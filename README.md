@@ -21,7 +21,7 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >µÚ¶þ¸öÊÇ·ÃÎÊsdcard
 >
-£¨·ÃÎÊÍøÂçÊÇÇëÇóÍøÂçÍ¼Æ¬µÄÊ±ºòÐèÒª»òÕßÊÇhttpÊý¾ÝÇëÇóÊ±ºòÐèÒª£¬·ÃÎÊsdcardÊÇÍ¼Æ¬»º´æµÄÐèÒª£©¡£
+>£¨·ÃÎÊÍøÂçÊÇÇëÇóÍøÂçÍ¼Æ¬µÄÊ±ºòÐèÒª»òÕßÊÇhttpÊý¾ÝÇëÇóÊ±ºòÐèÒª£¬·ÃÎÊsdcardÊÇÍ¼Æ¬»º´æµÄÐèÒª£©¡£
 
 
 ##FinalDBÊ¹ÓÃ·½·¨£º
@@ -41,50 +41,74 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 ##FinalActivityÊ¹ÓÃ·½·¨£º
 
 >public class AfinalDemoActivity extends FinalActivity {
-     //ÎÞÐèµ÷ÓÃfindViewByIdºÍsetOnclickListenerµÈ
-    @ViewInject(id=R.id.button,click="btnClick") Button button;
-    @ViewInject(id=R.id.textView) TextView textView;
+>
+>     //ÎÞÐèµ÷ÓÃfindViewByIdºÍsetOnclickListenerµÈ
+>
+>     @ViewInject(id=R.id.button,click="btnClick") Button button;
+>
+>     @ViewInject(id=R.id.textView) TextView textView;
 >       
->  public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-    }
+>    public void onCreate(Bundle savedInstanceState) {
+>
+>        super.onCreate(savedInstanceState);
+>
+>        setContentView(R.layout.main);
+>
+>    }
 >  
-    public void btnClick(View v){
-        textView.setText("text set form button");
-    }
-}
+>    public void btnClick(View v){
+>
+>        textView.setText("text set form button");
+>
+>   }
+>
+>}
 
 ##FinalHttpÊ¹ÓÃ·½·¨£º
 
 >FinalHttp.ajax("http://www.yangfuhai.com/topic/7.html", new AjaxCallBack() {
 >
-	@Override
-	public void callBack(AjaxStatus status) {
-		textView.setText(status.getContentAsString());
-	}
-});
+>	@Override
+>
+>	public void callBack(AjaxStatus status) {
+>
+>		textView.setText(status.getContentAsString());
+>
+>	}
+>
+>});
 
 ##FinalBitmap Ê¹ÓÃ·½·¨ (¼ÓÔØÍøÂçÍ¼Æ¬¾ÍÒ»ÐÐ´úÂë fb.display(imageView,url) )£º
 
->     private GridView gridView;
-	private FinalBitmap fb;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.images);
+>    private GridView gridView;
+>
+>	private FinalBitmap fb;
+>
+>	@Override
+>
+>	protected void onCreate(Bundle savedInstanceState) {
+>
+>		super.onCreate(savedInstanceState);
+>
+>		setContentView(R.layout.images);
 >		
 >		  gridView = (GridView) findViewById(R.id.gridView);
-		gridView.setAdapter(mAdapter);
+>
+>		gridView.setAdapter(mAdapter);
 >		
 >		  fb = new FinalBitmap(this).init();//±ØÐëµ÷ÓÃinit³õÊ¼»¯FinalBitmapÄ£¿é
-		fb.configLoadingImage(R.drawable.downloading);
-		//ÕâÀï¿ÉÒÔ½øÐÐÆäËûÊ®¼¸ÏîµÄÅäÖÃ£¬Ò²¿ÉÒÔ²»ÓÃÅäÖÃ£¬ÅäÖÃÖ®ºó±ØÐëµ÷ÓÃinit()º¯Êý,²ÅÉúÐ§
-		//fb.configBitmapLoadThreadSize(int size)
-		//fb.configBitmapMaxHeight(bitmapHeight)
-	}
-
-
+>
+>		fb.configLoadingImage(R.drawable.downloading);
+>
+>		//ÕâÀï¿ÉÒÔ½øÐÐÆäËûÊ®¼¸ÏîµÄÅäÖÃ£¬Ò²¿ÉÒÔ²»ÓÃÅäÖÃ£¬ÅäÖÃÖ®ºó±ØÐëµ÷ÓÃinit()º¯Êý,²ÅÉúÐ§
+>
+>		//fb.configBitmapLoadThreadSize(int size)
+>
+>		//fb.configBitmapMaxHeight(bitmapHeight)
+>
+>	}
+>
+>
 >///////////////////////////adapter getView////////////////////////////////////////////
 >
 > public View getView(int position, View convertView, ViewGroup parent) {
@@ -93,14 +117,20 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >	if(convertView == null){
 >
-	    convertView = View.inflate(BitmapCacheActivity.this,R.layout.image_item, null);
-	    iv = (ImageView) convertView.findViewById(R.id.imageView);
-	    iv.setScaleType(ScaleType.CENTER_CROP);
-	    convertView.setTag(iv);
+>	    convertView = View.inflate(BitmapCacheActivity.this,R.layout.image_item, null);
 >
-	}else{
-	    iv = (ImageView) convertView.getTag();
-	}
+>	    iv = (ImageView) convertView.findViewById(R.id.imageView);
+>
+>	    iv.setScaleType(ScaleType.CENTER_CROP);
+>
+>	    convertView.setTag(iv);
+>
+>	}else{
+>
+>	    iv = (ImageView) convertView.getTag();
+>
+>	}
+>
 >	//bitmap¼ÓÔØ¾ÍÕâÒ»ÐÐ´úÂë£¬display»¹ÓÐÆäËûÖØÔØ£¬ÏêÇé²é¿´Ô´Âë
 >
 >	fb.display(iv,Images.imageUrls[position]);
