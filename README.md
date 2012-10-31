@@ -1,30 +1,30 @@
-#¼ò½é
-Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼Ó¼òµ¥Ò×ÓÃ¡£Ê¹ÓÃfinalBitmap£¬ÎÞÐè¿¼ÂÇbitmapÔÚandroidÖÐ¼ÓÔØµÄÊ±ºòoomµÄÎÊÌâºÍ¿ìËÙ»¬¶¯µÄÊ±ºòÍ¼Æ¬Í¼Æ¬´íÎ»µÈÎÊÌâ¡£
+#Afinalç®€ä»‹
+Afinal æ˜¯ä¸€ä¸ªandroidçš„ orm å’Œ ioc æ¡†æž¶ã€‚è€Œä¸”å°è£…äº†androidä¸­çš„httpClientï¼Œä½¿å…¶æ›´åŠ ç®€å•æ˜“ç”¨ã€‚ä½¿ç”¨finalBitmapï¼Œæ— éœ€è€ƒè™‘bitmapåœ¨androidä¸­åŠ è½½çš„æ—¶å€™oomçš„é—®é¢˜å’Œå¿«é€Ÿæ»‘åŠ¨çš„æ—¶å€™å›¾ç‰‡å›¾ç‰‡é”™ä½ç­‰é—®é¢˜ã€‚
 
-##Ä¿Ç°AfinalÖ÷ÒªÓÐËÄ´óÄ£¿é£º
+##ç›®å‰Afinalä¸»è¦æœ‰å››å¤§æ¨¡å—ï¼š
 
-1¡¢FinalDBÄ£¿é£ºandroidÖÐµÄorm¿ò¼Ü£¬Ò»ÐÐ´úÂë¾Í¿ÉÒÔ½øÐÐÔöÉ¾¸Ä²é¡£Ö§³ÖÒ»¶Ô¶à£¬¶à¶ÔÒ»µÈ²éÑ¯¡£
+1ã€FinalDBæ¨¡å—ï¼šandroidä¸­çš„ormæ¡†æž¶ï¼Œä¸€è¡Œä»£ç å°±å¯ä»¥è¿›è¡Œå¢žåˆ æ”¹æŸ¥ã€‚æ”¯æŒä¸€å¯¹å¤šï¼Œå¤šå¯¹ä¸€ç­‰æŸ¥è¯¢ã€‚
 
-2¡¢FinalActivityÄ£¿é£ºandroidÖÐµÄioc¿ò¼Ü£¬ÍêÈ«×¢½â·½Ê½¾Í¿ÉÒÔ½øÐÐUI°ó¶¨ºÍÊÂ¼þ°ó¶¨¡£ÎÞÐèfindViewByIdºÍsetClickListenerµÈ¡£
+2ã€FinalActivityæ¨¡å—ï¼šandroidä¸­çš„iocæ¡†æž¶ï¼Œå®Œå…¨æ³¨è§£æ–¹å¼å°±å¯ä»¥è¿›è¡ŒUIç»‘å®šå’Œäº‹ä»¶ç»‘å®šã€‚æ— éœ€findViewByIdå’ŒsetClickListenerç­‰ã€‚
 
-3¡¢FinalHttpÄ£¿é£ºÍ¨¹ýhttpclient½øÐÐ·â×°httpÊý¾ÝÇëÇó£¬Ö§³Öajax·½Ê½¼ÓÔØ¡£
+3ã€FinalHttpæ¨¡å—ï¼šé€šè¿‡httpclientè¿›è¡Œå°è£…httpæ•°æ®è¯·æ±‚ï¼Œæ”¯æŒajaxæ–¹å¼åŠ è½½ã€‚
 
-4¡¢FinalBitmapÄ£¿é£ºÍ¨¹ýFinalBitmap£¬imageview¼ÓÔØbitmapµÄÊ±ºòÎÞÐè¿¼ÂÇbitmap¼ÓÔØ¹ý³ÌÖÐ³öÏÖµÄoomºÍandroidÈÝÆ÷¿ìËÙ»¬¶¯Ê±ºò³öÏÖµÄÍ¼Æ¬´íÎ»µÈÏÖÏó¡£FinalBitmap¿ÉÒÔÅäÖÃÏß³Ì¼ÓÔØÏß³ÌÊýÁ¿£¬»º´æ´óÐ¡£¬»º´æÂ·¾¶£¬¼ÓÔØÏÔÊ¾¶¯»­µÈ¡£FinalBitmapµÄÄÚ´æ¹ÜÀíÊ¹ÓÃlruËã·¨£¬Ã»ÓÐÊ¹ÓÃÈõÒýÓÃ£¨android2.3ÒÔºógoogleÒÑ¾­²»½¨ÒéÊ¹ÓÃÈôÒýÓÃ£¬android2.3ºóÇ¿ÐÐ»ØÊÕÈíÒýÓÃºÍÈôÒýÓÃ£¬ÏêÇé²é¿´android¹Ù·½ÎÄµµ£©£¬¸üºÃµÄ¹ÜÀíbitmapÄÚ´æ¡£FinalBitmap¿ÉÒÔ×Ô¶¨ÒåÏÂÔØÀ´£¬·½Ê½À©Õ¹ÆäËûÐ­ÒéµÄÍ¼Æ¬ÏÔÊ¾£¬²»ÈçftpµÈ¡£×Ô¶¨ÒåbitmapÏÔÊ¾Æ÷£¬ÏÈÏÔÊ¾µÄÊ±ºò²¥·Å¶¯»­µÈ£¨Ä¬ÈÏÊÇ½¥±ä¶¯»­ÏÔÊ¾£©¡£
+4ã€FinalBitmapæ¨¡å—ï¼šé€šè¿‡FinalBitmapï¼ŒimageviewåŠ è½½bitmapçš„æ—¶å€™æ— éœ€è€ƒè™‘bitmapåŠ è½½è¿‡ç¨‹ä¸­å‡ºçŽ°çš„oomå’Œandroidå®¹å™¨å¿«é€Ÿæ»‘åŠ¨æ—¶å€™å‡ºçŽ°çš„å›¾ç‰‡é”™ä½ç­‰çŽ°è±¡ã€‚FinalBitmapå¯ä»¥é…ç½®çº¿ç¨‹åŠ è½½çº¿ç¨‹æ•°é‡ï¼Œç¼“å­˜å¤§å°ï¼Œç¼“å­˜è·¯å¾„ï¼ŒåŠ è½½æ˜¾ç¤ºåŠ¨ç”»ç­‰ã€‚FinalBitmapçš„å†…å­˜ç®¡ç†ä½¿ç”¨lruç®—æ³•ï¼Œæ²¡æœ‰ä½¿ç”¨å¼±å¼•ç”¨ï¼ˆandroid2.3ä»¥åŽgoogleå·²ç»ä¸å»ºè®®ä½¿ç”¨è‹¥å¼•ç”¨ï¼Œandroid2.3åŽå¼ºè¡Œå›žæ”¶è½¯å¼•ç”¨å’Œè‹¥å¼•ç”¨ï¼Œè¯¦æƒ…æŸ¥çœ‹androidå®˜æ–¹æ–‡æ¡£ï¼‰ï¼Œæ›´å¥½çš„ç®¡ç†bitmapå†…å­˜ã€‚FinalBitmapå¯ä»¥è‡ªå®šä¹‰ä¸‹è½½å™¨ï¼Œç”¨æ¥æ‰©å±•å…¶ä»–åè®®æ˜¾ç¤ºç½‘ç»œå›¾ç‰‡ï¼Œæ¯”å¦‚ftpç­‰ã€‚åŒæ—¶å¯ä»¥è‡ªå®šä¹‰bitmapæ˜¾ç¤ºå™¨ï¼Œåœ¨imageviewæ˜¾ç¤ºå›¾ç‰‡çš„æ—¶å€™æ’­æ”¾åŠ¨ç”»ç­‰ï¼ˆé»˜è®¤æ˜¯æ¸å˜åŠ¨ç”»æ˜¾ç¤ºï¼‰ã€‚
 
-#Ê¹ÓÃafinal¿ìËÙ¿ª·¢¿ò¼ÜÐèÒªÓÐÒÔÏÂÈ¨ÏÞ£º
+#ä½¿ç”¨afinalå¿«é€Ÿå¼€å‘æ¡†æž¶éœ€è¦æœ‰ä»¥ä¸‹æƒé™ï¼š
 
 >uses-permission android:name="android.permission.INTERNET" 
 >
 >uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
 >
->µÚÒ»¸öÊÇ·ÃÎÊÍøÂç
+>ç¬¬ä¸€ä¸ªæ˜¯è®¿é—®ç½‘ç»œ
 >
->µÚ¶þ¸öÊÇ·ÃÎÊsdcard
+>ç¬¬äºŒä¸ªæ˜¯è®¿é—®sdcard
 >
->£¨·ÃÎÊÍøÂçÊÇÇëÇóÍøÂçÍ¼Æ¬µÄÊ±ºòÐèÒª»òÕßÊÇhttpÊý¾ÝÇëÇóÊ±ºòÐèÒª£¬·ÃÎÊsdcardÊÇÍ¼Æ¬»º´æµÄÐèÒª£©¡£
+>ï¼ˆè®¿é—®ç½‘ç»œæ˜¯è¯·æ±‚ç½‘ç»œå›¾ç‰‡çš„æ—¶å€™éœ€è¦æˆ–è€…æ˜¯httpæ•°æ®è¯·æ±‚æ—¶å€™éœ€è¦ï¼Œè®¿é—®sdcardæ˜¯å›¾ç‰‡ç¼“å­˜çš„éœ€è¦ï¼‰ã€‚
 
 
-##FinalDBÊ¹ÓÃ·½·¨£º
+##FinalDBä½¿ç”¨æ–¹æ³•ï¼š
 
 >FinalDb db = FinalDb.create(this);
 >                        
@@ -38,11 +38,12 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >db.save(user);
 
-##FinalActivityÊ¹ÓÃ·½·¨£º
+##FinalActivityä½¿ç”¨æ–¹æ³•ï¼š
+
 
 >public class AfinalDemoActivity extends FinalActivity {
 >
->     //ÎÞÐèµ÷ÓÃfindViewByIdºÍsetOnclickListenerµÈ
+>     //æ— éœ€è°ƒç”¨findViewByIdå’ŒsetOnclickListenerç­‰
 >
 >     @ViewInject(id=R.id.button,click="btnClick") Button button;
 >
@@ -64,7 +65,7 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >}
 
-##FinalHttpÊ¹ÓÃ·½·¨£º
+##FinalHttpä½¿ç”¨æ–¹æ³•ï¼š
 
 >FinalHttp.ajax("http://www.yangfuhai.com/topic/7.html", new AjaxCallBack() {
 >
@@ -78,7 +79,7 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >});
 
-##FinalBitmap Ê¹ÓÃ·½·¨ (¼ÓÔØÍøÂçÍ¼Æ¬¾ÍÒ»ÐÐ´úÂë fb.display(imageView,url) )£º
+##FinalBitmap ä½¿ç”¨æ–¹æ³• (åŠ è½½ç½‘ç»œå›¾ç‰‡å°±ä¸€è¡Œä»£ç  fb.display(imageView,url) )ï¼š
 
 >    private GridView gridView;
 >
@@ -96,11 +97,11 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >		gridView.setAdapter(mAdapter);
 >		
->		  fb = new FinalBitmap(this).init();//±ØÐëµ÷ÓÃinit³õÊ¼»¯FinalBitmapÄ£¿é
+>		  fb = new FinalBitmap(this).init();//å¿…é¡»è°ƒç”¨initåˆå§‹åŒ–FinalBitmapæ¨¡å—
 >
 >		fb.configLoadingImage(R.drawable.downloading);
 >
->		//ÕâÀï¿ÉÒÔ½øÐÐÆäËûÊ®¼¸ÏîµÄÅäÖÃ£¬Ò²¿ÉÒÔ²»ÓÃÅäÖÃ£¬ÅäÖÃÖ®ºó±ØÐëµ÷ÓÃinit()º¯Êý,²ÅÉúÐ§
+>		//è¿™é‡Œå¯ä»¥è¿›è¡Œå…¶ä»–åå‡ é¡¹çš„é…ç½®ï¼Œä¹Ÿå¯ä»¥ä¸ç”¨é…ç½®ï¼Œé…ç½®ä¹‹åŽå¿…é¡»è°ƒç”¨init()å‡½æ•°,æ‰ç”Ÿæ•ˆ
 >
 >		//fb.configBitmapLoadThreadSize(int size)
 >
@@ -131,7 +132,7 @@ Afinal ÊÇÒ»¸öandroidµÄ orm ºÍ ioc ¿ò¼Ü¡£¶øÇÒ·â×°ÁËandroidÖÐµÄhttpClient£¬Ê¹Æä¸ü¼
 >
 >	}
 >
->	//bitmap¼ÓÔØ¾ÍÕâÒ»ÐÐ´úÂë£¬display»¹ÓÐÆäËûÖØÔØ£¬ÏêÇé²é¿´Ô´Âë
+>	//bitmapåŠ è½½å°±è¿™ä¸€è¡Œä»£ç ï¼Œdisplayè¿˜æœ‰å…¶ä»–é‡è½½ï¼Œè¯¦æƒ…æŸ¥çœ‹æºç 
 >
 >	fb.display(iv,Images.imageUrls[position]);
 >
