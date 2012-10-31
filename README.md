@@ -1,5 +1,6 @@
 #Afinal简介
-Afinal 是一个android的 orm 和 ioc 框架。而且封装了android中的httpClient，使其更加简单易用。使用finalBitmap，无需考虑bitmap在android中加载的时候oom的问题和快速滑动的时候图片图片错位等问题。
+Afinal 是一个android的 orm 和 ioc 框架。而且封装了android中的httpClient，使其更加简单易用。使用finalBitmap，无需考虑bitmap在android中加载的时候oom的问题和快速滑动的时候图片加载位置错位等问题。
+Afinal的宗旨是简洁，快速。约定大于配置的方式。尽量一行代码完成所有事情。
 
 ##目前Afinal主要有四大模块：
 
