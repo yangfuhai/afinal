@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ import net.tsz.afinal.annotation.sqlite.Property;
 import net.tsz.afinal.annotation.sqlite.Transient;
 
 /**
- * @title ×Ö¶Î²Ù×÷¹¤¾ßÀà
- * @description ÃèÊö
- * @company Ì½Ë÷ÕßÍøÂç¹¤×÷ÊÒ(www.tsz.net)
+ * @title å­—æ®µæ“ä½œå·¥å…·ç±»
+ * @description æè¿°
+ * @company æ¢ç´¢è€…ç½‘ç»œå·¥ä½œå®¤(www.tsz.net)
  * @author michael Young (www.YangFuhai.com)
  * @version 1.0
  * @created 2012-10-10
@@ -76,7 +76,7 @@ public class FieldUtils {
 	}
 	
 	/**
-	 * »ñÈ¡Ä³¸ö×Ö¶ÎµÄÖµ
+	 * è·å–æŸä¸ªå­—æ®µçš„å€¼
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -87,7 +87,7 @@ public class FieldUtils {
 	}
 	
 	/**
-	 * »ñÈ¡Ä³¸ö×Ö¶ÎµÄÖµ
+	 * è·å–æŸä¸ªå­—æ®µçš„å€¼
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -98,7 +98,7 @@ public class FieldUtils {
 	}
 	
 	/**
-	 * ÉèÖÃÄ³¸ö×Ö¶ÎµÄÖµ
+	 * è®¾ç½®æŸä¸ªå­—æ®µçš„å€¼
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -130,7 +130,7 @@ public class FieldUtils {
 	
 	
 	/**
-	 * »ñÈ¡Ä³¸ö×Ö¶ÎµÄÖµ
+	 * è·å–æŸä¸ªå­—æ®µçš„å€¼
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -169,7 +169,7 @@ public class FieldUtils {
 	
 	
 	/**
-	 * »ñÈ¡Ä³¸ö×Ö¶ÎµÄÖµ
+	 * è·å–æŸä¸ªå­—æ®µçš„å€¼
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -191,7 +191,7 @@ public class FieldUtils {
 	
 	
 	/**
-	 * »ñÈ¡Ä³¸öÊìÏ¤¶ÔÓ¦µÄ ±íµÄÁĞ
+	 * è·å–æŸä¸ªç†Ÿæ‚‰å¯¹åº”çš„ è¡¨çš„åˆ—
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -232,7 +232,7 @@ public class FieldUtils {
 
 
 	/**
-	 * ¼ì²â ×Ö¶ÎÊÇ·ñÒÑ¾­±»±ê×¢Îª ·ÇÊı¾İ¿â×Ö¶Î
+	 * æ£€æµ‹ å­—æ®µæ˜¯å¦å·²ç»è¢«æ ‡æ³¨ä¸º éæ•°æ®åº“å­—æ®µ
 	 * @param f
 	 * @return
 	 */
@@ -241,7 +241,7 @@ public class FieldUtils {
 	}
 	
 	/**
-	 * »ñÈ¡Ä³¸öÊµÌåÖ´ĞĞÄ³¸ö·½·¨µÄ½á¹û
+	 * è·å–æŸä¸ªå®ä½“æ‰§è¡ŒæŸä¸ªæ–¹æ³•çš„ç»“æœ
 	 * @param obj
 	 * @param method
 	 * @return

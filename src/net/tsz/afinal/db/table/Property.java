@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @title ÊôĞÔ
- * @description ¡¾·ÇÖ÷¼ü¡¿µÄ¡¾»ù±¾Êı¾İÀàĞÍ¡¿ ¶¼ÊÇÊôĞÔ
- * @company Ì½Ë÷ÕßÍøÂç¹¤×÷ÊÒ(www.tsz.net)
+ * @title å±æ€§
+ * @description ã€éä¸»é”®ã€‘çš„ã€åŸºæœ¬æ•°æ®ç±»å‹ã€‘ éƒ½æ˜¯å±æ€§
+ * @company æ¢ç´¢è€…ç½‘ç»œå·¥ä½œå®¤(www.tsz.net)
  * @author michael Young (www.YangFuhai.com)
  * @version 1.0
  * @created 2012-10-10
@@ -62,7 +62,7 @@ public class Property {
 	}
 	
 	/**
-	 * »ñÈ¡Ä³¸öÊµÌåÖ´ĞĞÄ³¸ö·½·¨µÄ½á¹û
+	 * è·å–æŸä¸ªå®ä½“æ‰§è¡ŒæŸä¸ªæ–¹æ³•çš„ç»“æœ
 	 * @param obj
 	 * @param method
 	 * @return

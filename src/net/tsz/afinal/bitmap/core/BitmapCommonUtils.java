@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import android.os.StatFs;
 public class BitmapCommonUtils {
 	
 	/**
-	 * »ñÈ¡¿ÉÒÔÊ¹ÓÃµÄ»º´æÄ¿Â¼
+	 * è·å–å¯ä»¥ä½¿ç”¨çš„ç¼“å­˜ç›®å½•
 	 * @param context
-	 * @param uniqueName Ä¿Â¼Ãû³Æ
+	 * @param uniqueName ç›®å½•åç§°
 	 * @return
 	 */
     public static File getDiskCacheDir(Context context, String uniqueName) {
@@ -40,7 +40,7 @@ public class BitmapCommonUtils {
   
 
     /**
-     * »ñÈ¡bitmapµÄ×Ö½Ú´óĞ¡
+     * è·å–bitmapçš„å­—èŠ‚å¤§å°
      * @param bitmap
      * @return
      */
@@ -50,7 +50,7 @@ public class BitmapCommonUtils {
 
 
    /**
-    * »ñÈ¡³ÌĞòÍâ²¿µÄ»º´æÄ¿Â¼
+    * è·å–ç¨‹åºå¤–éƒ¨çš„ç¼“å­˜ç›®å½•
     * @param context
     * @return
     */
@@ -60,7 +60,7 @@ public class BitmapCommonUtils {
     }
 
     /**
-     * »ñÈ¡ÎÄ¼şÂ·¾¶¿Õ¼ä´óĞ¡
+     * è·å–æ–‡ä»¶è·¯å¾„ç©ºé—´å¤§å°
      * @param path
      * @return
      */

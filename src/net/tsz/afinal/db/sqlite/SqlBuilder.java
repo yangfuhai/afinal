@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import net.tsz.afinal.exception.DbException;
 public class SqlBuilder {
 	
 	/**
-	 * »ñÈ¡²åÈëµÄsqlÓï¾ä
+	 * è·å–æ’å…¥çš„sqlè¯­å¥
 	 * @param tableInfo
 	 * @return
 	 */
@@ -41,14 +41,14 @@ public class SqlBuilder {
 		
 		List<KeyValue> keyValueList = new ArrayList<KeyValue>();
 		
-		if(!(idvalue instanceof Integer)){ //ÓÃÁË·Ç×ÔÔö³¤,Ìí¼Óid , ²ÉÓÃ×ÔÔö³¤¾Í²»ĞèÒªÌí¼ÓidÁË
+		if(!(idvalue instanceof Integer)){ //ç”¨äº†éè‡ªå¢é•¿,æ·»åŠ id , é‡‡ç”¨è‡ªå¢é•¿å°±ä¸éœ€è¦æ·»åŠ idäº†
 			if(idvalue instanceof String && idvalue != null){
 				KeyValue kv = new KeyValue(table.getId().getColumn(),idvalue);
 				keyValueList.add(kv);
 			}
 		}
 		
-		//Ìí¼ÓÊôĞÔ
+		//æ·»åŠ å±æ€§
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			KeyValue kv = property2KeyValue(property,entity) ;
@@ -56,7 +56,7 @@ public class SqlBuilder {
 				keyValueList.add(kv);
 		}
 		
-		//Ìí¼ÓÍâ¼ü£¨¶à¶ÔÒ»£©
+		//æ·»åŠ å¤–é”®ï¼ˆå¤šå¯¹ä¸€ï¼‰
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne many:manyToOnes){
 			KeyValue kv = manyToOne2KeyValue(many,entity);
@@ -117,8 +117,8 @@ public class SqlBuilder {
 		}
 		
 		Id id=table.getId();
-		if(null == id ) return null ; //Ã»ÓĞÖ÷¼ü£¬²»ÄÜÉ¾³ı
-		if(null == idValue) return null ; //Ã»ÓĞÖ÷¼ü£¬²»ÄÜÉ¾³ı
+		if(null == id ) return null ; //æ²¡æœ‰ä¸»é”®ï¼Œä¸èƒ½åˆ é™¤
+		if(null == idValue) return null ; //æ²¡æœ‰ä¸»é”®ï¼Œä¸èƒ½åˆ é™¤
 		
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		strSQL.append(" WHERE ");
@@ -199,12 +199,12 @@ public class SqlBuilder {
 		TableInfo table=TableInfo.get(entity.getClass());
 		Object idvalue=table.getId().getValue(entity);
 		
-		if(null == idvalue ) {//Ö÷¼üÖµ²»ÄÜÎªnull£¬·ñÔò²»ÄÜ¸üĞÂ
+		if(null == idvalue ) {//ä¸»é”®å€¼ä¸èƒ½ä¸ºnullï¼Œå¦åˆ™ä¸èƒ½æ›´æ–°
 			throw new DbException("this entity["+entity.getClass()+"]'s id value is null");
 		}
 		
 		List<KeyValue> keyValueList = new ArrayList<KeyValue>();
-		//Ìí¼ÓÊôĞÔ
+		//æ·»åŠ å±æ€§
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			KeyValue kv = property2KeyValue(property,entity) ;
@@ -212,7 +212,7 @@ public class SqlBuilder {
 				keyValueList.add(kv);
 		}
 		
-		//Ìí¼ÓÍâ¼ü£¨¶à¶ÔÒ»£©
+		//æ·»åŠ å¤–é”®ï¼ˆå¤šå¯¹ä¸€ï¼‰
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne many:manyToOnes){
 			KeyValue kv = manyToOne2KeyValue(many,entity);
@@ -246,14 +246,14 @@ public class SqlBuilder {
 		
 		List<KeyValue> keyValueList = new ArrayList<KeyValue>();
 		
-		//Ìí¼ÓÊôĞÔ
+		//æ·»åŠ å±æ€§
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			KeyValue kv = property2KeyValue(property,entity) ;
 			if(kv!=null) keyValueList.add(kv);
 		}
 		
-		//Ìí¼ÓÍâ¼ü£¨¶à¶ÔÒ»£©
+		//æ·»åŠ å¤–é”®ï¼ˆå¤šå¯¹ä¸€ï¼‰
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne many:manyToOnes){
 			KeyValue kv = manyToOne2KeyValue(many,entity);

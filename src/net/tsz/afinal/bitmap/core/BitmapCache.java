@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ import java.io.OutputStream;
 public class BitmapCache {
     private static final String TAG = "ImageCache";
 
-    //Ä¬ÈÏµÄÄÚ´æ»º´æ´óĞ¡
+    //é»˜è®¤çš„å†…å­˜ç¼“å­˜å¤§å°
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 8; // 8MB
 
-    //Ä¬ÈÏµÄ´ÅÅÌ»º´æ´óĞ¡
+    //é»˜è®¤çš„ç£ç›˜ç¼“å­˜å¤§å°
     private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
 
     // Compression settings when writing images to disk cache
@@ -140,7 +140,7 @@ public class BitmapCache {
         }
 
         synchronized (mDiskCacheLock) {
-            // Ìí¼Óµ½Ó²ÅÌ»º´æ
+            // æ·»åŠ åˆ°ç¡¬ç›˜ç¼“å­˜
             if (mDiskLruCache != null) {
                 final String key = FileNameGenerator.generator(data);
                 OutputStream out = null;
@@ -190,7 +190,7 @@ public class BitmapCache {
     }
 
     /**
-     * »ñÈ¡Ó²ÅÌ»º´æ
+     * è·å–ç¡¬ç›˜ç¼“å­˜
      * @param data
      * @return
      */
@@ -309,9 +309,9 @@ public class BitmapCache {
         }
 
         /**
-         * ÉèÖÃ»º´æ´óĞ¡ 
+         * è®¾ç½®ç¼“å­˜å¤§å° 
          * @param context
-         * @param percent °Ù·Ö±È£¬ÖµµÄ·¶Î§ÊÇÔÚ 0.05 µ½ 0.8Ö®¼ä
+         * @param percent ç™¾åˆ†æ¯”ï¼Œå€¼çš„èŒƒå›´æ˜¯åœ¨ 0.05 åˆ° 0.8ä¹‹é—´
          */
         public void setMemCacheSizePercent(Context context, float percent) {
             if (percent < 0.05f || percent > 0.8f) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class TableInfo {
 	public final HashMap<String, OneToMany> oneToManyMap = new HashMap<String, OneToMany>();
 	public final HashMap<String, ManyToOne> manyToOneMap = new HashMap<String, ManyToOne>();
 	
-	private boolean checkDatabese;//ÔÚ¶ÔÊµÌå½øĞĞÊı¾İ¿â²Ù×÷µÄÊ±ºò²éÑ¯ÊÇ·ñÒÑ¾­ÓĞ±íÁË£¬Ö»Ğè²éÑ¯Ò»±é£¬ÓÃ´Ë±êÊ¾
+	private boolean checkDatabese;//åœ¨å¯¹å®ä½“è¿›è¡Œæ•°æ®åº“æ“ä½œçš„æ—¶å€™æŸ¥è¯¢æ˜¯å¦å·²ç»æœ‰è¡¨äº†ï¼Œåªéœ€æŸ¥è¯¢ä¸€éï¼Œç”¨æ­¤æ ‡ç¤º
 	
 	
 	private static final HashMap<String, TableInfo> tableInfoMap = new HashMap<String, TableInfo>();

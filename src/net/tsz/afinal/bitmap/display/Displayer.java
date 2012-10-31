@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import android.widget.ImageView;
 public interface Displayer {
 
 	/**
-	 * Í¼Æ¬¼ÓÔØÍê³É »Øµ÷µÄº¯Êı
+	 * å›¾ç‰‡åŠ è½½å®Œæˆ å›è°ƒçš„å‡½æ•°
 	 * @param imageView
 	 * @param bitmap
 	 * @param config
@@ -30,7 +30,7 @@ public interface Displayer {
 	public void loadCompletedisplay(ImageView imageView,Bitmap bitmap,BitmapDisplayConfig config);
 	
 	/**
-	 * Í¼Æ¬¼ÓÔØÊ§°Ü»Øµ÷µÄº¯Êı
+	 * å›¾ç‰‡åŠ è½½å¤±è´¥å›è°ƒçš„å‡½æ•°
 	 * @param imageView
 	 * @param bitmap
 	 */

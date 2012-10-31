@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,13 +61,13 @@ public class FinalBitmap {
 		mContext = context;
 		mConfig = new FinalBitmapConfig(context);
 		
-		configDiskCachePath(BitmapCommonUtils.getDiskCacheDir(context, "afinalCache"));//ÅäÖÃ»º´æÂ·¾¶
-		configDisplayer(new SimpleDisplayer());//ÅäÖÃÏÔÊ¾Æ÷
-		configDownlader(new SimpleHttpDownloader());//ÅäÖÃÏÂÔØÆ÷
+		configDiskCachePath(BitmapCommonUtils.getDiskCacheDir(context, "afinalCache"));//é…ç½®ç¼“å­˜è·¯å¾„
+		configDisplayer(new SimpleDisplayer());//é…ç½®æ˜¾ç¤ºå™¨
+		configDownlader(new SimpleHttpDownloader());//é…ç½®ä¸‹è½½å™¨
 	}
 	
 	/**
-	 * ÉèÖÃÍ¼Æ¬ÕıÔÚ¼ÓÔØµÄÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
+	 * è®¾ç½®å›¾ç‰‡æ­£åœ¨åŠ è½½çš„æ—¶å€™æ˜¾ç¤ºçš„å›¾ç‰‡
 	 * @param bitmap
 	 */
 	public FinalBitmap configLoadingImage(Bitmap bitmap) {
@@ -76,7 +76,7 @@ public class FinalBitmap {
 	}
 
 	/**
-	 * ÉèÖÃÍ¼Æ¬ÕıÔÚ¼ÓÔØµÄÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
+	 * è®¾ç½®å›¾ç‰‡æ­£åœ¨åŠ è½½çš„æ—¶å€™æ˜¾ç¤ºçš„å›¾ç‰‡
 	 * @param bitmap
 	 */
 	public FinalBitmap configLoadingImage(int resId) {
@@ -85,7 +85,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃÍ¼Æ¬¼ÓÔØÊ§°ÜÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
+	 * è®¾ç½®å›¾ç‰‡åŠ è½½å¤±è´¥æ—¶å€™æ˜¾ç¤ºçš„å›¾ç‰‡
 	 * @param bitmap
 	 */
 	public FinalBitmap configLoadfailImage(Bitmap bitmap) {
@@ -94,7 +94,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃÍ¼Æ¬¼ÓÔØÊ§°ÜÊ±ºòÏÔÊ¾µÄÍ¼Æ¬
+	 * è®¾ç½®å›¾ç‰‡åŠ è½½å¤±è´¥æ—¶å€™æ˜¾ç¤ºçš„å›¾ç‰‡
 	 * @param resId
 	 */
 	public FinalBitmap configLoadfailImage(int resId) {
@@ -103,7 +103,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÅäÖÃ´ÅÅÌ»º´æÂ·¾¶
+	 * é…ç½®ç£ç›˜ç¼“å­˜è·¯å¾„
 	 * @param strPath
 	 * @return
 	 */
@@ -115,7 +115,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÅäÖÃ´ÅÅÌ»º´æÂ·¾¶
+	 * é…ç½®ç£ç›˜ç¼“å­˜è·¯å¾„
 	 * @param strPath
 	 * @return
 	 */
@@ -126,7 +126,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÅäÖÃÄ¬ÈÏÍ¼Æ¬µÄĞ¡µÄ¸ß¶È
+	 * é…ç½®é»˜è®¤å›¾ç‰‡çš„å°çš„é«˜åº¦
 	 * @param bitmapHeight
 	 */
 	public FinalBitmap configBitmapMaxHeight(int bitmapHeight){
@@ -135,7 +135,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÅäÖÃÄ¬ÈÏÍ¼Æ¬µÄĞ¡µÄ¿í¶È
+	 * é…ç½®é»˜è®¤å›¾ç‰‡çš„å°çš„å®½åº¦
 	 * @param bitmapHeight
 	 */
 	public FinalBitmap configBitmapMaxWidth(int bitmapWidth){
@@ -144,7 +144,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃÏÂÔØÆ÷£¬±ÈÈçÍ¨¹ıftp»òÕßÆäËûĞ­ÒéÈ¥ÍøÂç¶ÁÈ¡Í¼Æ¬µÄÊ±ºò¿ÉÒÔÉèÖÃÕâÏî
+	 * è®¾ç½®ä¸‹è½½å™¨ï¼Œæ¯”å¦‚é€šè¿‡ftpæˆ–è€…å…¶ä»–åè®®å»ç½‘ç»œè¯»å–å›¾ç‰‡çš„æ—¶å€™å¯ä»¥è®¾ç½®è¿™é¡¹
 	 * @param downlader
 	 * @return
 	 */
@@ -154,7 +154,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃÏÔÊ¾Æ÷£¬±ÈÈçÔÚÏÔÊ¾µÄ¹ı³ÌÖĞÏÔÊ¾¶¯»­µÈ
+	 * è®¾ç½®æ˜¾ç¤ºå™¨ï¼Œæ¯”å¦‚åœ¨æ˜¾ç¤ºçš„è¿‡ç¨‹ä¸­æ˜¾ç¤ºåŠ¨ç”»ç­‰
 	 * @param displayer
 	 * @return
 	 */
@@ -164,8 +164,8 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÅäÖÃÄÚ´æ»º´æ´óĞ¡ ´óÓÚ2MBÒÔÉÏÓĞĞ§
-	 * @param size »º´æ´óĞ¡
+	 * é…ç½®å†…å­˜ç¼“å­˜å¤§å° å¤§äº2MBä»¥ä¸Šæœ‰æ•ˆ
+	 * @param size ç¼“å­˜å¤§å°
 	 */
 	public FinalBitmap configMemoryCacheSize(int size){
 		mConfig.memCacheSize = size;
@@ -173,8 +173,8 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃÓ¦»º´æµÄÔÚAPK×ÜÄÚ´æµÄ°Ù·Ö±È£¬ÓÅÏÈ¼¶´óÓÚconfigMemoryCacheSize
-	 * @param percent °Ù·Ö±È£¬ÖµµÄ·¶Î§ÊÇÔÚ 0.05 µ½ 0.8Ö®¼ä
+	 * è®¾ç½®åº”ç¼“å­˜çš„åœ¨APKæ€»å†…å­˜çš„ç™¾åˆ†æ¯”ï¼Œä¼˜å…ˆçº§å¤§äºconfigMemoryCacheSize
+	 * @param percent ç™¾åˆ†æ¯”ï¼Œå€¼çš„èŒƒå›´æ˜¯åœ¨ 0.05 åˆ° 0.8ä¹‹é—´
 	 */
 	public FinalBitmap configMemoryCachePercent(float percent){
 		mConfig.memCacheSizePercent = percent;
@@ -182,7 +182,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃ´ÅÅÌ»º´æ´óĞ¡ 5MB ÒÔÉÏÓĞĞ§
+	 * è®¾ç½®ç£ç›˜ç¼“å­˜å¤§å° 5MB ä»¥ä¸Šæœ‰æ•ˆ
 	 * @param size
 	 */
 	public FinalBitmap configDiskCacheSize(int size){
@@ -191,7 +191,7 @@ public class FinalBitmap {
 	} 
 	
 	/**
-	 * ÅäÖÃÔ­Ê¼Í¼Æ¬»º´æ´óĞ¡£¨·ÇÑ¹Ëõ»º´æ£©
+	 * é…ç½®åŸå§‹å›¾ç‰‡ç¼“å­˜å¤§å°ï¼ˆéå‹ç¼©ç¼“å­˜ï¼‰
 	 * @param size
 	 */
 	public FinalBitmap configOriginalDiskCacheSize(int size){
@@ -200,7 +200,7 @@ public class FinalBitmap {
 	}
 	
 	/**
-	 * ÉèÖÃ¼ÓÔØÍ¼Æ¬µÄÏß³Ì²¢·¢ÊıÁ¿
+	 * è®¾ç½®åŠ è½½å›¾ç‰‡çš„çº¿ç¨‹å¹¶å‘æ•°é‡
 	 * @param size
 	 */
 	public FinalBitmap configBitmapLoadThreadSize(int size){
@@ -221,7 +221,7 @@ public class FinalBitmap {
 			if(mConfig.memCacheSize > 1024 * 1024 * 2){
 				imageCacheParams.setMemCacheSize(mConfig.memCacheSize);	
 			}else{
-				//ÉèÖÃÄ¬ÈÏµÄÄÚ´æ»º´æ´óĞ¡
+				//è®¾ç½®é»˜è®¤çš„å†…å­˜ç¼“å­˜å¤§å°
 				imageCacheParams.setMemCacheSizePercent(mContext, 0.3f);
 			}
 		}
@@ -232,7 +232,7 @@ public class FinalBitmap {
 		bitmapLoadAndDisplayExecutor = Executors.newFixedThreadPool(mConfig.poolSize,new ThreadFactory() {
 			public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
-				// ÉèÖÃÏß³ÌµÄÓÅÏÈ¼¶±ğ£¬ÈÃÏß³ÌÏÈºóË³ĞòÖ´ĞĞ£¨¼¶±ğÔ½¸ß£¬ÇÀµ½cpuÖ´ĞĞµÄÊ±¼äÔ½¶à£©
+				// è®¾ç½®çº¿ç¨‹çš„ä¼˜å…ˆçº§åˆ«ï¼Œè®©çº¿ç¨‹å…ˆåé¡ºåºæ‰§è¡Œï¼ˆçº§åˆ«è¶Šé«˜ï¼ŒæŠ¢åˆ°cpuæ‰§è¡Œçš„æ—¶é—´è¶Šå¤šï¼‰
 				t.setPriority(Thread.NORM_PRIORITY - 1);
 				return t;
 			}
@@ -310,7 +310,7 @@ public class FinalBitmap {
 			
 		}else if (checkImageTask(uri, imageView)) {
 			final BitmapLoadAndDisplayTask task = new BitmapLoadAndDisplayTask(imageView,uri,displayConfig);
-			//ÉèÖÃÄ¬ÈÏÍ¼Æ¬
+			//è®¾ç½®é»˜è®¤å›¾ç‰‡
 			final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), displayConfig.getLoadingBitmap(), task);
 	        imageView.setImageDrawable(asyncDrawable);
 	
@@ -369,7 +369,7 @@ public class FinalBitmap {
 	}
 
 	/**
-	 * ÍøÂç¼ÓÔØbitmap
+	 * ç½‘ç»œåŠ è½½bitmap
 	 * @param data
 	 * @return
 	 */
@@ -381,39 +381,39 @@ public class FinalBitmap {
 	}
 
 	/**
-	 * Çå³ı»º´æ
+	 * æ¸…é™¤ç¼“å­˜
 	 */
 	public void clearCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR);
 	}
 
 	/**
-	 * Ë¢ĞÂ»º´æ
+	 * åˆ·æ–°ç¼“å­˜
 	 */
 	public void flushCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_FLUSH);
 	}
 
 	/**
-	 * ¹Ø±Õ»º´æ
+	 * å…³é—­ç¼“å­˜
 	 */
 	public void closeCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLOSE);
 	}
 
 	/**
-	 * ÍË³öÕıÔÚ¼ÓÔØµÄÏß³Ì£¬³ÌĞòÍË³öµÄÊ±ºòµ÷ÓÃ´Ê·½·¨
+	 * é€€å‡ºæ­£åœ¨åŠ è½½çš„çº¿ç¨‹ï¼Œç¨‹åºé€€å‡ºçš„æ—¶å€™è°ƒç”¨è¯æ–¹æ³•
 	 * @param exitTasksEarly
 	 */
 	public void exitTasksEarly(boolean exitTasksEarly) {
 		mExitTasksEarly = exitTasksEarly;
 		if(exitTasksEarly)
-			pauseWork(false);//ÈÃÔİÍ£µÄÏß³Ì½áÊø
+			pauseWork(false);//è®©æš‚åœçš„çº¿ç¨‹ç»“æŸ
 	}
 
 	/**
-	 * ÔİÍ£ÕıÔÚ¼ÓÔØµÄÏß³Ì£¬¼àÌılistview»òÕßgridviewÕıÔÚ»¬¶¯µÄÊ±ºòÌõÓÃ´Ê·½·¨
-	 * @param pauseWork trueÍ£Ö¹ÔİÍ£Ïß³Ì£¬false¼ÌĞøÏß³Ì
+	 * æš‚åœæ­£åœ¨åŠ è½½çš„çº¿ç¨‹ï¼Œç›‘å¬listviewæˆ–è€…gridviewæ­£åœ¨æ»‘åŠ¨çš„æ—¶å€™æ¡ç”¨è¯æ–¹æ³•
+	 * @param pauseWork trueåœæ­¢æš‚åœçº¿ç¨‹ï¼Œfalseç»§ç»­çº¿ç¨‹
 	 */
 	public void pauseWork(boolean pauseWork) {
 		synchronized (mPauseWorkLock) {
@@ -439,7 +439,7 @@ public class FinalBitmap {
 	 
 	    
 	   /**
-	    * »ñÈ¡imageviewÖĞÕıÔÚÖ´ĞĞµÄÈÎÎñ
+	    * è·å–imageviewä¸­æ­£åœ¨æ‰§è¡Œçš„ä»»åŠ¡
 	    * @param imageView
 	    * @return
 	    */
@@ -455,10 +455,10 @@ public class FinalBitmap {
 	    }
 
 	    /**
-	     * ¼ì²â imageViewÖĞÊÇ·ñÒÑ¾­ÓĞÏß³ÌÔÚÔËĞĞ
+	     * æ£€æµ‹ imageViewä¸­æ˜¯å¦å·²ç»æœ‰çº¿ç¨‹åœ¨è¿è¡Œ
 	     * @param data
 	     * @param imageView
-	     * @return true Ã»ÓĞ false ÓĞÏß³ÌÔÚÔËĞĞÁË
+	     * @return true æ²¡æœ‰ false æœ‰çº¿ç¨‹åœ¨è¿è¡Œäº†
 	     */
 	    public static boolean checkImageTask(String data, ImageView imageView) {
 	        final BitmapLoadAndDisplayTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
@@ -470,9 +470,9 @@ public class FinalBitmap {
 	    }
 
 	/**
-	 * @title bitmapÏÂÔØÏÔÊ¾µÄÏß³Ì
-	 * @description ¸ºÔğÏÂÔØ£¨»ò´Ósdcard¼ÓÔØ£©bitmap ²¢ÏÔÊ¾ÔÚimageviewÉÏ
-	 * @company Ì½Ë÷ÕßÍøÂç¹¤×÷ÊÒ(www.tsz.net)
+	 * @title bitmapä¸‹è½½æ˜¾ç¤ºçš„çº¿ç¨‹
+	 * @description è´Ÿè´£ä¸‹è½½ï¼ˆæˆ–ä»sdcardåŠ è½½ï¼‰bitmap å¹¶æ˜¾ç¤ºåœ¨imageviewä¸Š
+	 * @company æ¢ç´¢è€…ç½‘ç»œå·¥ä½œå®¤(www.tsz.net)
 	 * @author michael Young (www.YangFuhai.com)
 	 * @version 1.0
 	 * @created 2012-10-28
@@ -486,14 +486,14 @@ public class FinalBitmap {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case 0://¼ÓÔØ³É¹¦
+				case 0://åŠ è½½æˆåŠŸ
 					final Bitmap bm = mImageCache.getBitmapFromMemCache(uriData.toString());
 					final ImageView iv = getAttachedImageView();
 					if (iv != null && bm != null) {
 						mConfig.displayer.loadCompletedisplay(iv, bm,bitmapDisplayConfig);
 					}
 					break;
-				case 1: //¼ÓÔØÊ§°Ü
+				case 1: //åŠ è½½å¤±è´¥
 					final Bitmap failBitmap = bitmapDisplayConfig.getLoadfailBitmap();
 					final ImageView failIv = getAttachedImageView();
 					if (failIv != null && failBitmap != null) {
@@ -558,9 +558,9 @@ public class FinalBitmap {
 	
 
 	/**
-	 * @title »º´æ²Ù×÷µÄÒì²½ÈÎÎñ
-	 * @description ²Ù×÷»º´æ
-	 * @company Ì½Ë÷ÕßÍøÂç¹¤×÷ÊÒ(www.tsz.net)
+	 * @title ç¼“å­˜æ“ä½œçš„å¼‚æ­¥ä»»åŠ¡
+	 * @description æ“ä½œç¼“å­˜
+	 * @company æ¢ç´¢è€…ç½‘ç»œå·¥ä½œå®¤(www.tsz.net)
 	 * @author michael Young (www.YangFuhai.com)
 	 * @version 1.0
 	 * @created 2012-10-28
@@ -592,9 +592,9 @@ public class FinalBitmap {
 	
 	
 	/**
-	 * @title ÅäÖÃĞÅÏ¢
-	 * @description FinalBitmapµÄÅäÖÃĞÅÏ¢
-	 * @company Ì½Ë÷ÕßÍøÂç¹¤×÷ÊÒ(www.tsz.net)
+	 * @title é…ç½®ä¿¡æ¯
+	 * @description FinalBitmapçš„é…ç½®ä¿¡æ¯
+	 * @company æ¢ç´¢è€…ç½‘ç»œå·¥ä½œå®¤(www.tsz.net)
 	 * @author michael Young (www.YangFuhai.com)
 	 * @version 1.0
 	 * @created 2012-10-28
@@ -607,10 +607,10 @@ public class FinalBitmap {
 		 public Downloader downloader;
 		 public BitmapProcess bitmapProcess;
 		 public BitmapDisplayConfig defaultDisplayConfig;
-		 public float memCacheSizePercent;//»º´æ°Ù·Ö±È£¬androidÏµÍ³·ÖÅä¸øÃ¿¸öapkÄÚ´æµÄ´óĞ¡
-		 public int memCacheSize;//ÄÚ´æ»º´æ°Ù·Ö±È
-		 public int diskCacheSize;//´ÅÅÌ°Ù·Ö±È
-		 public int poolSize = 3;//Ä¬ÈÏµÄÏß³Ì³ØÏß³Ì²¢·¢ÊıÁ¿
+		 public float memCacheSizePercent;//ç¼“å­˜ç™¾åˆ†æ¯”ï¼Œandroidç³»ç»Ÿåˆ†é…ç»™æ¯ä¸ªapkå†…å­˜çš„å¤§å°
+		 public int memCacheSize;//å†…å­˜ç¼“å­˜ç™¾åˆ†æ¯”
+		 public int diskCacheSize;//ç£ç›˜ç™¾åˆ†æ¯”
+		 public int poolSize = 3;//é»˜è®¤çš„çº¿ç¨‹æ± çº¿ç¨‹å¹¶å‘æ•°é‡
 		 public int originalDiskCache = 20 * 1024 * 1024;//20MB
 		 
 		
@@ -620,7 +620,7 @@ public class FinalBitmap {
 				defaultDisplayConfig.setAnimation(null);
 				defaultDisplayConfig.setAnimationType(BitmapDisplayConfig.AnimationType.fadeIn);
 				
-				//ÉèÖÃÍ¼Æ¬µÄÏÔÊ¾×î´ó³ß´ç£¨ÎªÆÁÄ»µÄ´óĞ¡,Ä¬ÈÏÎªÆÁÄ»¿í¶ÈµÄ1/3£©
+				//è®¾ç½®å›¾ç‰‡çš„æ˜¾ç¤ºæœ€å¤§å°ºå¯¸ï¼ˆä¸ºå±å¹•çš„å¤§å°,é»˜è®¤ä¸ºå±å¹•å®½åº¦çš„1/3ï¼‰
 				DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
 				int defaultWidth = (int)Math.floor(displayMetrics.widthPixels/3);
 				defaultDisplayConfig.setBitmapHeight(defaultWidth);

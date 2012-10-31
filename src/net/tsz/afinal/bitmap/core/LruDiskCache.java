@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang —Ó∏£∫£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang Êù®Á¶èÊµ∑ (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,13 +47,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- ******************************************************************************
- * Taken from the JB source code, can be found in:
- * libcore/luni/src/main/java/libcore/io/DiskLruCache.java
- * or direct link:
- * https://android.googlesource.com/platform/libcore/+/android-4.1.1_r1/luni/src/main/java/libcore/io/DiskLruCache.java
- ******************************************************************************
- *
  * A cache that uses a bounded amount of space on a filesystem. Each cache
  * entry has a string key and a fixed number of values. Values are byte
  * sequences, accessible as streams or files. Each value must be between {@code

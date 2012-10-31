@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -420,9 +420,9 @@ public class FinalDb {
 	
 	
 	public static class DaoConfig{
-		private Context context = null;//androidÉÏÏÂÎÄ
-		private String dbName = "afinal.db";//Êı¾İ¿âÃû×Ö
-		private int dbVersion = 1;//Êı¾İ¿â°æ±¾
+		private Context context = null;//androidä¸Šä¸‹æ–‡
+		private String dbName = "afinal.db";//æ•°æ®åº“åå­—
+		private int dbVersion = 1;//æ•°æ®åº“ç‰ˆæœ¬
 		private boolean debug = true;
 		
 		public Context getContext() {

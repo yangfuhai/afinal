@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class BitmapProcess {
 	private int cacheSize;
 	private static final int DEFAULT_CACHE_SIZE = 20 * 1024 * 1024; // 20MB
 
-	private LruDiskCache mOriginalDiskCache;//Ô­Ê¼Í¼Æ¬µÄÂ·¾¶£¬²»½øĞĞÈÎºÎµÄÑ¹Ëõ²Ù×÷
+	private LruDiskCache mOriginalDiskCache;//åŸå§‹å›¾ç‰‡çš„è·¯å¾„ï¼Œä¸è¿›è¡Œä»»ä½•çš„å‹ç¼©æ“ä½œ
 	private final Object mHttpDiskCacheLock = new Object();
 	private static final int DISK_CACHE_INDEX = 0;
 

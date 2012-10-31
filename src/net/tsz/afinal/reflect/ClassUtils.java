@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,14 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ¸ù¾İÊµÌåÀà »ñµÃ ÊµÌåÀà¶ÔÓ¦µÄ±íÃû
+	 * æ ¹æ®å®ä½“ç±» è·å¾— å®ä½“ç±»å¯¹åº”çš„è¡¨å
 	 * @param entity
 	 * @return
 	 */
 	public static String getTableName(Class<?> clazz) {
 		Table table = clazz.getAnnotation(Table.class);
 		if(table == null || table.name().trim().length() == 0 ){
-			//µ±Ã»ÓĞ×¢½âµÄÊ±ºòÄ¬ÈÏÓÃÀàµÄÃû³Æ×÷Îª±íÃû,²¢°Ñµã£¨.£©Ìæ»»ÎªÏÂ»®Ïß(_)
+			//å½“æ²¡æœ‰æ³¨è§£çš„æ—¶å€™é»˜è®¤ç”¨ç±»çš„åç§°ä½œä¸ºè¡¨å,å¹¶æŠŠç‚¹ï¼ˆ.ï¼‰æ›¿æ¢ä¸ºä¸‹åˆ’çº¿(_)
 			return clazz.getName().replace('.', '_');
 		}
 		return table.name();
@@ -50,7 +50,7 @@ public class ClassUtils {
 	}
 	
 	/**
-	 * ¸ù¾İÊµÌåÀà »ñµÃ ÊµÌåÀà¶ÔÓ¦µÄ±íÃû
+	 * æ ¹æ®å®ä½“ç±» è·å¾— å®ä½“ç±»å¯¹åº”çš„è¡¨å
 	 * @param entity
 	 * @return
 	 */
@@ -61,7 +61,7 @@ public class ClassUtils {
 			Id idAnnotation = null ;
 			Field idField = null ;
 			
-			for(Field field : fields){ //»ñÈ¡ID×¢½â
+			for(Field field : fields){ //è·å–IDæ³¨è§£
 				idAnnotation = field.getAnnotation(Id.class);
 				if(idAnnotation != null){
 					idField = field;
@@ -69,11 +69,11 @@ public class ClassUtils {
 				}
 			}
 			
-			if(idAnnotation != null){ //ÓĞID×¢½â
+			if(idAnnotation != null){ //æœ‰IDæ³¨è§£
 				primaryKey = idAnnotation.column();
 				if(primaryKey == null || primaryKey.trim().length() == 0)
 					primaryKey = idField.getName();
-			}else{ //Ã»ÓĞID×¢½â,Ä¬ÈÏÈ¥ÕÒ _id ºÍ id ÎªÖ÷¼ü£¬ÓÅÏÈÑ°ÕÒ _id
+			}else{ //æ²¡æœ‰IDæ³¨è§£,é»˜è®¤å»æ‰¾ _id å’Œ id ä¸ºä¸»é”®ï¼Œä¼˜å…ˆå¯»æ‰¾ _id
 				for(Field field : fields){
 					if("_id".equals(field.getName()))
 						return "_id";
@@ -92,7 +92,7 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ¸ù¾İÊµÌåÀà »ñµÃ ÊµÌåÀà¶ÔÓ¦µÄ±íÃû
+	 * æ ¹æ®å®ä½“ç±» è·å¾— å®ä½“ç±»å¯¹åº”çš„è¡¨å
 	 * @param entity
 	 * @return
 	 */
@@ -101,21 +101,21 @@ public class ClassUtils {
 		Field[] fields = clazz.getDeclaredFields();
 		if(fields != null){
 			
-			for(Field field : fields){ //»ñÈ¡ID×¢½â
+			for(Field field : fields){ //è·å–IDæ³¨è§£
 				if(field.getAnnotation(Id.class) != null){
 					primaryKeyField = field;
 					break;
 				}
 			}
 			
-			if(primaryKeyField == null){ //Ã»ÓĞID×¢½â
+			if(primaryKeyField == null){ //æ²¡æœ‰IDæ³¨è§£
 				for(Field field : fields){
 					if("_id".equals(field.getName())){
 						primaryKeyField = field;
 						break;
 					}
 				}
-				if(primaryKeyField == null){ // Èç¹ûÃ»ÓĞ_idµÄ×Ö¶Î
+				if(primaryKeyField == null){ // å¦‚æœæ²¡æœ‰_idçš„å­—æ®µ
 					for(Field field : fields){
 						if("id".equals(field.getName())){
 							primaryKeyField = field;
@@ -132,7 +132,7 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ¸ù¾İÊµÌåÀà »ñµÃ ÊµÌåÀà¶ÔÓ¦µÄ±íÃû
+	 * æ ¹æ®å®ä½“ç±» è·å¾— å®ä½“ç±»å¯¹åº”çš„è¡¨å
 	 * @param entity
 	 * @return
 	 */
@@ -144,10 +144,10 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ½«¶ÔÏó×ª»»ÎªContentValues
+	 * å°†å¯¹è±¡è½¬æ¢ä¸ºContentValues
 	 * 
 	 * @param entity
-	 * @param selective ÊÇ·ñºöÂÔ ÖµÎªnullµÄ×Ö¶Î
+	 * @param selective æ˜¯å¦å¿½ç•¥ å€¼ä¸ºnullçš„å­—æ®µ
 	 * @return
 	 */
 	public static List<Property> getPropertyList(Class<?> clazz) {
@@ -157,10 +157,10 @@ public class ClassUtils {
 			Field[] fs = clazz.getDeclaredFields();
 			String primaryKeyFieldName = getPrimaryKeyFieldName(clazz);
 			for (Field f : fs) {
-				//±ØĞëÊÇ»ù±¾Êı¾İÀàĞÍºÍÃ»ÓĞ±êË²Ê±Ì¬µÄ×Ö¶Î
+				//å¿…é¡»æ˜¯åŸºæœ¬æ•°æ®ç±»å‹å’Œæ²¡æœ‰æ ‡ç¬æ—¶æ€çš„å­—æ®µ
 				if (!FieldUtils.isTransient(f) && FieldUtils.isBaseDateType(f)) {
 					
-					if(f.getName().equals(primaryKeyFieldName)) //¹ıÂËÖ÷¼ü
+					if(f.getName().equals(primaryKeyFieldName)) //è¿‡æ»¤ä¸»é”®
 						continue;
 					
 					Property property = new Property();
@@ -183,10 +183,10 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ½«¶ÔÏó×ª»»ÎªContentValues
+	 * å°†å¯¹è±¡è½¬æ¢ä¸ºContentValues
 	 * 
 	 * @param entity
-	 * @param selective ÊÇ·ñºöÂÔ ÖµÎªnullµÄ×Ö¶Î
+	 * @param selective æ˜¯å¦å¿½ç•¥ å€¼ä¸ºnullçš„å­—æ®µ
 	 * @return
 	 */
 	public static List<ManyToOne> getManyToOneList(Class<?> clazz) {
@@ -216,10 +216,10 @@ public class ClassUtils {
 	
 	
 	/**
-	 * ½«¶ÔÏó×ª»»ÎªContentValues
+	 * å°†å¯¹è±¡è½¬æ¢ä¸ºContentValues
 	 * 
 	 * @param entity
-	 * @param selective ÊÇ·ñºöÂÔ ÖµÎªnullµÄ×Ö¶Î
+	 * @param selective æ˜¯å¦å¿½ç•¥ å€¼ä¸ºnullçš„å­—æ®µ
 	 * @return
 	 */
 	public static List<OneToMany> getOneToManyList(Class<?> clazz) {

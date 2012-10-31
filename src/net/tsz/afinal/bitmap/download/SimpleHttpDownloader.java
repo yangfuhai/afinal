@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang Ñî¸£º£ (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang æ¨ç¦æµ· (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class SimpleHttpDownloader implements Downloader{
 	private static final int IO_BUFFER_SIZE = 8 * 1024; //8k
 	
 	/**
-	 * °ÑÍøÂçÍ¼Æ¬×ªÏÂÔØµ½ÎÄ¼şµÄ outputStream
+	 * æŠŠç½‘ç»œå›¾ç‰‡è½¬ä¸‹è½½åˆ°æ–‡ä»¶çš„ outputStream
 	 * @param urlString
 	 * @param outputStream
 	 * @return

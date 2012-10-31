@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2013, Michael Yang ��� (www.yangfuhai.com).
+ * Copyright (c) 2012-2013, Michael Yang 杨福海 (www.yangfuhai.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +19,11 @@ import java.io.OutputStream;
 
 public interface Downloader  {
 	
+	/**
+	 * 请求网络的inputStream填充outputStream
+	 * @param urlString
+	 * @param outputStream
+	 * @return
+	 */
 	public boolean downloadToLocalStreamByUrl(String urlString, OutputStream outputStream);
 }
