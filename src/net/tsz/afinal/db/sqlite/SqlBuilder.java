@@ -15,6 +15,7 @@
  */
 package net.tsz.afinal.db.sqlite;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,8 +76,10 @@ public class SqlBuilder {
 			strSQL.append(") VALUES ( ");
 			for(KeyValue kv : keyValueList){
 				Object value = kv.getValue();
-				if(value instanceof String){
+				if(value instanceof String ){
 					strSQL.append("'").append(value).append("'").append(",");
+				}else if(value instanceof java.util.Date || value instanceof java.sql.Date){
+					strSQL.append("'").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(value)).append("'").append(",");
 				}else{
 					strSQL.append(value).append(",");
 				}
@@ -303,7 +306,8 @@ public class SqlBuilder {
 		
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
-			strSQL.append("\"").append(property.getColumn()).append("\",");
+			strSQL.append("\"").append(property.getColumn());
+			strSQL.append("\",");
 		}
 		
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
@@ -330,7 +334,7 @@ public class SqlBuilder {
 	 */
 	private static String getPropertyStrSql(String key,Object value){
 		StringBuffer sbSQL = new StringBuffer(key).append("=");
-		if(value instanceof String){
+		if(value instanceof String || value instanceof java.util.Date || value instanceof java.sql.Date){
 			sbSQL.append("'").append(value).append("'");
 		}else{
 			sbSQL.append(value);

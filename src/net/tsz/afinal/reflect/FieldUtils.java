@@ -275,20 +275,21 @@ public class FieldUtils {
 	
 	public static boolean isBaseDateType(Field field){
 		Class<?> clazz = field.getType();
-		return clazz == int.class || clazz == Integer.class|| clazz == boolean.class || clazz == Boolean.class
-				|| clazz == float.class || clazz == Float.class || clazz ==long.class || clazz == Long.class
-				|| clazz == String.class || clazz == Date.class;
+		return   clazz.equals(String.class) ||  
+		         clazz.equals(Integer.class)||  
+		         clazz.equals(Byte.class) ||  
+		         clazz.equals(Long.class) ||  
+		         clazz.equals(Double.class) ||  
+		         clazz.equals(Float.class) ||  
+		         clazz.equals(Character.class) ||  
+		         clazz.equals(Short.class) ||  
+		         clazz.equals(Boolean.class) ||  
+		         clazz.equals(Date.class) ||  
+		         clazz.equals(java.util.Date.class) ||
+		         clazz.equals(java.sql.Date.class) ||
+		         clazz.isPrimitive();
 	}
 	
-	
-//	private static final String DATE_FORMAT_STR = "yyyy-MM-dd HH:mm:ss";
-//
-//	
-//	private static String dateTimeToString(Date date) {
-//		return date != null ? new SimpleDateFormat(DATE_FORMAT_STR)
-//				.format(date) : null;
-//	}
-
 	private static Date stringToDateTime(String strDate) {
 		if (strDate != null) {
 			try {

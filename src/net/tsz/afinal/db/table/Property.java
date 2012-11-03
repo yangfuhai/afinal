@@ -48,9 +48,11 @@ public class Property {
 					set.invoke(receiver, value == null ? (Integer) null : Integer.parseInt(value.toString()));
 				} else if (dataType == float.class || dataType == Float.class) {
 					set.invoke(receiver, value == null ? (Float) null: Float.parseFloat(value.toString()));
+				} else if (dataType == double.class || dataType == Double.class) {
+					set.invoke(receiver, value == null ? (Double) null: Double.parseDouble(value.toString()));
 				} else if (dataType == long.class || dataType == Long.class) {
 					set.invoke(receiver, value == null ? (Long) null: Long.parseLong(value.toString()));
-				} else if (dataType == Date.class) {
+				} else if (dataType == java.util.Date.class || dataType == java.sql.Date.class) {
 					set.invoke(receiver, value == null ? (Date) null: stringToDateTime(value.toString()));
 				} else {
 					set.invoke(receiver, value);

@@ -158,21 +158,23 @@ public class ClassUtils {
 			String primaryKeyFieldName = getPrimaryKeyFieldName(clazz);
 			for (Field f : fs) {
 				//必须是基本数据类型和没有标瞬时态的字段
-				if (!FieldUtils.isTransient(f) && FieldUtils.isBaseDateType(f)) {
+				if(!FieldUtils.isTransient(f)){
+					if (FieldUtils.isBaseDateType(f)) {
+						
+						if(f.getName().equals(primaryKeyFieldName)) //过滤主键
+							continue;
+						
+						Property property = new Property();
 					
-					if(f.getName().equals(primaryKeyFieldName)) //过滤主键
-						continue;
-					
-					Property property = new Property();
-				
-					property.setColumn(FieldUtils.getColumnByField(f));
-					property.setFieldName(f.getName());
-					property.setDataType(f.getType());
-					property.setDefaultValue(FieldUtils.getPropertyDefaultValue(f));
-					property.setSet(FieldUtils.getFieldSetMethod(clazz, f));
-					property.setGet(FieldUtils.getFieldGetMethod(clazz, f));
-					
-					plist.add(property);
+						property.setColumn(FieldUtils.getColumnByField(f));
+						property.setFieldName(f.getName());
+						property.setDataType(f.getType());
+						property.setDefaultValue(FieldUtils.getPropertyDefaultValue(f));
+						property.setSet(FieldUtils.getFieldSetMethod(clazz, f));
+						property.setGet(FieldUtils.getFieldGetMethod(clazz, f));
+						
+						plist.add(property);
+					}
 				}
 			}
 			return plist;
