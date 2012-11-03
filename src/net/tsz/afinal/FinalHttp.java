@@ -16,11 +16,13 @@
 package net.tsz.afinal;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -32,7 +34,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
@@ -53,9 +54,8 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 
 public class FinalHttp {
 	
@@ -112,6 +112,16 @@ public class FinalHttp {
 			return ajaxResponse;
 		}
 	};
+	
+	
+	private static ExecutorService ajaxExecutor = Executors.newFixedThreadPool(5,new ThreadFactory() {
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(r);
+			// 设置线程的优先级别，让线程先后顺序执行（级别越高，抢到cpu执行的时间越多）
+			t.setPriority(Thread.NORM_PRIORITY - 1);
+			return t;
+		}
+	});
 	
 
 	public static String get(String url) {
@@ -192,7 +202,7 @@ public class FinalHttp {
 	
 	public static void ajax(String url, AjaxCallBack callBack) {
 		AjaxRequest request = new AjaxRequest(url);
-		new AjaxTask(callBack).execute(request);
+		ajaxExecutor.submit(new AjaxTask(callBack, request));
 	}
 	
 	private static AjaxStatus ajax(AjaxRequest request) {
@@ -260,40 +270,6 @@ public class FinalHttp {
 	}
 	
 	
-	public static Bitmap downloadBitmap(String url) {
-		DefaultHttpClient client = getDefaultHttpClient(null);
-	    final HttpGet getRequest = new HttpGet(url);
-
-	    try {
-	        HttpResponse response = client.execute(getRequest);
-	        final int statusCode = response.getStatusLine().getStatusCode();
-	        if (statusCode != HttpStatus.SC_OK) { 
-	            return null;
-	        }
-	        
-	        final HttpEntity entity = response.getEntity();
-	        if (entity != null) {
-	            InputStream inputStream = null;
-	            try {
-	                inputStream = entity.getContent(); 
-	                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-	                return bitmap;
-	            } finally {
-	                if (inputStream != null) {
-	                    inputStream.close();  
-	                }
-	                entity.consumeContent();
-	            }
-	        }
-	    } catch (Exception e) {
-	        getRequest.abort();
-	    } finally {
-	        if (client != null) {
-	        	client.getConnectionManager().shutdown();
-	        }
-	    }
-	    return null;
-	}
 	
 	private static DefaultHttpClient getDefaultHttpClient(final String charset) {
 		
@@ -333,29 +309,26 @@ public class FinalHttp {
 	}
 	
 	
-	static class AjaxTask extends AsyncTask<AjaxRequest, Void, AjaxStatus> {
-
-		private AjaxCallBack mCallBack;
-
-		public AjaxTask(AjaxCallBack callBack) {
-			this.mCallBack = callBack;
-		}
-
-		protected AjaxStatus doInBackground(AjaxRequest... params) {
-			AjaxRequest request = params[0];
-			if(request!=null){
-				return FinalHttp.ajax(request);
+	
+	static class AjaxTask implements Runnable{
+		final private AjaxCallBack mCallBack;
+		final private AjaxRequest request;
+		
+		final private Handler mHandler= new Handler(){
+			public void handleMessage(Message msg) {
+				mCallBack.callBack((AjaxStatus)msg.obj);
 			}
-			return null;
+		};
+		
+		public AjaxTask(AjaxCallBack callBack, AjaxRequest request) {
+			this.mCallBack = callBack;
+			this.request = request;
 		}
 
-		protected void onCancelled() {
-			super.onCancelled();
+		public void run() {
+			Message msg = new Message();
+			msg.obj = ajax(request);
+			mHandler.sendMessage(msg);
 		}
-
-		protected void onPostExecute(AjaxStatus status) {
-			mCallBack.callBack(status);
-		}
-
 	}
 }

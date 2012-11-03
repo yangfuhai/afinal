@@ -57,7 +57,10 @@ public class FinalDb {
 		return dao;
 	}
 	
-	
+	/**
+	 * 创建FinalDb
+	 * @param context
+	 */
 	public static FinalDb create(Context context){
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
@@ -66,6 +69,11 @@ public class FinalDb {
 		
 	}
 	
+	/**
+	 * 创建FinalDb
+	 * @param context
+	 * @param isDebug 是否是debug模式（debug模式进行数据库操作的时候将会打印sql语句）
+	 */
 	public static FinalDb create(Context context,boolean isDebug){
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
@@ -74,6 +82,11 @@ public class FinalDb {
 		
 	}
 	
+	/**
+	 * 创建FinalDb
+	 * @param context
+	 * @param dbName 数据库名称
+	 */
 	public static FinalDb create(Context context,String dbName){
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
@@ -82,6 +95,12 @@ public class FinalDb {
 		return getInstance(config);
 	}
 	
+	/**
+	 * 创建 FinalDb
+	 * @param context
+	 * @param dbName 数据库名称
+	 * @param isDebug 是否为debug模式（debug模式进行数据库操作的时候将会打印sql语句）
+	 */
 	public static FinalDb create(Context context,String dbName,boolean isDebug){
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
@@ -91,11 +110,15 @@ public class FinalDb {
 	}
 	
 	
-	public static FinalDb createSqliteDao(DaoConfig daoConfig){
+	public static FinalDb create(DaoConfig daoConfig){
 		return getInstance(daoConfig);
 	}
 	
 
+	/**
+	 * 保存数据库
+	 * @param entity
+	 */
 	public void save(Object entity){
 		checkTableExist(entity.getClass());
 		String saveSQL = SqlBuilder.getInsertSQL(entity);
@@ -103,7 +126,10 @@ public class FinalDb {
 		db.execSQL(saveSQL);
 	}
 	
-	
+	/**
+	 * 更新数据 （主键ID必须不能为空）
+	 * @param entity
+	 */
 	public void update(Object entity){
 		checkTableExist(entity.getClass());
 		String saveSQL = SqlBuilder.getUpdateSQL(entity);
@@ -111,21 +137,34 @@ public class FinalDb {
 		db.execSQL(saveSQL);
 	}
 	
-	
-	public void update(Object entity,String ...strWhere){
+	/**
+	 * 根据条件更新数据
+	 * @param entity
+	 * @param strWhere 条件为空的时候，将会更新所有的数据
+	 */
+	public void update(Object entity,String strWhere){
 		checkTableExist(entity.getClass());
 		String saveSQL = SqlBuilder.getUpdateSQL(entity, strWhere);
 		debugSql(saveSQL);
 		db.execSQL(saveSQL);
 	}
 	
-	public void deleteById(Object entity) {
+	/**
+	 * 删除数据
+	 * @param entity  entity的主键不能为空
+	 */
+	public void delete(Object entity) {
 		checkTableExist(entity.getClass());
 		String sql = SqlBuilder.getDeleteSQL(entity);
 		debugSql(sql);
 		db.execSQL(sql);
 	}
 	
+	/**
+	 * 根据主键删除数据
+	 * @param clazz 要删除的实体类
+	 * @param id 主键值
+	 */
 	public void deleteById(Class<?> clazz , Object id) {
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getDeleteSQL(clazz,id);
@@ -133,13 +172,23 @@ public class FinalDb {
 		db.execSQL(sql);
 	}
 	
-	public void deleteByWhere(Class<?> clazz , String ...strWhere ) {
+	/**
+	 * 根据条件删除数据
+	 * @param clazz
+	 * @param strWhere 条件为空的时候 将会删除所有的数据
+	 */
+	public void deleteByWhere(Class<?> clazz , String strWhere ) {
 		checkTableExist(clazz);
-		String sql = SqlBuilder.getDeleteSQL(clazz, strWhere);
+		String sql = SqlBuilder.getDeleteSQLByWhere(clazz, strWhere);
 		debugSql(sql);
 		db.execSQL(sql);
 	}
 	
+	/**
+	 * 根据主键查找数据（默认不查询多对一或者一对多的关联数据）
+	 * @param id
+	 * @param clazz
+	 */
 	public <T> T findById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
@@ -157,8 +206,12 @@ public class FinalDb {
 		return null;
 	}
 	
-	
-	public <T> T findObjectWihtManyToOneById(Object id ,Class<T> clazz){
+	/**
+	 * 根据主键查找，同时查找“多对一”的数据（如果有多个“多对一”属性，则查找所有的“多对一”属性）
+	 * @param id
+	 * @param clazz
+	 */
+	public <T> T findWihtManyToOneById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -188,50 +241,55 @@ public class FinalDb {
 		return null;
 	}
 	
-	
-	public <T> T findObjectWihtManyToOneById(Object id ,Class<T> clazz,Class<?> ... findClass){
-		if(findClass!=null && findClass.length>0){
-			checkTableExist(clazz);
-			String sql = SqlBuilder.getSelectSQL(clazz, id);
-			debugSql(sql);
-			DbModel dbModel = findDbModelBySQL(sql);
-			if(dbModel!=null){
-				T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-				if(entity!=null){
-					try {
-						Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
-						for(ManyToOne many : manys){
-							boolean isFind = false;
-							for(Class<?> mClass : findClass){
-								if(many.getManyClass()==mClass){
-									isFind = true;
-									break;
-								}
-							}
-							
-							if(isFind){
-								@SuppressWarnings("unchecked")
-								T manyEntity = (T) findById(dbModel.get(many.getColumn()), many.getDataType());
-								if(manyEntity!=null){
-									many.setValue(entity, manyEntity);
-								}
+	/**
+	 * 根据条件查找，同时查找“多对一”的数据（只查找findClass中的类的数据）
+	 * @param id
+	 * @param clazz
+	 * @param findClass 要查找的类
+	 */
+	public <T> T findWihtManyToOneById(Object id ,Class<T> clazz,Class<?> ... findClass){
+		checkTableExist(clazz);
+		String sql = SqlBuilder.getSelectSQL(clazz, id);
+		debugSql(sql);
+		DbModel dbModel = findDbModelBySQL(sql);
+		if(dbModel!=null){
+			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
+			if(entity!=null){
+				try {
+					Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
+					for(ManyToOne many : manys){
+						boolean isFind = false;
+						for(Class<?> mClass : findClass){
+							if(many.getManyClass()==mClass){
+								isFind = true;
+								break;
 							}
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
+						
+						if(isFind){
+							@SuppressWarnings("unchecked")
+							T manyEntity = (T) findById(dbModel.get(many.getColumn()), many.getDataType());
+							if(manyEntity!=null){
+								many.setValue(entity, manyEntity);
+							}
+						}
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				return entity;
 			}
-			return null;
-		}else{
-			return findObjectWihtManyToOneById(id, clazz);
+			return entity;
 		}
+		return null;
 	}
 	
 	
-	
-	public <T> T findObjectWihtOneToManyById(Object id ,Class<T> clazz){
+	/**
+	 * 根据主键查找，同时查找“一对多”的数据（如果有多个“一对多”属性，则查找所有的一对多”属性）
+	 * @param id
+	 * @param clazz
+	 */
+	public <T> T findWihtOneToManyById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -242,7 +300,7 @@ public class FinalDb {
 				try {
 					Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
 					for(OneToMany one : ones){
-						List<?> list = findListByWhere(one.getOneClass(), one.getColumn()+"="+id);
+						List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
 						if(list!=null){
 							one.setValue(entity, list);
 						}
@@ -257,8 +315,13 @@ public class FinalDb {
 		return null;
 	}
 	
-	
-	public <T> T findObjectWihtOneToManyById(Object id ,Class<T> clazz,Class<?> ... findClass){
+	/**
+	 * 根据主键查找，同时查找“一对多”的数据（只查找findClass中的“一对多”）
+	 * @param id
+	 * @param clazz
+	 * @param findClass
+	 */
+	public <T> T findWihtOneToManyById(Object id ,Class<T> clazz,Class<?> ... findClass){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -278,7 +341,7 @@ public class FinalDb {
 						}
 						
 						if(isFind){
-							List<?> list = findListByWhere(one.getOneClass(), one.getColumn()+"="+id);
+							List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
 							if(list!=null){
 								one.setValue(entity, list);
 							}
@@ -294,18 +357,52 @@ public class FinalDb {
 		return null;
 	}
 	
-	
+	/**
+	 * 查找所有的数据
+	 * @param clazz
+	 */
 	public <T> List<T> findAll(Class<T> clazz){
 		checkTableExist(clazz);
-		return findList(clazz,SqlBuilder.getSelectSQL(clazz));
+		return findAllBySql(clazz,SqlBuilder.getSelectSQL(clazz));
 	}
 	
+	/**
+	 * 查找所有数据
+	 * @param clazz
+	 * @param orderBy 排序的字段
+	 */
 	public <T> List<T> findAll(Class<T> clazz,String orderBy){
 		checkTableExist(clazz);
-		return findList(clazz,SqlBuilder.getSelectSQL(clazz)+" ORDER BY '"+orderBy+"' DESC");
+		return findAllBySql(clazz,SqlBuilder.getSelectSQL(clazz)+" ORDER BY '"+orderBy+"' DESC");
 	}
 	
-	public <T> List<T> findList(Class<T> clazz,String strSQL){
+	/**
+	 * 根据条件查找所有数据
+	 * @param clazz
+	 * @param strWhere 条件为空的时候查找所有数据
+	 */
+	public <T> List<T> findAllByWhere(Class<T> clazz,String strWhere){
+		checkTableExist(clazz);
+		return findAllBySql(clazz,SqlBuilder.getSelectSQLByWhere(clazz,strWhere));
+	}
+	
+	/**
+	 * 根据条件查找所有数据
+	 * @param clazz
+	 * @param strWhere 条件为空的时候查找所有数据
+	 * @param orderBy 排序字段
+	 */
+	public <T> List<T> findAllByWhere(Class<T> clazz,String strWhere,String orderBy){
+		checkTableExist(clazz);
+		return findAllBySql(clazz,SqlBuilder.getSelectSQLByWhere(clazz,strWhere)+" ORDER BY '"+orderBy+"' DESC");
+	}
+	
+	/**
+	 * 根据条件查找所有数据
+	 * @param clazz
+	 * @param strSQL
+	 */
+	private <T> List<T> findAllBySql(Class<T> clazz,String strSQL){
 		checkTableExist(clazz);
 		debugSql(strSQL);
 		Cursor cursor = db.rawQuery(strSQL, null);
@@ -327,32 +424,11 @@ public class FinalDb {
 	}
 	
 	
-	
-	
-	public <T> List<T> findListByWhere(Class<T> clazz,String ... strWhere){
-		checkTableExist(clazz);
-		String strSQL = SqlBuilder.getSelectSQL(clazz,strWhere);
-		debugSql(strSQL);
-		Cursor cursor = db.rawQuery(strSQL, null);
-		try {
-			List<T> list = new ArrayList<T>();
-			while(cursor.moveToNext()){
-				T t = CursorUtils.getEntity(cursor, clazz);
-				if(t!=null ) list.add(t);
-				
-			}
-			return list;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			if(cursor!=null)
-				cursor.close();
-			cursor=null;
-		}
-		return null;
-	}
-	
-	
+
+	/**
+	 * 根据sql语句查找数据，这个一般用于数据统计
+	 * @param strSQL
+	 */
 	public DbModel findDbModelBySQL(String strSQL){
 		debugSql(strSQL);
 		Cursor cursor = db.rawQuery(strSQL,null);

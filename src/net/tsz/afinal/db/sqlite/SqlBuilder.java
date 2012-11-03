@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import android.text.TextUtils;
+
 import net.tsz.afinal.db.table.Id;
 import net.tsz.afinal.db.table.KeyValue;
 import net.tsz.afinal.db.table.ManyToOne;
@@ -100,9 +102,12 @@ public class SqlBuilder {
 	public static String getDeleteSQL(Object entity){
 		TableInfo table=TableInfo.get(entity.getClass());
 		
-		Id id=table.getId();
-		Object idvalue=id.getValue(entity);
+		Id id = table.getId();
+		Object idvalue = id.getValue(entity);
 		
+		if(idvalue == null ){
+			throw new DbException("getDeleteSQL:"+entity.getClass()+" id value is null");
+		}
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		strSQL.append(" WHERE ");
 		strSQL.append(getPropertyStrSql(id.getColumn(), idvalue));
@@ -129,31 +134,30 @@ public class SqlBuilder {
 		
 		return strSQL.toString();
 	}
-
-
+	
 	/**
-	 * 
-	 * @param entity
-	 * @param strWhere if strWhere is null,then delete all entity
+	 * 根据条件删除数据 ，条件为空的时候将会删除所有的数据
+	 * @param clazz
+	 * @param strWhere
 	 * @return
 	 */
-	public static  String getDeleteSQL(Class<?> clazz,String ... strWhere){
+	public static String getDeleteSQLByWhere(Class<?> clazz , String strWhere){
 		TableInfo table=TableInfo.get(clazz);
+		if(table == null){
+			throw new RuntimeException("");
+		}
 		
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		
-		if(strWhere != null && strWhere.length > 0){
+		if(!TextUtils.isEmpty(strWhere)){
 			strSQL.append(" WHERE ");
-			for(String whereSQL : strWhere){
-				strSQL.append(" (").append(whereSQL).append(") ").append("AND");
-			}
-			strSQL.delete(strSQL.length()-3, strSQL.length());
+			strSQL.append(strWhere);
 		}
 		
 		return strSQL.toString();
 	}
 
-	
+
 	////////////////////////////select sql start///////////////////////////////////////
 	
 
@@ -177,23 +181,17 @@ public class SqlBuilder {
 		return getSelectSqlByTableName(TableInfo.get(clazz).getTableName());
 	}
 	
-	
-	
-	public static  String getSelectSQL(Class<?> clazz,String ... strWhere){
+	public static String getSelectSQLByWhere(Class<?> clazz,String strWhere){
+		TableInfo table=TableInfo.get(clazz);
 		
-		StringBuffer strSQL = new StringBuffer(getSelectSqlByTableName(TableInfo.get(clazz).getTableName()));
+		StringBuffer strSQL = new StringBuffer(getSelectSqlByTableName(table.getTableName()));
 		
-		if(strWhere != null && strWhere.length > 0){
-			strSQL.append(" WHERE ");
-			for(String whereSQL : strWhere){
-				strSQL.append(" (").append(whereSQL).append(") ").append("AND");
-			}
-			strSQL.delete(strSQL.length()-3, strSQL.length());
+		if(!TextUtils.isEmpty(strWhere)){
+			strSQL.append(" WHERE ").append(strWhere);
 		}
 		
 		return strSQL.toString();
 	}
-	
 	
 	//////////////////////////////update sql start/////////////////////////////////////////////
 	
@@ -241,10 +239,8 @@ public class SqlBuilder {
 	 * @param strWhere if strWhere is empty,only return update by id sql
 	 * @return
 	 */
-	public static String getUpdateSQL(Object entity,String ... strWhere){
-		if(strWhere==null || strWhere.length == 0)
-			return getUpdateSQL(entity);
-		
+	public static String getUpdateSQL(Object entity,String  strWhere){
+	
 		TableInfo table=TableInfo.get(entity.getClass());
 		
 		List<KeyValue> keyValueList = new ArrayList<KeyValue>();
@@ -274,16 +270,10 @@ public class SqlBuilder {
 			strSQL.append(getPropertyStrSql(kv)).append(",");
 		}
 		strSQL.deleteCharAt(strSQL.length() - 1);
-		
-		if(strWhere!=null && strWhere.length>0){
-			strSQL.append(" WHERE ");
-			for(String whereSQL : strWhere){
-				strSQL.append(" (").append(whereSQL).append(") ").append("AND");
-			}
-			
-			strSQL.delete(strSQL.length()-3, strSQL.length());
+		if(!TextUtils.isEmpty(strWhere)){
+			strSQL.append(" WHERE ").append(strWhere);
 		}
-		
+			
 		return strSQL.toString();
 	}
 	
