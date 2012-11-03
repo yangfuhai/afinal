@@ -120,16 +120,15 @@ public class SqlBuilder {
 	
 	public static String getDeleteSQL(Class<?> clazz , Object idValue){
 		TableInfo table=TableInfo.get(clazz);
-		if(table == null){
-			throw new RuntimeException("");
-		}
-		
 		Id id=table.getId();
-		if(null == id ) return null ; //没有主键，不能删除
-		if(null == idValue) return null ; //没有主键，不能删除
+		
+		if(null == idValue) {
+			throw new DbException("getDeleteSQL:idValue is null");
+		}
 		
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		strSQL.append(" WHERE ");
+		
 		strSQL.append(getPropertyStrSql(id.getColumn(), idValue));
 		
 		return strSQL.toString();
@@ -143,10 +142,6 @@ public class SqlBuilder {
 	 */
 	public static String getDeleteSQLByWhere(Class<?> clazz , String strWhere){
 		TableInfo table=TableInfo.get(clazz);
-		if(table == null){
-			throw new RuntimeException("");
-		}
-		
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		
 		if(!TextUtils.isEmpty(strWhere)){
