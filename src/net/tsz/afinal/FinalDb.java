@@ -211,7 +211,7 @@ public class FinalDb {
 	 * @param id
 	 * @param clazz
 	 */
-	public <T> T findWihtManyToOneById(Object id ,Class<T> clazz){
+	public <T> T findWithManyToOneById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -247,7 +247,7 @@ public class FinalDb {
 	 * @param clazz
 	 * @param findClass 要查找的类
 	 */
-	public <T> T findWihtManyToOneById(Object id ,Class<T> clazz,Class<?> ... findClass){
+	public <T> T findWithManyToOneById(Object id ,Class<T> clazz,Class<?> ... findClass){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -289,7 +289,7 @@ public class FinalDb {
 	 * @param id
 	 * @param clazz
 	 */
-	public <T> T findWihtOneToManyById(Object id ,Class<T> clazz){
+	public <T> T findWithOneToManyById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -321,7 +321,7 @@ public class FinalDb {
 	 * @param clazz
 	 * @param findClass
 	 */
-	public <T> T findWihtOneToManyById(Object id ,Class<T> clazz,Class<?> ... findClass){
+	public <T> T findWithOneToManyById(Object id ,Class<T> clazz,Class<?> ... findClass){
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
