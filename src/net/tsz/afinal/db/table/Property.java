@@ -40,7 +40,7 @@ public class Property {
 	private Method set;
 	
 	public void setValue(Object receiver , Object value){
-		if(set!=null){
+		if(set!=null && value!=null){
 			try {
 				if (dataType == String.class) {
 					set.invoke(receiver, value.toString());
