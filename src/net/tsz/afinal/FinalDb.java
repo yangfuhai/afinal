@@ -43,7 +43,7 @@ public class FinalDb {
 			throw new RuntimeException("daoConfig is null");
 		if(config.getContext() == null)
 			throw new RuntimeException("android context is null");
-		this.db = new SqliteDbHelper(config.getContext(), config.getDbName(), config.getDbVersion()).getWritableDatabase();
+		this.db = new SqliteDbHelper(config.getContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
 		this.config = config;
 	}
 	
@@ -106,6 +106,17 @@ public class FinalDb {
 		config.setContext(context);
 		config.setDbName(dbName);
 		config.setDebug(isDebug);
+		return getInstance(config);
+	}
+	
+	
+	public static FinalDb create(Context context,String dbName,boolean isDebug,int dbVersion,DbUpdateListener dbUpdateListener){
+		DaoConfig config = new DaoConfig();
+		config.setContext(context);
+		config.setDbName(dbName);
+		config.setDebug(isDebug);
+		config.setDbVersion(dbVersion);
+		config.setDbUpdateListener(dbUpdateListener);
 		return getInstance(config);
 	}
 	
@@ -500,6 +511,7 @@ public class FinalDb {
 		private String dbName = "afinal.db";//数据库名字
 		private int dbVersion = 1;//数据库版本
 		private boolean debug = true;
+		private DbUpdateListener dbUpdateListener;
 		
 		public Context getContext() {
 			return context;
@@ -525,25 +537,48 @@ public class FinalDb {
 		public void setDebug(boolean debug) {
 			this.debug = debug;
 		}
-		
+		public DbUpdateListener getDbUpdateListener() {
+			return dbUpdateListener;
+		}
+		public void setDbUpdateListener(DbUpdateListener dbUpdateListener) {
+			this.dbUpdateListener = dbUpdateListener;
+		}
 		
 	}
 	
 	
 	class SqliteDbHelper extends SQLiteOpenHelper {
 		
-		public SqliteDbHelper(Context context, String name,int version) {
+		private DbUpdateListener mDbUpdateListener;
+		public SqliteDbHelper(Context context, String name,int version, DbUpdateListener dbUpdateListener) {
 			super(context, name, null, version);
+			this.mDbUpdateListener = dbUpdateListener;
 		}
 
 		public void onCreate(SQLiteDatabase db) {
 		}
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			
+			if(mDbUpdateListener!=null){
+				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
+			}else{ //清空所有的数据信息
+				Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type ='table'", null);
+				if(cursor!=null){
+					while(cursor.moveToNext()){
+						db.execSQL("DROP TABLE "+cursor.getString(0));
+					}
+				}
+				if(cursor!=null){
+					cursor.close();
+					cursor=null;
+				}
+			}
 		}
 
 	}
 	
+	public interface DbUpdateListener{
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
+	}
 
 }
