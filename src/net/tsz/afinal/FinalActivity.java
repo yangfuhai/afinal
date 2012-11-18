@@ -72,7 +72,7 @@ public class FinalActivity extends Activity {
 					if(!TextUtils.isEmpty(clickMethod))
 						setViewClickListener(field,clickMethod);
 					
-					String longClickMethod = viewInject.click();
+					String longClickMethod = viewInject.longClick();
 					if(!TextUtils.isEmpty(longClickMethod))
 						setViewLongClickListener(field,longClickMethod);
 					
@@ -80,7 +80,7 @@ public class FinalActivity extends Activity {
 					if(!TextUtils.isEmpty(itemClickMethod))
 						setItemClickListener(field,itemClickMethod);
 					
-					String itemLongClickMethod = viewInject.itemClick();
+					String itemLongClickMethod = viewInject.itemLongClick();
 					if(!TextUtils.isEmpty(itemLongClickMethod))
 						setItemLongClickListener(field,itemLongClickMethod);
 					
