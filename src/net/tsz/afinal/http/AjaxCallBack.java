@@ -18,7 +18,7 @@ package net.tsz.afinal.http;
  * 
  * @author michael
  *
- * @param <T> 目前泛型支持 String,File,JSONObject,Bitmap,byte[],XmlDom
+ * @param <T> 目前泛型支持 String,File, 以后扩展：JSONObject,Bitmap,byte[],XmlDom
  */
 public abstract class AjaxCallBack<T> {
 	
@@ -39,8 +39,10 @@ public abstract class AjaxCallBack<T> {
 	 * @param progress 是否启用进度显示
 	 * @param rate 进度更新频率
 	 */
-	public void progress(boolean progress , int rate) {
+	public AjaxCallBack<T> progress(boolean progress , int rate) {
 		this.progress = progress;
+		this.rate = rate;
+		return this;
 	}
 	
 	public void onStart(){};

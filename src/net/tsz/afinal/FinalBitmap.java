@@ -47,7 +47,7 @@ public class FinalBitmap {
 	
 
 	private FinalBitmapConfig mConfig;
-	private BitmapCache mImageCache;
+	private static BitmapCache mImageCache;
 
 	private boolean mExitTasksEarly = false;
 	private boolean mPauseWork = false;

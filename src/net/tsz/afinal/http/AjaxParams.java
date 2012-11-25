@@ -44,7 +44,7 @@ import org.apache.http.message.BasicNameValuePair;
  * params.put("profile_picture3", new ByteArrayInputStream(bytes)); // 提交字节流
  *
  * FinalHttp fh = new FinalHttp();
- * fh.post("http://www.yangfuhai.com", params, new AjaxCallBack(){
+ * fh.post("http://www.yangfuhai.com", params, new AjaxCallBack<String>(){
  * 		@Override
  *		public void onLoading(long count, long current) {
  *				textView.setText(current+"/"+count);
