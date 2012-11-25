@@ -1,0 +1,159 @@
+afinal 0.3 主要更新如下：
+
+1、更新FinalBitmap模块，解决线程并发没有回收线程的问题
+
+2、重写了FinalHttp模块
+
+具体 change log 如下：
+
+FinalBitmap添加三个方法
+public void onResume()
+public void onPause() 
+public void onDestroy()
+
+在activity生命周期方法中调用给方法释放内存和暂停图片加载线程
+
+FinalHttp添加方法如下（目前AjaxCallBack泛型只支持String和file。有时间将会扩展JSONObject,xmlDom,byte[],bitmap等）：
+
+
+    public HttpClient getHttpClient()
+    public HttpContext getHttpContext()
+    public void configCookieStore(CookieStore cookieStore) //配置cookie
+    public void configUserAgent(String userAgent)  
+    public void configTimeout(int timeout)//配置超时时间
+    public void configSSLSocketFactory(SSLSocketFactory sslSocketFactory) //配置https请求
+    public void configRequestExecutionRetryCount(int count)//配置网络异常自动重复连接请求次数
+    public void addHeader(String header, String value) //添加http请求头
+    
+    
+
+    //------------------get 请求-----------------------
+    public void get( String url, AjaxCallBack<? extends Object> callBack) 
+    public void get( String url, AjaxParams params, AjaxCallBack<? extends Object> callBack)   
+    public void get( String url, Header[] headers, AjaxParams params, AjaxCallBack<? extends Object> callBack)
+  
+    public Object getSync( String url) //同步get请求，请在子线程执行这个操作，否则非常有可能报ANR
+    public Object getSync( String url, AjaxParams params)   
+    public Object getSync( String url, Header[] headers, AjaxParams params) 
+
+
+    //------------------post 请求-----------------------
+    public void post(String url, AjaxCallBack<? extends Object> callBack) 
+    public void post(String url, AjaxParams params, AjaxCallBack<? extends Object> callBack) 
+    public void post( String url, HttpEntity entity, String contentType, AjaxCallBack<? extends Object> callBack) 
+    public void post( String url, Header[] headers, AjaxParams params, String contentType,AjaxCallBack<? extends Object> callBack) 
+    public void post( String url, Header[] headers, HttpEntity entity, String contentType,AjaxCallBack<? extends Object> callBack) 
+   
+    public Object postSync(String url)   //同步post请求，请在子线程执行这个操作，否则非常有可能报ANR
+    public Object postSync(String url, AjaxParams params)    
+    public Object postSync( String url, HttpEntity entity, String contentType)     
+    public Object postSync( String url, Header[] headers, AjaxParams params, String contentType)   
+    public Object postSync( String url, Header[] headers, HttpEntity entity, String contentType)
+    
+
+  //------------------put 请求-----------------------
+    public void put(String url, AjaxCallBack<? extends Object> callBack) 
+    public void put( String url, AjaxParams params, AjaxCallBack<? extends Object> callBack) 
+    public void put( String url, HttpEntity entity, String contentType, AjaxCallBack<? extends Object> callBack) 
+    public void put(String url,Header[] headers, HttpEntity entity, String contentType, AjaxCallBack<? extends Object> callBack) 
+	
+    public Object putSync(String url)  //同步put请求，请在子线程执行这个操作，否则非常有可能报ANR
+    public Object putSync( String url, AjaxParams params) 
+    public Object putSync(String url, HttpEntity entity, String contentType) 
+    public Object putSync(String url,Header[] headers, HttpEntity entity, String contentType) 
+
+    //------------------delete 请求-----------------------
+    public void delete( String url, AjaxCallBack<? extends Object> callBack)   
+    public void delete( String url, Header[] headers, AjaxCallBack<? extends Object> callBack)
+	
+    public Object deleteSync(String url) //同步delete请求，请在子线程执行这个操作，否则非常有可能报ANR
+    public Object deleteSync( String url, Header[] headers) 
+    
+    //---------------------下载---------------------------------------
+    public void download(String url,String target,AjaxCallBack<File> callback)
+    public void download( String url,AjaxParams params, String target, AjaxCallBack<? extends Object> callback) 
+	
+	
+	
+附送请求demo和下载demo
+普通get请求：
+			FinalHttp fh = new FinalHttp();
+			fh.get("http://www.yangfuhai.com", new AjaxCallBack<String>(){
+
+				@Override
+				public void onLoading(long count, long current) { //每1秒钟自动被回调一次
+					 textView.setText(current+"/"+count);
+				}
+
+				@Override
+				public void onSuccess(String t) {
+					textView.setText(t==null?"null":t);
+				}
+				
+				@Override
+				public void onStart() {
+					//开始http请求的时候回调
+				}
+
+				@Override
+				public void onFailure(Throwable t, String strMsg) {
+					//加载失败的时候回调
+				}
+			});
+			
+			
+			FinalHttp fh = new FinalHttp();
+			fh.get("http://www.yangfuhai.com", new AjaxCallBack<String>(){
+
+				@Override
+				public void onLoading(long count, long current) { //每5秒钟自动被回调一次，通过progress是否回调onLoading和回调频率
+					 textView.setText(current+"/"+count);
+				}
+
+				@Override
+				public void onSuccess(String t) {
+					textView.setText(t==null?"null":t);
+				}
+				
+			}.progress(true,5));
+			
+			
+			
+文件上传或者数据提交：
+  AjaxParams params = new AjaxParams();
+  params.put("username", "michael yang");
+  params.put("password", "123456");
+  params.put("email", "test@tsz.net");
+  params.put("profile_picture", new File("/mnt/sdcard/pic.jpg")); // 上传文件
+  params.put("profile_picture2", inputStream); // 上传数据流
+  params.put("profile_picture3", new ByteArrayInputStream(bytes)); // 提交字节流
+ 
+  FinalHttp fh = new FinalHttp();
+  fh.post("http://www.yangfuhai.com", params, new AjaxCallBack<String>(){
+  		@Override
+ 		public void onLoading(long count, long current) {
+ 				textView.setText(current+"/"+count);
+ 		}
+ 
+ 		@Override
+ 		public void onSuccess(String t) {
+ 			textView.setText(t==null?"null":t);
+ 		}
+  });
+  
+  
+文件下载：
+    FinalHttp fh = new FinalHttp();
+	fh.download("http://www.xxx.com/下载路径/xxx.apk", "/mnt/sdcard/testapk.apk", new AjaxCallBack<File>() {
+				@Override
+				public void onLoading(long count, long current) {
+					 textView.setText(current+"/"+count);
+				}
+
+				@Override
+				public void onSuccess(File t) {
+					textView.setText(t==null?"null":t.getAbsoluteFile().toString());
+				}
+				
+			});
+
