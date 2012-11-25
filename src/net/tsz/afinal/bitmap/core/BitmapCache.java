@@ -29,6 +29,7 @@ import java.io.OutputStream;
 
 
 public class BitmapCache {
+	
     private static final String TAG = "ImageCache";
 
     //默认的内存缓存大小

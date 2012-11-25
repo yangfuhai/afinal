@@ -53,7 +53,6 @@ public class SimpleDisplayer implements Displayer{
                         new ColorDrawable(android.R.color.transparent),
                         new BitmapDrawable(imageView.getResources(), bitmap)
                 });
-		imageView.setBackgroundDrawable(imageView.getDrawable());
         imageView.setImageDrawable(td);
         td.startTransition(300);
 	}
