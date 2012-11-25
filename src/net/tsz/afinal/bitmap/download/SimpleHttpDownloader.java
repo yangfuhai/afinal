@@ -56,7 +56,7 @@ public class SimpleHttpDownloader implements Downloader{
 	            }
 	            return true;
 	        } catch (final IOException e) {
-	            Log.e(TAG, "Error in downloadBitmap - " + e);
+	            Log.e(TAG, "Error in downloadBitmap - "+urlString +" : " + e);
 	        } finally {
 	            if (urlConnection != null) {
 	                urlConnection.disconnect();
