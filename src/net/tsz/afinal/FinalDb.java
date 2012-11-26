@@ -23,6 +23,7 @@ import java.util.List;
 import net.tsz.afinal.db.sqlite.CursorUtils;
 import net.tsz.afinal.db.sqlite.DbModel;
 import net.tsz.afinal.db.sqlite.SqlBuilder;
+import net.tsz.afinal.db.sqlite.SqlInfo;
 import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.TableInfo;
@@ -30,8 +31,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class FinalDb {
+	
+	private static final String TAG = "FinalDb";
 	
 	private static HashMap<String, FinalDb> daoMap = new HashMap<String, FinalDb>();
 	
@@ -132,9 +136,7 @@ public class FinalDb {
 	 */
 	public void save(Object entity){
 		checkTableExist(entity.getClass());
-		String saveSQL = SqlBuilder.getInsertSQL(entity);
-		debugSql(saveSQL);
-		db.execSQL(saveSQL);
+		exeSqlInfo(SqlBuilder.getInsertSqlAsSqlInfo(entity));
 	}
 	
 	/**
@@ -143,9 +145,7 @@ public class FinalDb {
 	 */
 	public void update(Object entity){
 		checkTableExist(entity.getClass());
-		String saveSQL = SqlBuilder.getUpdateSQL(entity);
-		debugSql(saveSQL);
-		db.execSQL(saveSQL);
+		exeSqlInfo(SqlBuilder.getUpdateSqlAsSqlInfo(entity));
 	}
 	
 	/**
@@ -155,9 +155,7 @@ public class FinalDb {
 	 */
 	public void update(Object entity,String strWhere){
 		checkTableExist(entity.getClass());
-		String saveSQL = SqlBuilder.getUpdateSQL(entity, strWhere);
-		debugSql(saveSQL);
-		db.execSQL(saveSQL);
+		exeSqlInfo(SqlBuilder.getUpdateSqlAsSqlInfo(entity, strWhere));
 	}
 	
 	/**
@@ -166,9 +164,7 @@ public class FinalDb {
 	 */
 	public void delete(Object entity) {
 		checkTableExist(entity.getClass());
-		String sql = SqlBuilder.getDeleteSQL(entity);
-		debugSql(sql);
-		db.execSQL(sql);
+		exeSqlInfo(SqlBuilder.getDeleteSqlAsSqlInfo(entity));
 	}
 	
 	/**
@@ -178,9 +174,7 @@ public class FinalDb {
 	 */
 	public void deleteById(Class<?> clazz , Object id) {
 		checkTableExist(clazz);
-		String sql = SqlBuilder.getDeleteSQL(clazz,id);
-		debugSql(sql);
-		db.execSQL(sql);
+		exeSqlInfo(SqlBuilder.getDeleteSqlAsSqlInfo(clazz, id));
 	}
 	
 	/**
@@ -195,6 +189,16 @@ public class FinalDb {
 		db.execSQL(sql);
 	}
 	
+	
+	private void exeSqlInfo(SqlInfo sqlInfo){
+		if(sqlInfo!=null){
+			debugSql(sqlInfo.getSql());
+			db.execSQL(sqlInfo.getSql(),sqlInfo.getBindArgsAsArray());
+		}else{
+			Log.e(TAG, "sava error:sqlInfo is null");
+		}
+	}
+	
 	/**
 	 * 根据主键查找数据（默认不查询多对一或者一对多的关联数据）
 	 * @param id
@@ -202,17 +206,19 @@ public class FinalDb {
 	 */
 	public <T> T findById(Object id ,Class<T> clazz){
 		checkTableExist(clazz);
-		String sql = SqlBuilder.getSelectSQL(clazz, id);
-		debugSql(sql);
-		Cursor cursor = db.rawQuery(sql, null);
-		try {
-			if(cursor.moveToNext()){
-				return CursorUtils.getEntity(cursor, clazz);
+		SqlInfo sqlInfo = SqlBuilder.getSelectSqlAsSqlInfo(clazz, id);
+		if(sqlInfo!=null){
+			debugSql(sqlInfo.getSql());
+			Cursor cursor = db.rawQuery(sqlInfo.getSql(), sqlInfo.getBindArgsAsStringArray());
+			try {
+				if(cursor.moveToNext()){
+					return CursorUtils.getEntity(cursor, clazz);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				cursor.close();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			cursor.close();
 		}
 		return null;
 	}
