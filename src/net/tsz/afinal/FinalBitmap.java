@@ -209,7 +209,10 @@ public class FinalBitmap {
 		return this;
 	}
 	
-	
+	/**
+	 * 这个方法必须被调用后 FinalBitmap 配置才能有效
+	 * @return
+	 */
 	public FinalBitmap init(){
 		
 		mConfig.init();

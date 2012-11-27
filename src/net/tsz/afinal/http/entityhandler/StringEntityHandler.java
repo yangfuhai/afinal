@@ -24,7 +24,7 @@ import org.apache.http.HttpEntity;
 
 public class StringEntityHandler {
 
-	public Object handleEntity(HttpEntity entity, EntityCallBack callback)throws IOException {
+	public Object handleEntity(HttpEntity entity, EntityCallBack callback,String charset)throws IOException {
 		if (entity == null)
 			return null;
 		
@@ -45,7 +45,7 @@ public class StringEntityHandler {
 		byte[] data = outStream.toByteArray();
 		outStream.close();
 		is.close();
-		return new String(data,"utf-8");
+		return new String(data,charset);
 	}
 
 }

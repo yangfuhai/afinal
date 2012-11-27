@@ -44,7 +44,7 @@ public class FileEntityHandler {
 		long current = 0;
 		byte[] bt = new byte[1024];
 		int nRead = 0;
-		while ((nRead = input.read(bt, 0, 1024)) > 0) {
+		while ((nRead = input.read(bt, 0, 1024)) >0) {
 			raf.write(bt, 0, nRead);
 			current += nRead;
 			callback.callBack(count, current);

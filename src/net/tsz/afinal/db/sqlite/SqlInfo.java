@@ -1,6 +1,5 @@
 package net.tsz.afinal.db.sqlite;
 
-import android.annotation.SuppressLint;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 

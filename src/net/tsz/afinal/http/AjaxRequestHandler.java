@@ -49,11 +49,13 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 	
 	private int executionCount = 0;
 	private String targetUrl = null;
+	private String charset;
 
-	public AjaxRequestHandler(AbstractHttpClient client, HttpContext context, AjaxCallBack<?> callback) {
+	public AjaxRequestHandler(AbstractHttpClient client, HttpContext context, AjaxCallBack<?> callback,String charset) {
 		this.client = client;
 		this.context = context;
 		this.callback = callback;
+		this.charset = charset;
 	}
 
 
@@ -150,7 +152,7 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 					if(targetUrl!=null)
 						responseBody = mFileEntityHandler.handleEntity(temp,new EntityCallBackImpl(),targetUrl);
 					else
-						responseBody = mStrEntityHandler.handleEntity(temp,new EntityCallBackImpl());
+						responseBody = mStrEntityHandler.handleEntity(temp,new EntityCallBackImpl(),charset);
 				}
 				publishProgress(Update_success,responseBody);
 				

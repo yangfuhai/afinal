@@ -35,7 +35,7 @@ public class SqlBuilder {
 	 * @param tableInfo
 	 * @return
 	 */
-	public static SqlInfo getInsertSqlAsSqlInfo(Object entity){
+	public static SqlInfo buildInsertSql(Object entity){
 		
 		TableInfo table=TableInfo.get(entity.getClass());
 		
@@ -76,6 +76,7 @@ public class SqlBuilder {
 			strSQL.append(" (");
 			for(KeyValue kv : keyValueList){
 				strSQL.append(kv.getKey()).append(",");
+				sqlInfo.addValue(kv.getValue());
 			}
 			strSQL.deleteCharAt(strSQL.length() - 1);
 			strSQL.append(") VALUES ( ");
@@ -88,11 +89,6 @@ public class SqlBuilder {
 			strSQL.append(")");
 			
 			sqlInfo.setSql(strSQL.toString());
-			
-			for(KeyValue kv : keyValueList){
-				sqlInfo.addValue(kv.getValue());
-			}
-		
 		}
 		
 		return sqlInfo;
@@ -105,7 +101,7 @@ public class SqlBuilder {
 	}
 	
 	
-	public static SqlInfo getDeleteSqlAsSqlInfo(Object entity){
+	public static SqlInfo buildDeleteSql(Object entity){
 		TableInfo table=TableInfo.get(entity.getClass());
 		
 		Id id = table.getId();
@@ -126,7 +122,7 @@ public class SqlBuilder {
 	
 	
 	
-	public static SqlInfo getDeleteSqlAsSqlInfo(Class<?> clazz , Object idValue){
+	public static SqlInfo buildDeleteSql(Class<?> clazz , Object idValue){
 		TableInfo table=TableInfo.get(clazz);
 		Id id=table.getId();
 		
@@ -150,7 +146,7 @@ public class SqlBuilder {
 	 * @param strWhere
 	 * @return
 	 */
-	public static String getDeleteSQLByWhere(Class<?> clazz , String strWhere){
+	public static String buildDeleteSql(Class<?> clazz , String strWhere){
 		TableInfo table=TableInfo.get(clazz);
 		StringBuffer strSQL = new StringBuffer(getDeleteSqlBytableName(table.getTableName()));
 		
@@ -251,7 +247,7 @@ public class SqlBuilder {
 		strSQL.deleteCharAt(strSQL.length() - 1);
 		strSQL.append(" WHERE ").append(table.getId().getColumn()).append("=?");
 		sqlInfo.addValue(idvalue);
-
+		sqlInfo.setSql(strSQL.toString());
 		return sqlInfo;
 	}
 	
@@ -294,7 +290,7 @@ public class SqlBuilder {
 		if(!TextUtils.isEmpty(strWhere)){
 			strSQL.append(" WHERE ").append(strWhere);
 		}
-			
+		sqlInfo.setSql(strSQL.toString());	
 		return sqlInfo;
 	}
 	
