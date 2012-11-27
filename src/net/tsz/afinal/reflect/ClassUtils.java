@@ -172,6 +172,7 @@ public class ClassUtils {
 						property.setDefaultValue(FieldUtils.getPropertyDefaultValue(f));
 						property.setSet(FieldUtils.getFieldSetMethod(clazz, f));
 						property.setGet(FieldUtils.getFieldGetMethod(clazz, f));
+						property.setField(f);
 						
 						plist.add(property);
 					}

@@ -113,7 +113,15 @@ public class FinalDb {
 		return getInstance(config);
 	}
 	
-	
+	/**
+	 * 创建 FinalDb
+	 * @param context 上下文
+	 * @param dbName 数据库名字
+	 * @param isDebug 是否是调试模式：调试模式会log出sql信息
+	 * @param dbVersion 数据库版本信息
+	 * @param dbUpdateListener 数据库升级监听器：如果监听器为null，升级的时候将会清空所所有的数据
+	 * @return
+	 */
 	public static FinalDb create(Context context,String dbName,boolean isDebug,int dbVersion,DbUpdateListener dbUpdateListener){
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
@@ -124,7 +132,11 @@ public class FinalDb {
 		return getInstance(config);
 	}
 	
-	
+	/**
+	 * 创建FinalDb
+	 * @param daoConfig
+	 * @return
+	 */
 	public static FinalDb create(DaoConfig daoConfig){
 		return getInstance(daoConfig);
 	}
@@ -136,7 +148,7 @@ public class FinalDb {
 	 */
 	public void save(Object entity){
 		checkTableExist(entity.getClass());
-		exeSqlInfo(SqlBuilder.getInsertSqlAsSqlInfo(entity));
+		exeSqlInfo(SqlBuilder.buildInsertSql(entity));
 	}
 	
 	/**
@@ -164,7 +176,7 @@ public class FinalDb {
 	 */
 	public void delete(Object entity) {
 		checkTableExist(entity.getClass());
-		exeSqlInfo(SqlBuilder.getDeleteSqlAsSqlInfo(entity));
+		exeSqlInfo(SqlBuilder.buildDeleteSql(entity));
 	}
 	
 	/**
@@ -174,7 +186,7 @@ public class FinalDb {
 	 */
 	public void deleteById(Class<?> clazz , Object id) {
 		checkTableExist(clazz);
-		exeSqlInfo(SqlBuilder.getDeleteSqlAsSqlInfo(clazz, id));
+		exeSqlInfo(SqlBuilder.buildDeleteSql(clazz, id));
 	}
 	
 	/**
@@ -184,7 +196,7 @@ public class FinalDb {
 	 */
 	public void deleteByWhere(Class<?> clazz , String strWhere ) {
 		checkTableExist(clazz);
-		String sql = SqlBuilder.getDeleteSQLByWhere(clazz, strWhere);
+		String sql = SqlBuilder.buildDeleteSql(clazz, strWhere);
 		debugSql(sql);
 		db.execSQL(sql);
 	}

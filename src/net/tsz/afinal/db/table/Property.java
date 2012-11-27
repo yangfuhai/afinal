@@ -15,6 +15,7 @@
  */
 package net.tsz.afinal.db.table;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -24,17 +25,17 @@ import java.util.Date;
 /**
  * @title 属性
  * @description 【非主键】的【基本数据类型】 都是属性
- * @company 探索者网络工作室(www.tsz.net)
  * @author michael Young (www.YangFuhai.com)
  * @version 1.0
  * @created 2012-10-10
  */
 public class Property {
-
+	
 	private String fieldName;
 	private String column;
 	private String defaultValue;
 	private Class<?> dataType;
+	private Field field;
 	
 	private Method get;
 	private Method set;
@@ -57,6 +58,13 @@ public class Property {
 				} else {
 					set.invoke(receiver, value);
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			try {
+				field.setAccessible(true);
+				field.set(receiver, value);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -132,6 +140,14 @@ public class Property {
 	}
 	public void setSet(Method set) {
 		this.set = set;
+	}
+
+	public Field getField() {
+		return field;
+	}
+
+	public void setField(Field field) {
+		this.field = field;
 	}
 	
 	

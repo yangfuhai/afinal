@@ -34,10 +34,12 @@ public class SyncRequestHandler {
 	private final StringEntityHandler entityHandler = new StringEntityHandler();
 
 	private int executionCount = 0;
+	private String charset;
 
-	public SyncRequestHandler(AbstractHttpClient client, HttpContext context) {
+	public SyncRequestHandler(AbstractHttpClient client, HttpContext context,String charset) {
 		this.client = client;
 		this.context = context;
+		this.charset = charset;
 	}
 
 	private Object makeRequestWithRetries(HttpUriRequest request) throws ConnectException {
@@ -47,7 +49,7 @@ public class SyncRequestHandler {
 		while (retry) {
 			try {
 				HttpResponse response = client.execute(request, context);
-				return entityHandler.handleEntity(response.getEntity(),null);
+				return entityHandler.handleEntity(response.getEntity(),null,charset);
 			} catch (UnknownHostException e) {
 				cause = e;
 			} catch (IOException e) {

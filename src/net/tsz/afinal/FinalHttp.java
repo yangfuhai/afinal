@@ -74,6 +74,7 @@ public class FinalHttp {
 
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
+    private String charset = "utf-8";
     
     private final Map<String, String> clientHeaderMap;
     
@@ -139,6 +140,11 @@ public class FinalHttp {
 
     public HttpContext getHttpContext() {
         return this.httpContext;
+    }
+    
+    public void configCharset(String charSet){
+    	if(charSet!=null && charSet.trim().length()!=0)
+    		this.charset = charSet;
     }
 
     public void configCookieStore(CookieStore cookieStore) {
@@ -342,13 +348,13 @@ public class FinalHttp {
     //---------------------下载---------------------------------------
     public void download(String url,String target,AjaxCallBack<File> callback){
     	 final HttpGet get = new HttpGet(url);
-    	 new AjaxRequestHandler(httpClient, httpContext, callback)
+    	 new AjaxRequestHandler(httpClient, httpContext, callback,charset)
          .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
     }
     
     public void download( String url,AjaxParams params, String target, AjaxCallBack<? extends Object> callback) {
     	final HttpGet get =  new HttpGet(getUrlWithQueryString(url, params));
-   	 	new AjaxRequestHandler(httpClient, httpContext, callback)
+   	 	new AjaxRequestHandler(httpClient, httpContext, callback,charset)
         .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
     }
 
@@ -358,7 +364,7 @@ public class FinalHttp {
             uriRequest.addHeader("Content-Type", contentType);
         }
 
-        new AjaxRequestHandler(client, httpContext, ajaxCallBack)
+        new AjaxRequestHandler(client, httpContext, ajaxCallBack,charset)
         .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, uriRequest);
 
     }
@@ -367,7 +373,7 @@ public class FinalHttp {
         if(contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
-        return new SyncRequestHandler(client, httpContext).sendRequest(uriRequest);
+        return new SyncRequestHandler(client, httpContext,charset).sendRequest(uriRequest);
     }
 
     public static String getUrlWithQueryString(String url, AjaxParams params) {
