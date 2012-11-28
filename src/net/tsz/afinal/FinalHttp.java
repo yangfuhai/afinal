@@ -352,7 +352,7 @@ public class FinalHttp {
          .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
     }
     
-    public void download( String url,AjaxParams params, String target, AjaxCallBack<? extends Object> callback) {
+    public void download( String url,AjaxParams params, String target, AjaxCallBack<File> callback) {
     	final HttpGet get =  new HttpGet(getUrlWithQueryString(url, params));
    	 	new AjaxRequestHandler(httpClient, httpContext, callback,charset)
         .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
