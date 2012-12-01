@@ -122,16 +122,20 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 		int update = Integer.valueOf(String.valueOf(values[0]));
 		switch (update) {
 		case Update_start:
-			callback.onStart();
+			if(callback!=null)
+				callback.onStart();
 			break;
 		case Update_loading:
-			callback.onLoading(Long.valueOf(String.valueOf(values[1])),Long.valueOf(String.valueOf(values[2])));
+			if(callback!=null)
+				callback.onLoading(Long.valueOf(String.valueOf(values[1])),Long.valueOf(String.valueOf(values[2])));
 			break;
 		case Update_failure:
-			callback.onFailure((Throwable)values[1],(String)values[2]);
+			if(callback!=null)
+				callback.onFailure((Throwable)values[1],(String)values[2]);
 			break;
 		case Update_success:
-			callback.onSuccess(values[1]);
+			if(callback!=null)
+				callback.onSuccess(values[1]);
 			break;
 		default:
 			break;
@@ -170,7 +174,7 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 		}
 		@Override
 		public void callBack(long count, long current) {
-			if(callback.isProgress()){
+			if(callback!=null && callback.isProgress()){
 				long thisTime = SystemClock.uptimeMillis();
 				if(thisTime - time > callback.getRate()){
 					time = thisTime ;
