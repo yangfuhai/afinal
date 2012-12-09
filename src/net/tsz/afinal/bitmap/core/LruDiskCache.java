@@ -247,7 +247,8 @@ public final class LruDiskCache implements Closeable {
     public static void deleteContents(File dir) throws IOException {
         File[] files = dir.listFiles();
         if (files == null) {
-            throw new IllegalArgumentException("not a directory: " + dir);
+        	return;
+//            throw new IllegalArgumentException("not a directory: " + dir);
         }
         for (File file : files) {
             if (file.isDirectory()) {
@@ -305,7 +306,8 @@ public final class LruDiskCache implements Closeable {
         if (valueCount <= 0) {
             throw new IllegalArgumentException("valueCount <= 0");
         }
-
+        if(directory!=null && !directory.exists())
+        	directory.mkdirs();
         // prefer to pick up where we left off
         LruDiskCache cache = new LruDiskCache(directory, appVersion, valueCount, maxSize);
         if (cache.journalFile.exists()) {

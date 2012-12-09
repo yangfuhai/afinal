@@ -39,8 +39,50 @@ import net.tsz.afinal.annotation.sqlite.Transient;
 public class FieldUtils {
 	public static Method getFieldGetMethod(Class<?> clazz, Field f) {
 		String fn = f.getName();
-		return getFieldGetMethod(clazz, fn);
+		Method m = getFieldGetMethod(clazz, fn);
+		if(m == null && f.getType() == boolean.class){
+			m = getBooleanFieldGetMethod(clazz, fn);
+		}
+		return m;
 	}
+	
+	public static Method getBooleanFieldGetMethod(Class<?> clazz, String fieldName) {
+		String mn = "is" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+		if(isISStart(fieldName)){
+			mn = fieldName;
+		}
+		try {
+			return clazz.getDeclaredMethod(mn);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	public static Method getBooleanFieldSetMethod(Class<?> clazz, Field f) {
+		String fn = f.getName();
+		String mn = "set" + fn.substring(0, 1).toUpperCase() + fn.substring(1);
+		if(isISStart(f.getName())){
+			mn = "set" + fn.substring(2, 3).toUpperCase() + fn.substring(3);
+		}
+		try {
+			return clazz.getDeclaredMethod(mn, f.getType());
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	private static boolean isISStart(String fieldName){
+		if(fieldName==null || fieldName.trim().length()==0)
+			return false;
+		//is开头，并且is之后第一个字母是大写 比如 isAdmin
+		return fieldName.startsWith("is") && !Character.isLowerCase(fieldName.charAt(2));
+	}
+	
+	
 	
 	
 	public static Method getFieldGetMethod(Class<?> clazz, String fieldName) {
@@ -59,9 +101,11 @@ public class FieldUtils {
 		try {
 			return clazz.getDeclaredMethod(mn, f.getType());
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
+			if(f.getType() == boolean.class){
+				return getBooleanFieldSetMethod(clazz, f);
+			}
 		}
+		return null;
 	}
 	
 	public static Method getFieldSetMethod(Class<?> clazz, String fieldName) {

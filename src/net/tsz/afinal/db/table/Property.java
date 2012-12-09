@@ -55,6 +55,8 @@ public class Property {
 					set.invoke(receiver, value == null ? (Long) null: Long.parseLong(value.toString()));
 				} else if (dataType == java.util.Date.class || dataType == java.sql.Date.class) {
 					set.invoke(receiver, value == null ? (Date) null: stringToDateTime(value.toString()));
+				} else if (dataType == boolean.class || dataType == Boolean.class) {
+					set.invoke(receiver, value == null ? (Boolean) null: "1".equals(value.toString()));
 				} else {
 					set.invoke(receiver, value);
 				}
