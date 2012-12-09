@@ -25,7 +25,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -56,15 +55,168 @@ public class FinalBitmap {
 	
 	private static ExecutorService bitmapLoadAndDisplayExecutor;
 
+	private static FinalBitmap mFinalBitmap;
 	////////////////////////// config method start////////////////////////////////////
-	public FinalBitmap(Context context) {
+	private FinalBitmap(Context context) {
 		mContext = context;
 		mConfig = new FinalBitmapConfig(context);
 		
-		configDiskCachePath(BitmapCommonUtils.getDiskCacheDir(context, "afinalCache"));//配置缓存路径
+		configDiskCachePath(BitmapCommonUtils.getDiskCacheDir(context, "afinalCache").getAbsolutePath());//配置缓存路径
 		configDisplayer(new SimpleDisplayer());//配置显示器
 		configDownlader(new SimpleHttpDownloader());//配置下载器
 	}
+	
+	/**
+	 * 创建finalbitmap
+	 * @param ctx
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.init();
+		}
+		return mFinalBitmap;
+	}
+	
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.init();
+		}
+		return mFinalBitmap;
+			
+	}
+	
+	
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSizePercent 缓存大小在当前进程的百分比（0.05-0.8之间）
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,float memoryCacheSizePercent){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configMemoryCachePercent(memoryCacheSizePercent);
+			mFinalBitmap.init();
+		}
+		
+		return mFinalBitmap;
+	}
+
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSize 内存缓存大小
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,int memoryCacheSize){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configMemoryCacheSize(memoryCacheSize);
+			mFinalBitmap.init();
+		}
+			
+		return mFinalBitmap;
+	}
+	
+	
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSizePercent 缓存大小在当前进程的百分比（0.05-0.8之间）
+	 * @param threadSize 线程并发数量
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,float memoryCacheSizePercent,int threadSize){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configBitmapLoadThreadSize(threadSize);
+			mFinalBitmap.configMemoryCachePercent(memoryCacheSizePercent);
+			mFinalBitmap.init();
+		}
+		
+		return mFinalBitmap;
+	}
+
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSize 内存缓存大小
+	 * @param threadSize 线程并发数量
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,int memoryCacheSize,int threadSize){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configBitmapLoadThreadSize(threadSize);
+			mFinalBitmap.configMemoryCacheSize(memoryCacheSize);
+			mFinalBitmap.init();
+		}
+			
+		return mFinalBitmap;
+	}
+	
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSizePercent 缓存大小在当前进程的百分比（0.05-0.8之间）
+	 * @param diskCacheSize 磁盘缓存大小
+	 * @param threadSize 线程并发数量
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,float memoryCacheSizePercent,int diskCacheSize,int threadSize){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configBitmapLoadThreadSize(threadSize);
+			mFinalBitmap.configMemoryCachePercent(memoryCacheSizePercent);
+			mFinalBitmap.configDiskCacheSize(diskCacheSize);
+			mFinalBitmap.init();
+		}
+		
+		return mFinalBitmap;
+	}
+
+	/**
+	 * 创建finalBitmap
+	 * @param ctx
+	 * @param diskCachePath 磁盘缓存路径
+	 * @param memoryCacheSize 内存缓存大小
+	 * @param diskCacheSize 磁盘缓存大小
+	 * @param threadSize 线程并发数量
+	 * @return
+	 */
+	public static FinalBitmap create(Context ctx,String diskCachePath,int memoryCacheSize,int diskCacheSize,int threadSize){
+		if(mFinalBitmap == null){
+			mFinalBitmap = new FinalBitmap(ctx.getApplicationContext());
+			mFinalBitmap.configDiskCachePath(diskCachePath);
+			mFinalBitmap.configBitmapLoadThreadSize(threadSize);
+			mFinalBitmap.configMemoryCacheSize(memoryCacheSize);
+			mFinalBitmap.configDiskCacheSize(diskCacheSize);
+			mFinalBitmap.init();
+		}
+			
+		return mFinalBitmap;
+	}
+	
 	
 	/**
 	 * 设置图片正在加载的时候显示的图片
@@ -102,28 +254,6 @@ public class FinalBitmap {
 		return this;
 	}
 	
-	/**
-	 * 配置磁盘缓存路径
-	 * @param strPath
-	 * @return
-	 */
-	public FinalBitmap configDiskCachePath(String strPath){
-		if(!TextUtils.isEmpty(strPath)){
-			mConfig.cachePath = strPath;
-		}
-		return this;
-	}
-	
-	/**
-	 * 配置磁盘缓存路径
-	 * @param strPath
-	 * @return
-	 */
-	public FinalBitmap configDiskCachePath(File pathFile){
-		if(pathFile!=null)
-			configDiskCachePath(pathFile.getAbsolutePath());
-		return this;
-	}
 	
 	/**
 	 * 配置默认图片的小的高度
@@ -164,10 +294,22 @@ public class FinalBitmap {
 	}
 	
 	/**
+	 * 配置磁盘缓存路径
+	 * @param strPath
+	 * @return
+	 */
+	private FinalBitmap configDiskCachePath(String strPath){
+		if(!TextUtils.isEmpty(strPath)){
+			mConfig.cachePath = strPath;
+		}
+		return this;
+	}
+
+	/**
 	 * 配置内存缓存大小 大于2MB以上有效
 	 * @param size 缓存大小
 	 */
-	public FinalBitmap configMemoryCacheSize(int size){
+	private FinalBitmap configMemoryCacheSize(int size){
 		mConfig.memCacheSize = size;
 		return this;
 	}
@@ -176,7 +318,7 @@ public class FinalBitmap {
 	 * 设置应缓存的在APK总内存的百分比，优先级大于configMemoryCacheSize
 	 * @param percent 百分比，值的范围是在 0.05 到 0.8之间
 	 */
-	public FinalBitmap configMemoryCachePercent(float percent){
+	private FinalBitmap configMemoryCachePercent(float percent){
 		mConfig.memCacheSizePercent = percent;
 		return this;
 	}
@@ -185,25 +327,18 @@ public class FinalBitmap {
 	 * 设置磁盘缓存大小 5MB 以上有效
 	 * @param size
 	 */
-	public FinalBitmap configDiskCacheSize(int size){
+	private FinalBitmap configDiskCacheSize(int size){
 		mConfig.diskCacheSize = size;
 		return this;
 	} 
 	
-	/**
-	 * 配置原始图片缓存大小（非压缩缓存）
-	 * @param size
-	 */
-	public FinalBitmap configOriginalDiskCacheSize(int size){
-		mConfig.diskCacheSize = size;
-		return this;
-	}
+	
 	
 	/**
 	 * 设置加载图片的线程并发数量
 	 * @param size
 	 */
-	public FinalBitmap configBitmapLoadThreadSize(int size){
+	private FinalBitmap configBitmapLoadThreadSize(int size){
 		if(size >= 1)
 			mConfig.poolSize = size;
 		return this;
@@ -213,7 +348,7 @@ public class FinalBitmap {
 	 * 这个方法必须被调用后 FinalBitmap 配置才能有效
 	 * @return
 	 */
-	public FinalBitmap init(){
+	private FinalBitmap init(){
 		
 		mConfig.init();
 		
@@ -371,6 +506,13 @@ public class FinalBitmap {
 			mConfig.bitmapProcess.clearCacheInternal();
 		}
 	}
+	
+	
+	private void clearMemoryCache(){
+		if (mImageCache != null) {
+			mImageCache.clearMemoryCache();
+		}
+	}
 
 	private void flushCacheInternal() {
 		if (mImageCache != null) {
@@ -428,13 +570,19 @@ public class FinalBitmap {
     public void onDestroy() {
         closeCache();
     }
-    
 
 	/**
 	 * 清除缓存
 	 */
-	public void clearCache() {
+	public void clearAllCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR);
+	}
+	
+	/**
+	 * 清除缓存
+	 */
+	public void clearMemeoryCache() {
+		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_MEMORY);
 	}
 
 	/**
@@ -537,6 +685,7 @@ public class FinalBitmap {
 		public static final int MESSAGE_INIT_DISK_CACHE = 1;
 		public static final int MESSAGE_FLUSH = 2;
 		public static final int MESSAGE_CLOSE = 3;
+		public static final int MESSAGE_CLEAR_MEMORY = 4;
 		@Override
 		protected Void doInBackground(Object... params) {
 			switch ((Integer) params[0]) {
@@ -547,10 +696,15 @@ public class FinalBitmap {
 				initDiskCacheInternal();
 				break;
 			case MESSAGE_FLUSH:
+				clearMemoryCache();
 				flushCacheInternal();
 				break;
 			case MESSAGE_CLOSE:
+				clearMemoryCache();
 				closeCacheInternal();
+				break;
+			case MESSAGE_CLEAR_MEMORY:
+				clearMemoryCache();
 				break;
 			}
 			return null;
@@ -661,7 +815,7 @@ public class FinalBitmap {
 		 public int memCacheSize;//内存缓存百分比
 		 public int diskCacheSize;//磁盘百分比
 		 public int poolSize = 3;//默认的线程池线程并发数量
-		 public int originalDiskCache = 20 * 1024 * 1024;//20MB
+		 public int originalDiskCacheSize = 30 * 1024 * 1024;//50MB
 		 
 		
 		 public FinalBitmapConfig(Context context) {
@@ -672,7 +826,7 @@ public class FinalBitmap {
 				
 				//设置图片的显示最大尺寸（为屏幕的大小,默认为屏幕宽度的1/3）
 				DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-				int defaultWidth = (int)Math.floor(displayMetrics.widthPixels/3);
+				int defaultWidth = (int)Math.floor(displayMetrics.widthPixels/4);
 				defaultDisplayConfig.setBitmapHeight(defaultWidth);
 				defaultDisplayConfig.setBitmapWidth(defaultWidth);
 				
@@ -685,7 +839,7 @@ public class FinalBitmap {
 			if(displayer==null)
 				displayer = new SimpleDisplayer();
 			
-			bitmapProcess = new BitmapProcess(downloader,cachePath,originalDiskCache);
+			bitmapProcess = new BitmapProcess(downloader,cachePath,originalDiskCacheSize);
 		}
 
 	}

@@ -473,6 +473,22 @@ public class FinalDb {
 		return null;
 	}
 	
+	public List<DbModel> findDbModelListBySQL(String strSQL){
+		debugSql(strSQL);
+		Cursor cursor = db.rawQuery(strSQL,null);
+		List<DbModel> dbModelList = new ArrayList<DbModel>();
+		try {
+			while(cursor.moveToNext()){
+				dbModelList.add(CursorUtils.getDbModel(cursor));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			cursor.close();
+		}
+		return dbModelList;
+	}
+	
 	
 	
 	private void checkTableExist(Class<?> clazz){

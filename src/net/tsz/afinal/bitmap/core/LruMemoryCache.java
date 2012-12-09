@@ -18,6 +18,8 @@ package net.tsz.afinal.bitmap.core;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.graphics.Bitmap;
+
 
 public class LruMemoryCache<K, V> {
     private final LinkedHashMap<K, V> map;
@@ -198,7 +200,13 @@ public class LruMemoryCache<K, V> {
      *     this removal was caused by a {@link #put}. Otherwise it was caused by
      *     an eviction or a {@link #remove}.
      */
-    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {}
+    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {
+    	if(evicted && key instanceof Bitmap){
+			if(!((Bitmap)key).isRecycled()){
+				((Bitmap)key).recycle();
+			}
+    	}
+    }
 
     /**
      * Called after a cache miss to compute a value for the corresponding key.
