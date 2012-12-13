@@ -34,6 +34,7 @@ import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 
 public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
@@ -99,11 +100,10 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 			targetUrl = String.valueOf(params[1]);
 		
 		try {
-			publishProgress(Update_start); // 开始
 			
+			publishProgress(Update_start); // 开始
 			makeRequestWithRetries((HttpUriRequest)params[0]);
 			
-			publishProgress(Update_failure,null,null); // 结束
 		} catch (IOException e) {
 			publishProgress(Update_failure,e,null); // 结束
 		}
