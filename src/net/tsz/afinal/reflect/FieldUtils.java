@@ -39,9 +39,12 @@ import net.tsz.afinal.annotation.sqlite.Transient;
 public class FieldUtils {
 	public static Method getFieldGetMethod(Class<?> clazz, Field f) {
 		String fn = f.getName();
-		Method m = getFieldGetMethod(clazz, fn);
-		if(m == null && f.getType() == boolean.class){
+		Method m = null;
+		if(f.getType() == boolean.class){
 			m = getBooleanFieldGetMethod(clazz, fn);
+		}
+		if(m == null ){
+			m = getFieldGetMethod(clazz, fn);
 		}
 		return m;
 	}
