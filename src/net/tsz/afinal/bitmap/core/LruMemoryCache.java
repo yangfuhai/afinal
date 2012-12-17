@@ -200,13 +200,7 @@ public class LruMemoryCache<K, V> {
      *     this removal was caused by a {@link #put}. Otherwise it was caused by
      *     an eviction or a {@link #remove}.
      */
-    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {
-    	if(evicted && key instanceof Bitmap){
-			if(!((Bitmap)key).isRecycled()){
-				((Bitmap)key).recycle();
-			}
-    	}
-    }
+    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {}
 
     /**
      * Called after a cache miss to compute a value for the corresponding key.
