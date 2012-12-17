@@ -47,7 +47,7 @@ public class FinalDb {
 			throw new RuntimeException("daoConfig is null");
 		if(config.getContext() == null)
 			throw new RuntimeException("android context is null");
-		this.db = new SqliteDbHelper(config.getContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
+		this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
 		this.config = config;
 	}
 	
