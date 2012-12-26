@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
 
 import net.tsz.afinal.http.AjaxCallBack;
@@ -71,12 +75,24 @@ public class FinalHttp {
     private static int maxConnections = 10; //http请求最大并发连接数
     private static int socketTimeout = 10 * 1000; //超时时间，默认10秒
     private static int maxRetries = 5;//错误尝试次数，错误异常表请在RetryHandler添加
+    private static int httpThreadCount = 3;//http线程池数量
 
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
     private String charset = "utf-8";
     
     private final Map<String, String> clientHeaderMap;
+    
+    private static final ThreadFactory  sThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+        public Thread newThread(Runnable r) {
+        	Thread tread = new Thread(r, "FinalHttp #" + mCount.getAndIncrement());
+        	tread.setPriority(Thread.NORM_PRIORITY - 1);
+            return tread;
+        }
+    };
+    
+    private static final Executor executor =Executors.newFixedThreadPool(httpThreadCount, sThreadFactory);
     
     public FinalHttp() {
         BasicHttpParams httpParams = new BasicHttpParams();
@@ -349,13 +365,13 @@ public class FinalHttp {
     public void download(String url,String target,AjaxCallBack<File> callback){
     	 final HttpGet get = new HttpGet(url);
     	 new AjaxRequestHandler(httpClient, httpContext, callback,charset)
-         .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
+         .executeOnExecutor(executor,get,target);
     }
     
     public void download( String url,AjaxParams params, String target, AjaxCallBack<File> callback) {
     	final HttpGet get =  new HttpGet(getUrlWithQueryString(url, params));
    	 	new AjaxRequestHandler(httpClient, httpContext, callback,charset)
-        .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, get,target);
+        .executeOnExecutor(executor,get,target);
     }
 
 
@@ -365,7 +381,7 @@ public class FinalHttp {
         }
 
         new AjaxRequestHandler(client, httpContext, ajaxCallBack,charset)
-        .executeOnExecutor(AjaxRequestHandler.DUAL_THREAD_EXECUTOR, uriRequest);
+        .executeOnExecutor(executor, uriRequest);
 
     }
     

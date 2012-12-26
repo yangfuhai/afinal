@@ -1,11 +1,9 @@
-package net.tsz.afinal.common;
+package net.tsz.afinal.core;
 
-import android.annotation.TargetApi;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
-import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -20,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 拷贝 https://android.googlesource.com/platform/frameworks/base/+/jb-release/
  * core/java/android/os/AsyncTask.java
@@ -54,16 +53,15 @@ public abstract class AsyncTask<Params, Progress, Result> {
     public static final Executor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
             TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory,
             new ThreadPoolExecutor.DiscardOldestPolicy());
+    
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial
      * order.  This serialization is global to a particular process.
      */
-    public static final Executor SERIAL_EXECUTOR = Utils.hasHoneycomb() ? new SerialExecutor() :
-            Executors.newSingleThreadExecutor(sThreadFactory);
+    public static final Executor SERIAL_EXECUTOR = new SerialExecutor();
 
-    public static final Executor DUAL_THREAD_EXECUTOR =
-            Executors.newFixedThreadPool(3, sThreadFactory);
+    public static final Executor DUAL_THREAD_EXECUTOR =Executors.newFixedThreadPool(3, sThreadFactory);
 
     private static final int MESSAGE_POST_RESULT = 0x1;
     private static final int MESSAGE_POST_PROGRESS = 0x2;
@@ -79,7 +77,6 @@ public abstract class AsyncTask<Params, Progress, Result> {
     private final AtomicBoolean mCancelled = new AtomicBoolean();
     private final AtomicBoolean mTaskInvoked = new AtomicBoolean();
 
-    @TargetApi(11)
     private static class SerialExecutor implements Executor {
         final ArrayDeque<Runnable> mTasks = new ArrayDeque<Runnable>();
         Runnable mActive;
