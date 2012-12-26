@@ -115,15 +115,17 @@ public class ClassUtils {
 						break;
 					}
 				}
-				if(primaryKeyField == null){ // 如果没有_id的字段
-					for(Field field : fields){
-						if("id".equals(field.getName())){
-							primaryKeyField = field;
-							break;
-						}
+			}
+			
+			if(primaryKeyField == null){ // 如果没有_id的字段
+				for(Field field : fields){
+					if("id".equals(field.getName())){
+						primaryKeyField = field;
+						break;
 					}
 				}
 			}
+			
 		}else{
 			throw new RuntimeException("this model["+clazz+"] has no field");
 		}

@@ -52,6 +52,7 @@ public class SyncRequestHandler {
 				return entityHandler.handleEntity(response.getEntity(),null,charset);
 			} catch (UnknownHostException e) {
 				cause = e;
+				break;
 			} catch (IOException e) {
 				cause = e;
 				retry = retryHandler.retryRequest(cause, ++executionCount,context);

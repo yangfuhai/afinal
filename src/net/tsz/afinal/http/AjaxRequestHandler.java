@@ -37,7 +37,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 
-public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
+public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object> {
 
 	private final AbstractHttpClient client;
 	private final HttpContext context;
@@ -45,14 +45,13 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 	private final static StringEntityHandler mStrEntityHandler = new StringEntityHandler();
 	private final static FileEntityHandler mFileEntityHandler = new FileEntityHandler();
 	
-	@SuppressWarnings("rawtypes")
-	private final AjaxCallBack callback;
+	private final AjaxCallBack<T> callback;
 	
 	private int executionCount = 0;
 	private String targetUrl = null;
 	private String charset;
 
-	public AjaxRequestHandler(AbstractHttpClient client, HttpContext context, AjaxCallBack<?> callback,String charset) {
+	public AjaxRequestHandler(AbstractHttpClient client, HttpContext context, AjaxCallBack<T> callback,String charset) {
 		this.client = client;
 		this.context = context;
 		this.callback = callback;
@@ -75,7 +74,7 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 				}
 				return;
 			} catch (UnknownHostException e) {
-				publishProgress(Update_failure, e,"can't resolve host");
+				publishProgress(UPDATE_FAILURE, e,"can't resolve host");
 				return;
 			} catch (IOException e) {
 				cause = e;
@@ -101,41 +100,41 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 		
 		try {
 			
-			publishProgress(Update_start); // 开始
+			publishProgress(UPDATE_START); // 开始
 			makeRequestWithRetries((HttpUriRequest)params[0]);
 			
 		} catch (IOException e) {
-			publishProgress(Update_failure,e,null); // 结束
+			publishProgress(UPDATE_FAILURE,e,null); // 结束
 		}
 
 		return null;
 	}
 
-	private final static int Update_start = 1;
-	private final static int Update_loading = 2;
-	private final static int Update_failure = 3;
-	private final static int Update_success = 4;
+	private final static int UPDATE_START = 1;
+	private final static int UPDATE_LOADING = 2;
+	private final static int UPDATE_FAILURE = 3;
+	private final static int UPDATE_SUCCESS = 4;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onProgressUpdate(Object... values) {
 		int update = Integer.valueOf(String.valueOf(values[0]));
 		switch (update) {
-		case Update_start:
+		case UPDATE_START:
 			if(callback!=null)
 				callback.onStart();
 			break;
-		case Update_loading:
+		case UPDATE_LOADING:
 			if(callback!=null)
 				callback.onLoading(Long.valueOf(String.valueOf(values[1])),Long.valueOf(String.valueOf(values[2])));
 			break;
-		case Update_failure:
+		case UPDATE_FAILURE:
 			if(callback!=null)
 				callback.onFailure((Throwable)values[1],(String)values[2]);
 			break;
-		case Update_success:
+		case UPDATE_SUCCESS:
 			if(callback!=null)
-				callback.onSuccess(values[1]);
+				callback.onSuccess((T)values[1]);
 			break;
 		default:
 			break;
@@ -146,7 +145,7 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 	private void handleResponse(HttpResponse response) {
 		StatusLine status = response.getStatusLine();
 		if (status.getStatusCode() >= 300) {
-			publishProgress(Update_failure,new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),
+			publishProgress(UPDATE_FAILURE,new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),
 					"response status code:"+status.getStatusCode());
 		} else {
 			try {
@@ -158,10 +157,10 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 					else
 						responseBody = mStrEntityHandler.handleEntity(temp,new EntityCallBackImpl(),charset);
 				}
-				publishProgress(Update_success,responseBody);
+				publishProgress(UPDATE_SUCCESS,responseBody);
 				
 			} catch (IOException e) {
-				publishProgress(Update_failure,e,(String)null);
+				publishProgress(UPDATE_FAILURE,e,(String)null);
 			}
 			
 		}
@@ -178,7 +177,7 @@ public class  AjaxRequestHandler extends  AsyncTask<Object, Object, Object> {
 				long thisTime = SystemClock.uptimeMillis();
 				if(thisTime - time > callback.getRate()){
 					time = thisTime ;
-					publishProgress(Update_loading,count,current);
+					publishProgress(UPDATE_LOADING,count,current);
 				}
 			}
 		}
