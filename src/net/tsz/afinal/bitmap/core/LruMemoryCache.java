@@ -18,9 +18,6 @@ package net.tsz.afinal.bitmap.core;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import android.graphics.Bitmap;
-
-
 public class LruMemoryCache<K, V> {
     private final LinkedHashMap<K, V> map;
 
@@ -309,9 +306,9 @@ public class LruMemoryCache<K, V> {
         return new LinkedHashMap<K, V>(map);
     }
 
-    public synchronized final String toString() {
+	public synchronized final String toString() {
         int accesses = hitCount + missCount;
         int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
-        return String.format("LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]",maxSize, hitCount, missCount, hitPercent);
+        return String.format("LruMemoryCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]",maxSize, hitCount, missCount, hitPercent);
     }
 }

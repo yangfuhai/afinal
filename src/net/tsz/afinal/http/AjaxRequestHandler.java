@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
-import net.tsz.afinal.common.AsyncTask;
+import net.tsz.afinal.core.AsyncTask;
 import net.tsz.afinal.http.entityhandler.EntityCallBack;
 import net.tsz.afinal.http.entityhandler.FileEntityHandler;
 import net.tsz.afinal.http.entityhandler.StringEntityHandler;
@@ -34,7 +34,6 @@ import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
 import android.os.SystemClock;
-import android.util.Log;
 
 
 public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object> {

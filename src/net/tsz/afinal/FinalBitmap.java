@@ -40,7 +40,7 @@ import net.tsz.afinal.bitmap.display.Displayer;
 import net.tsz.afinal.bitmap.display.SimpleDisplayer;
 import net.tsz.afinal.bitmap.download.Downloader;
 import net.tsz.afinal.bitmap.download.SimpleHttpDownloader;
-import net.tsz.afinal.common.AsyncTask;
+import net.tsz.afinal.core.AsyncTask;
 
 public class FinalBitmap {
 	
