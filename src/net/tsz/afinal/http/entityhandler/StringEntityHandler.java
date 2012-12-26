@@ -33,13 +33,13 @@ public class StringEntityHandler {
 		
 		long count = entity.getContentLength();
 		long curCount = 0;
-		
 		int len = -1;
 		InputStream is = entity.getContent();
 		while ((len = is.read(buffer)) != -1) {
 			outStream.write(buffer, 0, len);
 			curCount += len;
-			callback.callBack(count, curCount);
+			if(callback!=null)
+				callback.callBack(count, curCount);
 		}
 		
 		byte[] data = outStream.toByteArray();

@@ -25,6 +25,12 @@ public abstract class AjaxCallBack<T> {
 	private boolean progress = true;
 	private int rate = 1000 * 1;//每秒
 	
+	private Class<T> type;
+	
+	public AjaxCallBack(Class<T> clazz) {
+		this.type = clazz;
+	}
+	
 	
 	public boolean isProgress() {
 		return progress;

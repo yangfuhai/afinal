@@ -242,7 +242,7 @@ public class FinalHttp {
         sendRequest(httpClient, httpContext, addEntityToRequestBase(new HttpPost(url), entity), contentType, callBack);
     }
 
-    public void post( String url, Header[] headers, AjaxParams params, String contentType,AjaxCallBack<? extends Object> callBack) {
+    public <T> void post( String url, Header[] headers, AjaxParams params, String contentType,AjaxCallBack<T> callBack) {
         HttpEntityEnclosingRequestBase request = new HttpPost(url);
         if(params != null) request.setEntity(paramsToEntity(params));
         if(headers != null) request.setHeaders(headers);
