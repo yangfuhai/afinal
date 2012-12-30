@@ -21,8 +21,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 
 public class BitmapCommonUtils {
+	
+	private static final String TAG = "BitmapCommonUtils";
 	
 	/**
 	 * 获取可以使用的缓存目录
@@ -65,8 +68,15 @@ public class BitmapCommonUtils {
      * @return
      */
     public static long getUsableSpace(File path) {
-        final StatFs stats = new StatFs(path.getPath());
-        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+    	try{
+    		 final StatFs stats = new StatFs(path.getPath());
+    	     return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+    	}catch (Exception e) {
+			Log.e(TAG, "获取 sdcard 缓存大小 出错，请查看AndroidManifest.xml 是否添加了sdcard的访问权限");
+			e.printStackTrace();
+			return -1;
+		}
+       
     }
 
 }

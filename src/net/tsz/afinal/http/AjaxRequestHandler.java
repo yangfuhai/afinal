@@ -58,7 +58,7 @@ public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object>
 	}
 
 
-	private void makeRequestWithRetries(HttpUriRequest request) throws ConnectException {
+	private void makeRequestWithRetries(HttpUriRequest request) throws IOException {
 		
 		boolean retry = true;
 		IOException cause = null;
@@ -73,7 +73,7 @@ public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object>
 				}
 				return;
 			} catch (UnknownHostException e) {
-				publishProgress(UPDATE_FAILURE, e,"can't resolve host");
+				publishProgress(UPDATE_FAILURE, e,"unknownHostException：can't resolve host");
 				return;
 			} catch (IOException e) {
 				cause = e;
@@ -83,13 +83,15 @@ public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object>
 				// http://code.google.com/p/android/issues/detail?id=5255
 				cause = new IOException("NPE in HttpClient" + e.getMessage());
 				retry = retryHandler.retryRequest(cause, ++executionCount,context);
+			}catch (Exception e) {
+				cause = new IOException("Exception" + e.getMessage());
+				retry = retryHandler.retryRequest(cause, ++executionCount,context);
 			}
 		}
-		
 		//没有能读取到网络数据
-		ConnectException ex = new ConnectException();
-		ex.initCause(cause);
-		throw ex;
+//		ConnectException ex = new ConnectException(cause.getMessage());
+//		ex.initCause(cause);
+		throw cause;
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class  AjaxRequestHandler  <T> extends  AsyncTask<Object, Object, Object>
 			makeRequestWithRetries((HttpUriRequest)params[0]);
 			
 		} catch (IOException e) {
-			publishProgress(UPDATE_FAILURE,e,null); // 结束
+			publishProgress(UPDATE_FAILURE,e,e==null ?  "null" : e.getMessage()); // 结束
 		}
 
 		return null;
