@@ -1,14 +1,11 @@
 package net.tsz.afinal.db.sqlite;
 
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
 public class SqlInfo {
 	
 	private String sql;
 	private LinkedList<Object> bindArgs;
-	
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public String getSql() {
 		return sql;
@@ -44,10 +41,6 @@ public class SqlInfo {
 	public void addValue(Object obj){
 		if(bindArgs == null)
 			bindArgs = new LinkedList<Object>();
-		
-		if(obj instanceof java.util.Date || obj instanceof java.sql.Date){
-			obj = format.format(obj);
-		}
 		
 		bindArgs.add(obj);
 	}
