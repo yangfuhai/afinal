@@ -22,6 +22,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.util.Log;
+
 /**
  * @title 属性
  * @description 【非主键】的【基本数据类型】 都是属性
@@ -95,10 +97,11 @@ public class Property {
 		return null;
 	}
 	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Date stringToDateTime(String strDate) {
 		if (strDate != null) {
 			try {
-				return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(strDate);
+				return sdf.parse(strDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

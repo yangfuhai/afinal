@@ -37,11 +37,43 @@ public class SqlBuilder {
 	 */
 	public static SqlInfo buildInsertSql(Object entity){
 		
-		TableInfo table=TableInfo.get(entity.getClass());
+		List<KeyValue> keyValueList = getSaveKeyValueListByEntity(entity);
 		
-		Object idvalue = table.getId().getValue(entity);
+		StringBuffer strSQL=new StringBuffer();
+		SqlInfo sqlInfo = null;
+		if(keyValueList!=null && keyValueList.size()>0){
+			
+			sqlInfo = new SqlInfo();
+			
+			strSQL.append("INSERT INTO ");
+			strSQL.append(TableInfo.get(entity.getClass()).getTableName());
+			strSQL.append(" (");
+			for(KeyValue kv : keyValueList){
+				strSQL.append(kv.getKey()).append(",");
+				sqlInfo.addValue(kv.getValue());
+			}
+			strSQL.deleteCharAt(strSQL.length() - 1);
+			strSQL.append(") VALUES ( ");
+			
+			int length = keyValueList.size();
+			for(int i =0 ; i < length;i++){
+				strSQL.append("?,");
+			}
+			strSQL.deleteCharAt(strSQL.length() - 1);
+			strSQL.append(")");
+			
+			sqlInfo.setSql(strSQL.toString());
+		}
+		
+		return sqlInfo;
+	}
+	
+	public static List<KeyValue> getSaveKeyValueListByEntity(Object entity){
 		
 		List<KeyValue> keyValueList = new ArrayList<KeyValue>();
+		
+		TableInfo table=TableInfo.get(entity.getClass());
+		Object idvalue = table.getId().getValue(entity);
 		
 		if(!(idvalue instanceof Integer)){ //用了非自增长,添加id , 采用自增长就不需要添加id了
 			if(idvalue instanceof String && idvalue != null){
@@ -65,35 +97,8 @@ public class SqlBuilder {
 			if(kv!=null) keyValueList.add(kv);
 		}
 		
-		StringBuffer strSQL=new StringBuffer();
-		SqlInfo sqlInfo = null;
-		if(keyValueList!=null && keyValueList.size()>0){
-			
-			sqlInfo = new SqlInfo();
-			
-			strSQL.append("INSERT INTO ");
-			strSQL.append(table.getTableName());
-			strSQL.append(" (");
-			for(KeyValue kv : keyValueList){
-				strSQL.append(kv.getKey()).append(",");
-				sqlInfo.addValue(kv.getValue());
-			}
-			strSQL.deleteCharAt(strSQL.length() - 1);
-			strSQL.append(") VALUES ( ");
-			
-			int length = keyValueList.size();
-			for(int i =0 ; i < length;i++){
-				strSQL.append("?,");
-			}
-			strSQL.deleteCharAt(strSQL.length() - 1);
-			strSQL.append(")");
-			
-			sqlInfo.setSql(strSQL.toString());
-		}
-		
-		return sqlInfo;
+		return keyValueList;
 	}
-	
 	
 	
 	private static String getDeleteSqlBytableName(String tableName){

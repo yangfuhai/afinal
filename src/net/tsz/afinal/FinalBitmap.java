@@ -294,6 +294,16 @@ public class FinalBitmap {
 	}
 	
 	/**
+	 * 配置 加载图片的时候是否计算图片大小，如果配置为真，则decode图片的时候可能会造成out of memory的异常
+	 * @param neverCalculate 是否decode的时候不计算图片大小
+	 */
+	public FinalBitmap configCalculateBitmapSizeWhenDecode(boolean neverCalculate){
+		if (mConfig != null && mConfig.bitmapProcess != null) 
+			mConfig.bitmapProcess.configCalculateBitmap(neverCalculate);
+		return this;
+	} 
+	
+	/**
 	 * 配置磁盘缓存路径
 	 * @param strPath
 	 * @return

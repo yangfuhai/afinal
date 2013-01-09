@@ -337,10 +337,11 @@ public class FieldUtils {
 		         clazz.isPrimitive();
 	}
 	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Date stringToDateTime(String strDate) {
 		if (strDate != null) {
 			try {
-				return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(strDate);
+				return sdf.parse(strDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
