@@ -485,6 +485,7 @@ public class FinalBitmap {
 	
 	private HashMap<String, BitmapDisplayConfig> configMap= new HashMap<String, BitmapDisplayConfig>();
 	
+	
 	private BitmapDisplayConfig getDisplayConfig(){
 		BitmapDisplayConfig config = new BitmapDisplayConfig();
 		config.setAnimation(mConfig.defaultDisplayConfig.getAnimation());
@@ -496,10 +497,7 @@ public class FinalBitmap {
 		return config;
 	}
 	
-	
-
-
-	private void initDiskCacheInternal() {
+	private void initDiskCacheInternalInBackgroud() {
 		if (mImageCache != null) {
 			mImageCache.initDiskCache();
 		}
@@ -508,7 +506,7 @@ public class FinalBitmap {
 		}
 	}
 
-	private void clearCacheInternal() {
+	private void clearCacheInternalInBackgroud() {
 		if (mImageCache != null) {
 			mImageCache.clearCache();
 		}
@@ -518,13 +516,42 @@ public class FinalBitmap {
 	}
 	
 	
-	private void clearMemoryCache(){
+	private void clearMemoryCacheInBackgroud(){
 		if (mImageCache != null) {
 			mImageCache.clearMemoryCache();
 		}
 	}
+	
+	private void clearDiskCacheInBackgroud(){
+		if (mImageCache != null) {
+			mImageCache.clearDiskCache();
+		}
+		if (mConfig != null && mConfig.bitmapProcess != null) {
+			mConfig.bitmapProcess.clearCacheInternal();
+		}
+	}
+	
+	
+	private void clearCacheInBackgroud(String key){
+		if (mImageCache != null) {
+			mImageCache.clearCache(key);
+		}
+	}
+	
+	private void clearDiskCacheInBackgroud(String key){
+		if (mImageCache != null) {
+			mImageCache.clearDiskCache(key);
+		}
+	}
+	
+	private void clearMemoryCacheInBackgroud(String key){
+		if (mImageCache != null) {
+			mImageCache.clearMemoryCache(key);
+		}
+	}
+	
 
-	private void flushCacheInternal() {
+	private void flushCacheInternalInBackgroud() {
 		if (mImageCache != null) {
 			mImageCache.flush();
 		}
@@ -533,7 +560,7 @@ public class FinalBitmap {
 		}
 	}
 
-	private void closeCacheInternal() {
+	private void closeCacheInternalInBackgroud() {
 		if (mImageCache != null) {
 			mImageCache.close();
 			mImageCache = null;
@@ -582,18 +609,52 @@ public class FinalBitmap {
     }
 
 	/**
-	 * 清除缓存
+	 * 清除所有缓存（磁盘和内存）
 	 */
-	public void clearAllCache() {
+	public void clearCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR);
+	}
+	
+	/**
+	 * 根据key清除指定的内存缓存
+	 * @param key
+	 */
+	public void clearCache(String key) {
+		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_KEY,key);
 	}
 	
 	/**
 	 * 清除缓存
 	 */
-	public void clearMemeoryCache() {
+	public void clearMemoryCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_MEMORY);
 	}
+	
+	/**
+	 * 根据key清除指定的内存缓存
+	 * @param key
+	 */
+	public void clearMemoryCache(String key) {
+		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_KEY_IN_MEMORY,key);
+	}
+	
+	
+	/**
+	 * 清除磁盘缓存
+	 */
+	public void clearDiskCache() {
+		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_DISK);
+	}
+	
+	/**
+	 * 根据key清除指定的内存缓存
+	 * @param key
+	 */
+	public void clearDiskCache(String key) {
+		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLEAR_KEY_IN_DISK,key);
+	}
+	
+	
 
 	/**
 	 * 刷新缓存
@@ -696,25 +757,40 @@ public class FinalBitmap {
 		public static final int MESSAGE_FLUSH = 2;
 		public static final int MESSAGE_CLOSE = 3;
 		public static final int MESSAGE_CLEAR_MEMORY = 4;
+		public static final int MESSAGE_CLEAR_DISK = 5;
+		public static final int MESSAGE_CLEAR_KEY = 6;
+		public static final int MESSAGE_CLEAR_KEY_IN_MEMORY = 7;
+		public static final int MESSAGE_CLEAR_KEY_IN_DISK = 8;
 		@Override
 		protected Void doInBackground(Object... params) {
 			switch ((Integer) params[0]) {
 			case MESSAGE_CLEAR:
-				clearCacheInternal();
+				clearCacheInternalInBackgroud();
 				break;
 			case MESSAGE_INIT_DISK_CACHE:
-				initDiskCacheInternal();
+				initDiskCacheInternalInBackgroud();
 				break;
 			case MESSAGE_FLUSH:
-				clearMemoryCache();
-				flushCacheInternal();
+				clearMemoryCacheInBackgroud();
+				flushCacheInternalInBackgroud();
 				break;
 			case MESSAGE_CLOSE:
-				clearMemoryCache();
-				closeCacheInternal();
-				break;
+				clearMemoryCacheInBackgroud();
+				closeCacheInternalInBackgroud();
 			case MESSAGE_CLEAR_MEMORY:
-				clearMemoryCache();
+				clearMemoryCacheInBackgroud();
+				break;
+			case MESSAGE_CLEAR_DISK:
+				clearDiskCacheInBackgroud();
+				break;
+			case MESSAGE_CLEAR_KEY:
+				clearCacheInBackgroud(String.valueOf(params[1]));
+				break;
+			case MESSAGE_CLEAR_KEY_IN_MEMORY:
+				clearMemoryCacheInBackgroud(String.valueOf(params[1]));
+				break;
+			case MESSAGE_CLEAR_KEY_IN_DISK:
+				clearDiskCacheInBackgroud(String.valueOf(params[1]));
 				break;
 			}
 			return null;
