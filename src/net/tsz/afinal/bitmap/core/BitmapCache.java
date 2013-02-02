@@ -238,7 +238,11 @@ public class BitmapCache {
      */
     public void clearCache() {
     	clearMemoryCache();
-        synchronized (mDiskCacheLock) {
+    	clearDiskCache();
+    }
+    
+    public void clearDiskCache(){
+    	synchronized (mDiskCacheLock) {
             mDiskCacheStarting = true;
             if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
                 try {
@@ -255,6 +259,30 @@ public class BitmapCache {
     public void clearMemoryCache(){
     	if (mMemoryCache != null) {
             mMemoryCache.evictAll();
+        }
+    }
+    
+    
+    public void clearCache(String key) {
+    	clearMemoryCache(key);
+    	clearDiskCache(key);
+    }
+    
+    public void clearDiskCache(String key){
+    	synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
+                try {
+                    mDiskLruCache.remove(key);
+                } catch (IOException e) {
+                    Log.e(TAG, "clearCache - " + e);
+                }
+            }
+        }
+    }
+    
+    public void clearMemoryCache(String key){
+    	if (mMemoryCache != null) {
+            mMemoryCache.remove(key);
         }
     }
 
