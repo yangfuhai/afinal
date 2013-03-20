@@ -1,4 +1,3 @@
-
 #afinal交流QQ群：192341294
 ----
 # ![mahua](http://code.google.com/p/afinal/logo?cct=1351516535) Afinal简介 
@@ -167,8 +166,8 @@ public View getView(int position, View convertView, ViewGroup parent) {
 
 ----
 #关于作者无为
-* 个人博客：[www.yangfuhai.com](www.yangfuhai.com)
-* 交流网站：[www.devchina.com](www.devchina.com)
+* 个人博客：[http://www.yangfuhai.com](http://www.yangfuhai.com)
+* 交流网站：[http://www.devchina.com](http://www.devchina.com)
 * afinal交流QQ群 ： 192341294
 
 
