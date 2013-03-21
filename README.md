@@ -37,7 +37,7 @@ user.setEmail("mail@tsz.net");
 user.setName("michael yang");
 db.save(user);
 ```
-
+* 关于finalDb的更多介绍，请点击[这里](http://my.oschina.net/yangfuhai/blog/87459)
 ----
 ##FinalActivity使用方法：
 ```java
@@ -108,6 +108,7 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
  		}
   });
 ```
+文件上传到服务器，服务器如何接收，请查看[这里](http://www.oschina.net/question/105836_85825)
 ----
 ##使用FinalHttp下载文件：
 ```java
@@ -128,7 +129,8 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
             });  
 ```
 ----
-##FinalBitmap 使用方法 (加载网络图片就一行代码 fb.display(imageView,url) )：
+##FinalBitmap 使用方法 
+* 加载网络图片就一行代码 fb.display(imageView,url) 
 ```java
 private GridView gridView;
 	private FinalBitmap fb;
@@ -140,7 +142,7 @@ private GridView gridView;
 		gridView = (GridView) findViewById(R.id.gridView);
 		gridView.setAdapter(mAdapter);
 		
-		fb = new FinalBitmap(this).init();//必须调用init初始化FinalBitmap模块
+		fb = FinalBitmap.create(this);//初始化FinalBitmap模块
 		fb.configLoadingImage(R.drawable.downloading);
 		//这里可以进行其他十几项的配置，也可以不用配置，配置之后必须调用init()函数,才生效
 		//fb.configBitmapLoadThreadSize(int size)
