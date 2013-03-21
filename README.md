@@ -30,6 +30,8 @@
 
 ----
 ##FinalDB使用方法：
+关于finalDb的更多介绍，请点击[这里](http://my.oschina.net/yangfuhai/blog/87459)
+
 ```java
 FinalDb db = FinalDb.create(this);
 User user = new User(); //这里需要注意的是User对象必须有id属性，或者有通过@ID注解的属性
@@ -37,9 +39,13 @@ user.setEmail("mail@tsz.net");
 user.setName("michael yang");
 db.save(user);
 ```
-* 关于finalDb的更多介绍，请点击[这里](http://my.oschina.net/yangfuhai/blog/87459)
+
 ----
+
 ##FinalActivity使用方法：
+* 完全注解方式就可以进行UI绑定和事件绑定
+* 无需findViewById和setClickListener等
+
 ```java
 public class AfinalDemoActivity extends FinalActivity {
 
@@ -57,14 +63,15 @@ public class AfinalDemoActivity extends FinalActivity {
     }
 }
 ```
-----
 ##FinalHttp使用方法：
+###普通get方法
+
 ```java
 FinalHttp fh = new FinalHttp();
 fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 
     @Override
-	public void onLoading(long count, long current) { //每1秒钟自动被回调一次
+    public void onLoading(long count, long current) { //每1秒钟自动被回调一次
 			textView.setText(current+"/"+count);
 	}
 
@@ -84,8 +91,9 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 	}
 });
 ```
-----
-##上传文件 或者提交数据：
+
+###上传文件 或者 提交数据 到服务器（post方法）
+文件上传到服务器，服务器如何接收，请查看[这里](http://www.oschina.net/question/105836_85825)
 ```java
   AjaxParams params = new AjaxParams();
   params.put("username", "michael yang");
@@ -108,9 +116,11 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
  		}
   });
 ```
-文件上传到服务器，服务器如何接收，请查看[这里](http://www.oschina.net/question/105836_85825)
+
+
 ----
-##使用FinalHttp下载文件：
+
+###下载文件：
 ```java
     FinalHttp fh = new FinalHttp();  
     fh.download("http://www.xxx.com/下载路径/xxx.apk", //这里是下载的路径
@@ -128,9 +138,11 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
   
             });  
 ```
-----
+
+
 ##FinalBitmap 使用方法 
-* 加载网络图片就一行代码 fb.display(imageView,url) 
+加载网络图片就一行代码 fb.display(imageView,url) ,更多的display重载请看[帮助文档](https://github.com/yangfuhai/afinal/tree/master/doc)
+
 ```java
 private GridView gridView;
 	private FinalBitmap fb;
@@ -166,7 +178,8 @@ public View getView(int position, View convertView, ViewGroup parent) {
 	fb.display(iv,Images.imageUrls[position]);
 ```
 
-----
+
+
 #关于作者无为
 * 个人博客：[http://www.yangfuhai.com](http://www.yangfuhai.com)
 * 交流网站：[http://www.devchina.com](http://www.devchina.com)
