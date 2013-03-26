@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -291,6 +292,15 @@ public class FinalBitmap {
 	public FinalBitmap configDisplayer(Displayer displayer){
 		mConfig.displayer = displayer;
 		return this;
+	}
+	
+	/**
+	 * 设置 图片压缩格式 
+	 * 如果是透明的png图片，请用 CompressFormat.PNG
+	 * @param format
+	 */
+	public void configCompressFormat(CompressFormat format){
+		mImageCache.setCompressFormat(format);
 	}
 	
 	/**
