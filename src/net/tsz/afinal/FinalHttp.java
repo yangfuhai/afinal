@@ -28,7 +28,7 @@ import java.util.zip.GZIPInputStream;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
-import net.tsz.afinal.http.AjaxRequestHandler;
+import net.tsz.afinal.http.HttpHandler;
 import net.tsz.afinal.http.RetryHandler;
 import net.tsz.afinal.http.SyncRequestHandler;
 
@@ -362,16 +362,24 @@ public class FinalHttp {
     }
     
     //---------------------下载---------------------------------------
-    public void download(String url,String target,AjaxCallBack<File> callback){
-    	 final HttpGet get = new HttpGet(url);
-    	 new AjaxRequestHandler(httpClient, httpContext, callback,charset)
-         .executeOnExecutor(executor,get,target);
+    public HttpHandler<File> download(String url,String target,AjaxCallBack<File> callback){
+    	return download(url, null, target, false, callback);
     }
     
-    public void download( String url,AjaxParams params, String target, AjaxCallBack<File> callback) {
+
+    public HttpHandler<File> download(String url,String target,boolean isResume,AjaxCallBack<File> callback){
+    	 return download(url, null, target, isResume, callback);
+    }
+    
+    public HttpHandler<File> download( String url,AjaxParams params, String target, AjaxCallBack<File> callback) {
+   	 	return download(url, params, target, false, callback);
+    }
+    
+    public HttpHandler<File> download( String url,AjaxParams params, String target,boolean isResume, AjaxCallBack<File> callback) {
     	final HttpGet get =  new HttpGet(getUrlWithQueryString(url, params));
-   	 	new AjaxRequestHandler(httpClient, httpContext, callback,charset)
-        .executeOnExecutor(executor,get,target);
+    	HttpHandler<File> handler = new HttpHandler<File>(httpClient, httpContext, callback,charset);
+    	handler.executeOnExecutor(executor,get,target,isResume);
+    	return handler;
     }
 
 
@@ -380,7 +388,7 @@ public class FinalHttp {
             uriRequest.addHeader("Content-Type", contentType);
         }
 
-        new AjaxRequestHandler(client, httpContext, ajaxCallBack,charset)
+        new HttpHandler<T>(client, httpContext, ajaxCallBack,charset)
         .executeOnExecutor(executor, uriRequest);
 
     }
