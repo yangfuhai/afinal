@@ -193,6 +193,9 @@ public class BitmapCache {
         }
         return null;
     }
+    
+    
+    
 
     /**
      * 获取硬盘缓存
@@ -320,6 +323,11 @@ public class BitmapCache {
             }
         }
     }
+    
+    
+	public void setCompressFormat(CompressFormat format){
+		this.mCacheParams.setCompressFormat(format);
+	}
 
     /**
      * A holder class that contains cache parameters.
@@ -364,6 +372,10 @@ public class BitmapCache {
 
 		public void setDiskCacheSize(int diskCacheSize) {
 			this.diskCacheSize = diskCacheSize;
+		}
+		
+		public void setCompressFormat(CompressFormat format){
+			this.compressFormat = format;
 		}
 
 		private static int getMemoryClass(Context context) {
