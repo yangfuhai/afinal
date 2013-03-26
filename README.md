@@ -121,9 +121,11 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 ----
 
 ###下载文件：
+* 支持断点续传，随时停止下载任务 或者 开始任务
 ```java
     FinalHttp fh = new FinalHttp();  
     fh.download("http://www.xxx.com/下载路径/xxx.apk", //这里是下载的路径
+    true,//true:断点续传 false:不断点续传（全新下载）
     "/mnt/sdcard/testapk.apk", //这是保存到本地的路径
     new AjaxCallBack() {  
                 @Override  
