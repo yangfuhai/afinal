@@ -16,39 +16,79 @@
 package net.tsz.afinal.http.entityhandler;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 
 import org.apache.http.HttpEntity;
 
 import android.text.TextUtils;
 
 public class FileEntityHandler {
+	
+	private boolean mStop = false;
+	
+	
 
-	public Object handleEntity(HttpEntity entity, EntityCallBack callback,String target) throws IOException {
+	public boolean isStop() {
+		return mStop;
+	}
 
+
+
+	public void setStop(boolean stop) {
+		this.mStop = stop;
+	}
+
+
+	public Object handleEntity(HttpEntity entity, EntityCallBack callback,String target,boolean isResume) throws IOException {
 		if (TextUtils.isEmpty(target) || target.trim().length() == 0)
 			return null;
 
 		File targetFile = new File(target);
 
-		if (!targetFile.getParentFile().exists()) {
-			targetFile.getParentFile().mkdirs();
+		if (!targetFile.exists()) {
+			targetFile.createNewFile();
 		}
 
-		RandomAccessFile raf = new RandomAccessFile(targetFile, "rw");
-		raf.seek(0);
-		InputStream input = entity.getContent();
-		long count = entity.getContentLength();
-		long current = 0;
-		byte[] bt = new byte[1024];
-		int nRead = 0;
-		while ((nRead = input.read(bt, 0, 1024)) >0) {
-			raf.write(bt, 0, nRead);
-			current += nRead;
-			callback.callBack(count, current);
+		if(mStop){
+			return targetFile;
 		}
+			
+		
+		long current = 0;
+		FileOutputStream os = null;
+		if(isResume){
+			current = targetFile.length();
+			os = new FileOutputStream(target, true);
+		}else{
+			os = new FileOutputStream(target);
+		}
+		
+		if(mStop){
+			return targetFile;
+		}
+			
+		InputStream input = entity.getContent();
+		long count = entity.getContentLength() + current;
+		
+		if(current >= count || mStop){
+			return targetFile;
+		}
+		
+		int readLen = 0;
+		byte[] buffer = new byte[1024];
+		while (!mStop && !(current >= count) && ((readLen = input.read(buffer,0,1024)) > 0) ) {//未全部读取
+			os.write(buffer, 0, readLen);
+			current += readLen;
+			callback.callBack(count, current,false);
+		}
+		callback.callBack(count, current,true);
+		
+		if(mStop && current < count){ //用户主动停止
+			throw new IOException("user stop download thread");
+		}
+		
 		return targetFile;
 	}
 

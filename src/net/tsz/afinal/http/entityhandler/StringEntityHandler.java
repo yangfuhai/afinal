@@ -39,9 +39,9 @@ public class StringEntityHandler {
 			outStream.write(buffer, 0, len);
 			curCount += len;
 			if(callback!=null)
-				callback.callBack(count, curCount);
+				callback.callBack(count, curCount,false);
 		}
-		
+		callback.callBack(count, curCount,true);
 		byte[] data = outStream.toByteArray();
 		outStream.close();
 		is.close();
