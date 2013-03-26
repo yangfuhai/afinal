@@ -1,4 +1,8 @@
-#afinal交流QQ群：192341294
+#afinal交流平台
+* QQ群：192341294
+* 网址：[http://www.afinal.org](http://www.afinal.org)
+
+
 ----
 # ![mahua](http://code.google.com/p/afinal/logo?cct=1351516535) Afinal简介 
 * Afinal 是一个android的sqlite orm 和 ioc 框架。同时封装了android中的http框架，使其更加简单易用；
