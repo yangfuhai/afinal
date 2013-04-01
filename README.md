@@ -76,7 +76,7 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 
     @Override
     public void onLoading(long count, long current) { //每1秒钟自动被回调一次
-    		textView.setText(current+"/"+count);
+        	textView.setText(current+"/"+count);
 	}
 
 	@Override
@@ -96,8 +96,9 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 });
 ```
 
-###上传文件 或者 提交数据 到服务器（post方法）
+### 使用FinalHttp上传文件 或者 提交数据 到服务器（post方法）
 文件上传到服务器，服务器如何接收，请查看[这里](http://www.oschina.net/question/105836_85825)
+
 ```java
   AjaxParams params = new AjaxParams();
   params.put("username", "michael yang");
@@ -124,11 +125,12 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 
 ----
 
-###下载文件：
+###使用FinalHttp下载文件：
 * 支持断点续传，随时停止下载任务 或者 开始任务
 
 ```java
     FinalHttp fh = new FinalHttp();  
+    //调用download方法开始下载
     HttpHandler handler = fh.download("http://www.xxx.com/下载路径/xxx.apk", //这里是下载的路径
     true,//true:断点续传 false:不断点续传（全新下载）
     "/mnt/sdcard/testapk.apk", //这是保存到本地的路径
@@ -146,7 +148,7 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
             });  
 
 	
-   //停止下载：
+   //调用stop()方法停止下载
    handler.stop();
 
    
@@ -193,9 +195,9 @@ public View getView(int position, View convertView, ViewGroup parent) {
 
 
 
-#关于作者无为
+#关于作者michael
 * 个人博客：[http://www.yangfuhai.com](http://www.yangfuhai.com)
-* 交流网站：[http://www.devchina.com](http://www.devchina.com)
+* afinal捐助：[http://me.alipay.com/yangfuhai](http://me.alipay.com/yangfuhai) （为了感谢捐助者，michael将会把捐助者将公布在afinal官方网站[afinal.org](http://www.afinal.org)上,不让公布的同学说明下）
 * afinal交流QQ群 ： 192341294
 
 
