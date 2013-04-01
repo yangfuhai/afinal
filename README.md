@@ -76,7 +76,7 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 
     @Override
     public void onLoading(long count, long current) { //每1秒钟自动被回调一次
-			textView.setText(current+"/"+count);
+    		textView.setText(current+"/"+count);
 	}
 
 	@Override
@@ -126,6 +126,7 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
 
 ###下载文件：
 * 支持断点续传，随时停止下载任务 或者 开始任务
+
 ```java
     FinalHttp fh = new FinalHttp();  
     HttpHandler handler = fh.download("http://www.xxx.com/下载路径/xxx.apk", //这里是下载的路径
@@ -145,8 +146,8 @@ fh.get("http://www.yangfuhai.com", new AjaxCallBack(){
             });  
 
 	
-	//停止下载：
-	handler.stop();
+   //停止下载：
+   handler.stop();
 
    
 ```
