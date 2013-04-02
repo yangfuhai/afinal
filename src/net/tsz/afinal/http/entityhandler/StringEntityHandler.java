@@ -41,7 +41,8 @@ public class StringEntityHandler {
 			if(callback!=null)
 				callback.callBack(count, curCount,false);
 		}
-		callback.callBack(count, curCount,true);
+		if(callback!=null)
+			callback.callBack(count, curCount,true);
 		byte[] data = outStream.toByteArray();
 		outStream.close();
 		is.close();

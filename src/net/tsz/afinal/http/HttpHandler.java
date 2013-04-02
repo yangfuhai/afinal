@@ -98,10 +98,10 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 				retry = retryHandler.retryRequest(cause, ++executionCount,context);
 			}
 		}
-		//没有能读取到网络数据
-//		ConnectException ex = new ConnectException(cause.getMessage());
-//		ex.initCause(cause);
-		throw cause;
+		if(cause!=null)
+			throw cause;
+		else
+			throw new IOException("未知网络错误");
 	}
 
 	@Override

@@ -42,7 +42,8 @@ public class SyncRequestHandler {
 		this.charset = charset;
 	}
 
-	private Object makeRequestWithRetries(HttpUriRequest request) throws ConnectException {
+	private Object makeRequestWithRetries(HttpUriRequest request) throws IOException {
+		
 		boolean retry = true;
 		IOException cause = null;
 		HttpRequestRetryHandler retryHandler = client.getHttpRequestRetryHandler();
@@ -52,24 +53,31 @@ public class SyncRequestHandler {
 				return entityHandler.handleEntity(response.getEntity(),null,charset);
 			} catch (UnknownHostException e) {
 				cause = e;
-				break;
+				retry = retryHandler.retryRequest(cause, ++executionCount,context);
 			} catch (IOException e) {
 				cause = e;
 				retry = retryHandler.retryRequest(cause, ++executionCount,context);
 			} catch (NullPointerException e) {
 				// HttpClient 4.0.x 之前的一个bug
 				// http://code.google.com/p/android/issues/detail?id=5255
+				cause = new IOException("NPE in HttpClient" + e.getMessage());
+				retry = retryHandler.retryRequest(cause, ++executionCount,context);
+			}catch (Exception e) {
+				cause = new IOException("Exception" + e.getMessage());
 				retry = retryHandler.retryRequest(cause, ++executionCount,context);
 			}
 		}
-		return null;
-
+		if(cause!=null)
+			throw cause;
+		else
+			throw new IOException("未知网络错误");
+		
 	}
 
 	public Object sendRequest (HttpUriRequest... params) {
 		try {
 			return makeRequestWithRetries(params[0]);
-		} catch (ConnectException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
