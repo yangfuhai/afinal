@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
+import java.io.ObjectInputStream.GetField;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -590,6 +591,37 @@ public class FinalBitmap {
 			return mConfig.bitmapProcess.processBitmap(uri,config);
 		}
 		return null;
+	}
+	
+	/**
+	 * 从缓存（内存缓存和磁盘缓存）中直接获取bitmap，注意这里有io操作，最好不要放在ui线程执行
+	 * @param key
+	 * @return
+	 */
+	public Bitmap getBitmapFromCache(String key){
+		Bitmap bitmap  = getBitmapFromMemoryCache(key);
+		if(bitmap == null)
+			bitmap = getBitmapFromDiskCache(key);
+		
+		return bitmap;
+	}
+	
+	/**
+	 * 从内存缓存中获取bitmap
+	 * @param key
+	 * @return
+	 */
+	public Bitmap getBitmapFromMemoryCache(String key){
+		return mImageCache.getBitmapFromMemCache(key);
+	}
+	
+	/**
+	 * 从磁盘缓存中获取bitmap，，注意这里有io操作，最好不要放在ui线程执行
+	 * @param key 
+	 * @return
+	 */
+	public Bitmap getBitmapFromDiskCache(String key){
+		return mImageCache.getBitmapFromDiskCache(key);
 	}
 	
 	public void setExitTasksEarly(boolean exitTasksEarly) {
