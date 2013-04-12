@@ -64,7 +64,7 @@ public class TableInfo {
 				
 				tableInfo.setId(id);
 			}else{
-				throw new DbException("the class["+clazz+"]'s idField is null");
+				throw new DbException("the class["+clazz+"]'s idField is null , \n you can define _id,id property or use annotation @id to solution this exception");
 			}
 			
 			List<Property> pList = ClassUtils.getPropertyList(clazz);

@@ -17,19 +17,20 @@ package net.tsz.afinal.exception;
 
 public class DbException extends AfinalException {
 	private static final long serialVersionUID = 1L;
-	private String strMsg = null;
+	
 	public DbException() {}
 	
-	public DbException(String strMsg) {
-		this.strMsg = strMsg;
+	
+	public DbException(String msg) {
+		super(msg);
 	}
 	
-	public void printStackTrace() {
-		if(strMsg!=null)
-			System.err.println(strMsg);
-		
-		super.printStackTrace();
+	public DbException(Throwable ex) {
+		super(ex);
 	}
-
+	
+	public DbException(String msg,Throwable ex) {
+		super(msg,ex);
+	}
 	
 }
