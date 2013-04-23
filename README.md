@@ -1,5 +1,5 @@
 #afinal交流平台
-* QQ群：192341294
+* QQ群：192341294（群1）    246710918（群2）
 * 网址：[http://www.afinal.org](http://www.afinal.org)
 
 
