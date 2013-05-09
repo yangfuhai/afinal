@@ -1,49 +1,4 @@
----
-**>>> Add by fantouch**
 
-#### 配置成Android Library Project
-*解决需求:有多个项目依赖afinal,并且想修改afinal源码*
->  
-* clone到本地
-* 添加AndroidManifest.xml文件:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.tsz.afinal" >
-    <uses-sdk
-        android:minSdkVersion="5"
-        android:targetSdkVersion="7" />
-</manifest>
-```
->  
-* 导入到 Eclipse:  
-`Import => Android => Existing Android Code Into Workspace`
-* 工程上按右键 => Properties => Android => √ Is Library
-* 完成,你的项目可以引用这个afinal Library了.
-
-#### 排除不需要Git管理的文件
-*解决需求:想修改源码,但不想让Eclipse把工程弄脏*
->  
-* 忽略已经被Git管理的`./bin`目录:  
-导入Eclipse前执行:  ` git update-index --assume-unchanged ./bin/* `
->  
-* 忽略未被Git管理的文件和目录: 添加`/.gitignore` 文件:  
-```
-/gen
-/assets
-/bin
-/res
-/.classpath
-/.project
-/AndroidManifest.xml
-/project.properties
-/.gitignore
-```  
-* 导入到Eclipse,`git status`可见Repository依旧干净.
-  
-**<<< Add by fantouch**
-
----
 #afinal交流平台
 * QQ群：192341294（群1）    246710918（群2）
 * 网址：[http://www.afinal.org](http://www.afinal.org)
@@ -240,6 +195,52 @@ public View getView(int position, View convertView, ViewGroup parent) {
 ```
 
 
+---
+**>>> Add by fantouch**
+
+#### 配置成Android Library Project
+*解决需求:有多个项目依赖afinal,并且想修改afinal源码*
+>  
+* clone到本地
+* 添加AndroidManifest.xml文件:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.tsz.afinal" >
+    <uses-sdk
+        android:minSdkVersion="5"
+        android:targetSdkVersion="7" />
+</manifest>
+```
+>  
+* 导入到 Eclipse:  
+`Import => Android => Existing Android Code Into Workspace`
+* 工程上按右键 => Properties => Android => √ Is Library
+* 完成,你的项目可以引用这个afinal Library了.
+
+#### 排除不需要Git管理的文件
+*解决需求:想修改源码,但不想让Eclipse把工程弄脏*
+>  
+* 忽略已经被Git管理的`./bin`目录:  
+导入Eclipse前执行:  ` git update-index --assume-unchanged ./bin/* `
+>  
+* 忽略未被Git管理的文件和目录: 添加`/.gitignore` 文件:  
+```
+/gen
+/assets
+/bin
+/res
+/.classpath
+/.project
+/AndroidManifest.xml
+/project.properties
+/.gitignore
+```  
+* 导入到Eclipse,`git status`可见Repository依旧干净.
+  
+**<<< Add by fantouch**
+
+---
 
 #关于作者michael
 * 个人博客：[http://www.yangfuhai.com](http://www.yangfuhai.com)
