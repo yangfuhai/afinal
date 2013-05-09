@@ -282,6 +282,7 @@ public class FinalBitmap {
 	 */
 	public FinalBitmap configDownlader(Downloader downlader){
 		mConfig.downloader = downlader;
+		mConfig.init();
 		return this;
 	}
 	
@@ -389,7 +390,8 @@ public class FinalBitmap {
 		mImageCache = new BitmapCache(imageCacheParams);
 		
 		bitmapLoadAndDisplayExecutor = Executors.newFixedThreadPool(mConfig.poolSize,new ThreadFactory() {
-			public Thread newThread(Runnable r) {
+			@Override
+            public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
 				// 设置线程的优先级别，让线程先后顺序执行（级别越高，抢到cpu执行的时间越多）
 				t.setPriority(Thread.NORM_PRIORITY - 1);
