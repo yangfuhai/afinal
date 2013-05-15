@@ -573,10 +573,33 @@ public class FinalBitmap {
 		}
 	}
 
+    /**
+     * 执行过此方法后,FinalBitmap的缓存已经失效,建议通过FinalBitmap.create()获取新的实例
+     * 
+     * @author fantouch
+     */
 	private void closeCacheInternalInBackgroud() {
 		if (mImageCache != null) {
 			mImageCache.close();
 			mImageCache = null;
+
+            // 修改这里是的原因是一个引起空指针异常的bug
+            // 重现:
+            // 1.Activity.onCreat()执行FinalBitmap.create(),FinalBitmap.configCompressFormat();
+            // 2.Activity的生命周期里相应调用FinalBitmap.onPause(),onResume(),onDestory()
+            // 3.退出Activity,Activity.onDestory()被执行,于是FinalBitmap.onDestory()被执行
+            // 4.再次进入Activity,FinalBitmap.configCompressFormat()报空指针
+            // 原因:
+            // FinalBitmap.onDestory()会调用本方法,导致mImageCache==null.
+            // (FinalBitmap.closeCache()也是)
+            // 解决思路:
+            // mImageCache只能在FinalBitmap.init()方法中实例化,
+            // FinalBitmap.init()只能被FinalBitmap.create()调用,
+            // 要使FinalBitmap.create()能被有效调用,必须使mFinalBitmap==null,
+            // 因此,mImageCache和mFinalBitmap的生命周期应当是同步的,
+            // 一旦mImageCache==null,也应使mFinalBitmap==null.
+            // !!另外,有必要警告用户,他们手上的FinalBitmap实例的缓存已经失效,最好通过FinalBitmap.create()获取新的实例
+            mFinalBitmap = null;
 		}
 		if (mConfig != null && mConfig.bitmapProcess != null) {
 			mConfig.bitmapProcess.clearCacheInternal();
@@ -647,6 +670,10 @@ public class FinalBitmap {
     
     /**
      * activity onDestroy的时候调用这个方法，释放缓存
+     * <p>
+     * 执行过此方法后,FinalBitmap的缓存已经失效,建议通过FinalBitmap.create()获取新的实例
+     * 
+     * @author fantouch
      */
     public void onDestroy() {
         closeCache();
@@ -707,9 +734,13 @@ public class FinalBitmap {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_FLUSH);
 	}
 
-	/**
-	 * 关闭缓存
-	 */
+    /**
+     * 关闭缓存
+     * <p>
+     * 执行过此方法后,FinalBitmap的缓存已经失效,建议通过FinalBitmap.create()获取新的实例
+     * 
+     * @author fantouch
+     */
 	public void closeCache() {
 		new CacheExecutecTask().execute(CacheExecutecTask.MESSAGE_CLOSE);
 	}
