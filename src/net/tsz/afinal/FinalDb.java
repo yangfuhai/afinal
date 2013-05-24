@@ -31,6 +31,7 @@ import net.tsz.afinal.db.table.TableInfo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -242,6 +243,27 @@ public class FinalDb {
 		String sql = SqlBuilder.buildDeleteSql(clazz, strWhere);
 		debugSql(sql);
 		db.execSQL(sql);
+	}
+	/**
+	 * 删除所有数据表
+	 */
+	public void dropDb() {
+		Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type ='table'", null);
+		if(cursor!=null){
+			while(cursor.moveToNext()){
+				//添加异常捕获.忽略删除所有表时出现的异常:
+				//table sqlite_sequence may not be dropped
+				try {
+					db.execSQL("DROP TABLE "+cursor.getString(0));
+				} catch (SQLException e) {
+					android.util.Log.d("Debug SQL", ">>>>>>  "+e.getMessage());
+				}
+			}
+		}
+		if(cursor!=null){
+			cursor.close();
+			cursor=null;
+		}
 	}
 	
 	
@@ -639,18 +661,11 @@ public class FinalDb {
 			if(mDbUpdateListener!=null){
 				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
 			}else{ //清空所有的数据信息
-				Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type ='table'", null);
-				if(cursor!=null){
-					while(cursor.moveToNext()){
-						db.execSQL("DROP TABLE "+cursor.getString(0));
-					}
-				}
-				if(cursor!=null){
-					cursor.close();
-					cursor=null;
-				}
+				dropDb();
 			}
 		}
+
+		
 
 	}
 	
