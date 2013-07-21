@@ -59,5 +59,5 @@ public abstract class AjaxCallBack<T> {
 	 */
 	public void onLoading(long count,long current){};
 	public void onSuccess(T t){};
-	public void onFailure(Throwable t,String strMsg){};
+	public void onFailure(Throwable t,int errorNo ,String strMsg){};
 }

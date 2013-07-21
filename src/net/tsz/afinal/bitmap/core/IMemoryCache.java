@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.tsz.afinal.bitmap.download;
+package net.tsz.afinal.bitmap.core;
 
+import android.graphics.Bitmap;
 
-public interface Downloader  {
+public interface IMemoryCache {
 	
-	/**
-	 * 请求网络的inputStream填充outputStream
-	 * @param urlString
-	 * @param outputStream
-	 * @return
-	 */
-	public byte[] download(String urlString);
+	public void put(String key,Bitmap bitmap);
+	public Bitmap get(String key);
+	public void evictAll();
+	public void remove(String key);
+
 }

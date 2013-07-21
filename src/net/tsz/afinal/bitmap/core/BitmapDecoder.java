@@ -15,15 +15,13 @@
  */
 package net.tsz.afinal.bitmap.core;
 
+import java.io.FileDescriptor;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import java.io.FileDescriptor;
 
 public class BitmapDecoder {
-	private static final String TAG = "BitmapDecoder";
 	private BitmapDecoder(){}
 
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,int reqWidth, int reqHeight) {
@@ -37,27 +35,11 @@ public class BitmapDecoder {
         try {
         	  return BitmapFactory.decodeResource(res, resId, options);
 		} catch (OutOfMemoryError e) {
-			 Log.e(TAG, "decodeSampledBitmapFromResource内存溢出，如果频繁出现这个情况 可以尝试配置增加内存缓存大小");
 			 e.printStackTrace();
 			 return null;
 		}
     }
 
-    public static Bitmap decodeSampledBitmapFromFile(String filename,int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        options.inPurgeable = true;
-        BitmapFactory.decodeFile(filename, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        try {
-        	  return BitmapFactory.decodeFile(filename, options);
-		} catch (OutOfMemoryError e) {
-			 Log.e(TAG, "decodeSampledBitmapFromFile内存溢出，如果频繁出现这个情况 可以尝试配置增加内存缓存大小");
-			 e.printStackTrace();
-			 return null;
-		}
-    }
 
     public static Bitmap decodeSampledBitmapFromDescriptor(FileDescriptor fileDescriptor, int reqWidth, int reqHeight) {
 
@@ -70,13 +52,23 @@ public class BitmapDecoder {
         try {
         	 return BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
 		} catch (OutOfMemoryError e) {
-			 Log.e(TAG, "decodeSampledBitmapFromDescriptor内存溢出，如果频繁出现这个情况 可以尝试配置增加内存缓存大小");
 			 e.printStackTrace();
 			 return null;
 		}
     }
+    
+    
+    public static Bitmap decodeSampledBitmapFromByteArray(byte[] data,  int offset, int length, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPurgeable = true;
+        BitmapFactory.decodeByteArray(data, offset, length, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(data, offset, length, options);
+    }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;

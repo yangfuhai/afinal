@@ -21,13 +21,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class SimpleDisplayer implements Displayer{
 	
-	public void loadCompletedisplay(ImageView imageView,Bitmap bitmap,BitmapDisplayConfig config){
+	public void loadCompletedisplay(View imageView,Bitmap bitmap,BitmapDisplayConfig config){
 		switch (config.getAnimationType()) {
 		case BitmapDisplayConfig.AnimationType.fadeIn:
 			fadeInDisplay(imageView,bitmap);
@@ -41,26 +42,38 @@ public class SimpleDisplayer implements Displayer{
 	}
 	
 	
-	public void loadFailDisplay(ImageView imageView,Bitmap bitmap){
-		imageView.setImageBitmap(bitmap);
+	public void loadFailDisplay(View imageView,Bitmap bitmap){
+		if(imageView instanceof ImageView){
+			((ImageView)imageView).setImageBitmap(bitmap);
+		}else{
+			imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
+		}
 	}
 	
 	
 	
-	private void fadeInDisplay(ImageView imageView,Bitmap bitmap){
+	private void fadeInDisplay(View imageView,Bitmap bitmap){
 		final TransitionDrawable td =
                 new TransitionDrawable(new Drawable[] {
                         new ColorDrawable(android.R.color.transparent),
                         new BitmapDrawable(imageView.getResources(), bitmap)
                 });
-        imageView.setImageDrawable(td);
+        if(imageView instanceof ImageView){
+			((ImageView)imageView).setImageDrawable(td);
+		}else{
+			imageView.setBackgroundDrawable(td);
+		}
         td.startTransition(300);
 	}
 	
 	
-	private void animationDisplay(ImageView imageView,Bitmap bitmap,Animation animation){
+	private void animationDisplay(View imageView,Bitmap bitmap,Animation animation){
 		animation.setStartTime(AnimationUtils.currentAnimationTimeMillis());		
-        imageView.setImageBitmap(bitmap);
+        if(imageView instanceof ImageView){
+			((ImageView)imageView).setImageBitmap(bitmap);
+		}else{
+			imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
+		}
         imageView.startAnimation(animation);
 	}
 

@@ -83,7 +83,7 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 				}
 				return;
 			} catch (UnknownHostException e) {
-				publishProgress(UPDATE_FAILURE, e,"unknownHostException：can't resolve host");
+				publishProgress(UPDATE_FAILURE,e,0,"unknownHostException：can't resolve host");
 				return;
 			} catch (IOException e) {
 				cause = e;
@@ -115,7 +115,7 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 			makeRequestWithRetries((HttpUriRequest)params[0]);
 			
 		} catch (IOException e) {
-			publishProgress(UPDATE_FAILURE,e,e.getMessage()); // 结束
+			publishProgress(UPDATE_FAILURE,e,0,e.getMessage()); // 结束
 		}
 
 		return null;
@@ -141,7 +141,7 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 			break;
 		case UPDATE_FAILURE:
 			if(callback!=null)
-				callback.onFailure((Throwable)values[1],(String)values[2]);
+				callback.onFailure((Throwable)values[1],(Integer)values[2],(String)values[3]);
 			break;
 		case UPDATE_SUCCESS:
 			if(callback!=null)
@@ -172,7 +172,7 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 			if(status.getStatusCode() == 416 && isResume){
 				errorMsg += " \n maybe you have download complete.";
 			}
-			publishProgress(UPDATE_FAILURE,new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),errorMsg);
+			publishProgress(UPDATE_FAILURE,new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),status.getStatusCode() ,errorMsg);
 		} else {
 			try {
 				HttpEntity entity = response.getEntity();
@@ -190,7 +190,7 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 				publishProgress(UPDATE_SUCCESS,responseBody);
 				
 			} catch (IOException e) {
-				publishProgress(UPDATE_FAILURE,e,e.getMessage());
+				publishProgress(UPDATE_FAILURE,e,0,e.getMessage());
 			}
 			
 		}
