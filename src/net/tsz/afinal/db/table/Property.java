@@ -15,14 +15,13 @@
  */
 package net.tsz.afinal.db.table;
 
+import android.annotation.SuppressLint;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import android.util.Log;
 
 /**
  * @title 属性
@@ -97,6 +96,7 @@ public class Property {
 		return null;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Date stringToDateTime(String strDate) {
 		if (strDate != null) {

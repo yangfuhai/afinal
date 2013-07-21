@@ -17,7 +17,7 @@ package net.tsz.afinal.bitmap.display;
 
 import net.tsz.afinal.bitmap.core.BitmapDisplayConfig;
 import android.graphics.Bitmap;
-import android.widget.ImageView;
+import android.view.View;
 
 public interface Displayer {
 
@@ -27,13 +27,13 @@ public interface Displayer {
 	 * @param bitmap
 	 * @param config
 	 */
-	public void loadCompletedisplay(ImageView imageView,Bitmap bitmap,BitmapDisplayConfig config);
+	public void loadCompletedisplay(View imageView,Bitmap bitmap,BitmapDisplayConfig config);
 	
 	/**
 	 * 图片加载失败回调的函数
 	 * @param imageView
 	 * @param bitmap
 	 */
-	public void loadFailDisplay(ImageView imageView,Bitmap bitmap);
+	public void loadFailDisplay(View imageView,Bitmap bitmap);
 	
 }
