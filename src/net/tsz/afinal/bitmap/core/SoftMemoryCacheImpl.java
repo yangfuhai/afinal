@@ -29,9 +29,9 @@ public class SoftMemoryCacheImpl implements IMemoryCache {
 		mMemoryCache = new LruMemoryCache<String, SoftReference<Bitmap>>(size) {
             @Override
             protected int sizeOf(String key, SoftReference<Bitmap> sBitmap) {
-            	Bitmap bitmap = sBitmap.get();
+            	final Bitmap bitmap = sBitmap==null ? null : sBitmap.get();
             	if(bitmap == null)
-            		return 0;
+            		return 1;
                 return Utils.getBitmapSize(bitmap); 
             }
         };
