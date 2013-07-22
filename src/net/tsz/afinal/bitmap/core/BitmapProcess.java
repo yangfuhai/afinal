@@ -39,12 +39,14 @@ public class BitmapProcess {
 		
 		if(bitmap == null){
 			byte[] data = mDownloader.download(url);
-			if(config !=null)
-				bitmap =  BitmapDecoder.decodeSampledBitmapFromByteArray(data,0,data.length,config.getBitmapWidth(),config.getBitmapHeight());
-			else
-				return BitmapFactory.decodeByteArray(data,0, data.length);
-			
-			mCache.addToDiskCache(url, data);
+			if(data != null && data.length > 0){
+				if(config !=null)
+					bitmap =  BitmapDecoder.decodeSampledBitmapFromByteArray(data,0,data.length,config.getBitmapWidth(),config.getBitmapHeight());
+				else
+					return BitmapFactory.decodeByteArray(data,0,data.length);
+				
+				mCache.addToDiskCache(url, data);
+			}
 		}
 		
 		return bitmap;
