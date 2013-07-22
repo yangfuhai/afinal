@@ -702,7 +702,6 @@ public class FinalBitmap {
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
 			if (isCancelled() || mExitTasksEarly) {
-				bitmap.recycle();
 				bitmap = null;
 			}
 
