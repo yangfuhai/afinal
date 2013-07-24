@@ -15,6 +15,9 @@
  */
 package net.tsz.afinal;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,10 +54,54 @@ public class FinalDb {
 			throw new DbException("daoConfig is null");
 		if(config.getContext() == null)
 			throw new DbException("android context is null");
-		this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
+        if(config.isSaveOnSDCard()){
+            this.db = createDbFileOnSDCard(config.getTargetDirectory(),config.getDbName());
+        }else{
+		    this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
+        }
 		this.config = config;
 	}
-	
+
+    /**
+     * 在SD卡的指定目录上创建文件
+     * @param sdcardPath
+     * @param dbfilename
+     * @return
+     */
+	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,String dbfilename){
+        String dbPath=android.os.Environment.getExternalStorageDirectory()
+                .getAbsolutePath()+(sdcardPath==null||sdcardPath.length()==0?"":"/" +sdcardPath);
+        String[] dirs = sdcardPath.split("/");
+        String pathCache =android.os.Environment.getExternalStorageDirectory()
+                .getAbsolutePath();
+        for(String dir :dirs){
+            if(dir.length()==0)
+                continue;
+            File dbp=new File(pathCache+"/"+dir);
+            if(!dbp.exists()){
+                dbp.mkdir();
+                pathCache = dbp.getAbsolutePath();
+            }
+        }
+        File dbf=new File(dbPath+"/"+dbfilename);
+
+        //数据库文件是否创建成功
+        boolean isFileCreateSuccess=false;
+        if(!dbf.exists()){
+            try{
+                isFileCreateSuccess=dbf.createNewFile();
+            }
+            catch(IOException ioex){
+                throw new DbException("数据库文件创建失败",ioex);
+            }
+        }
+       else{
+            isFileCreateSuccess=true;
+        }
+        if(isFileCreateSuccess)
+            return SQLiteDatabase.openOrCreateDatabase(dbf, null);
+        return null;
+    }
 	
 	private synchronized static FinalDb getInstance(DaoConfig daoConfig) {
 		FinalDb dao = daoMap.get(daoConfig.getDbName());
@@ -64,7 +111,19 @@ public class FinalDb {
 		}
 		return dao;
 	}
-	
+    /**
+     * 在sd卡上创建FinalDb
+     * @param context
+     * @param targetDirectory 目标目录
+     */
+    public static FinalDb createOnSDCard(Context context,String targetDirectory){
+        DaoConfig config = new DaoConfig();
+        config.setContext(context);
+        config.setSaveOnSDCard(true);
+        config.setTargetDirectory(targetDirectory);
+        return getInstance(config);
+
+    }
 	/**
 	 * 创建FinalDb
 	 * @param context
@@ -609,6 +668,8 @@ public class FinalDb {
 		private int 		dbVersion 	= 1;			//数据库版本
 		private boolean 	debug = true;				//是否是调试模式（调试模式  增删改查的时候显示SQL语句）
 		private DbUpdateListener dbUpdateListener;
+        private boolean saveOnSDCard = false;//是否保存到SD卡
+        private String  targetDirectory;//数据库文件在sd卡中的目录
 		
 		public Context getContext() {
 			return mContext;
@@ -640,8 +701,23 @@ public class FinalDb {
 		public void setDbUpdateListener(DbUpdateListener dbUpdateListener) {
 			this.dbUpdateListener = dbUpdateListener;
 		}
-		
-	}
+
+        public boolean isSaveOnSDCard() {
+            return saveOnSDCard;
+        }
+
+        public void setSaveOnSDCard(boolean saveOnSDCard) {
+            this.saveOnSDCard = saveOnSDCard;
+        }
+
+        public String getTargetDirectory() {
+            return targetDirectory;
+        }
+
+        public void setTargetDirectory(String targetDirectory) {
+            this.targetDirectory = targetDirectory;
+        }
+    }
 	
 	
 	class SqliteDbHelper extends SQLiteOpenHelper {
