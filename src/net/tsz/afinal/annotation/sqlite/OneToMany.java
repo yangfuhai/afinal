@@ -25,5 +25,4 @@ import java.lang.annotation.Target;
 public @interface OneToMany {
 	
 	 public String manyColumn();
-     public boolean lazyLoad() default true;
 }
