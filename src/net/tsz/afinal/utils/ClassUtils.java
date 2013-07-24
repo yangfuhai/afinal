@@ -244,9 +244,16 @@ public class ClassUtils {
 					
 					if(type instanceof ParameterizedType){
 						ParameterizedType pType = (ParameterizedType) f.getGenericType();
-						Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[0];
-						if(pClazz!=null)
-							otm.setOneClass(pClazz);
+                        //如果类型参数为2则认为是LazyLoader 2013-7-25
+                        if(pType.getActualTypeArguments().length==1){
+						    Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[0];
+						    if(pClazz!=null)
+							    otm.setOneClass(pClazz);
+                        }else{
+                            Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[1];
+                            if(pClazz!=null)
+                                otm.setOneClass(pClazz);
+                        }
 					}else{
 						throw new DbException("getOneToManyList Exception:"+f.getName()+"'s type is null");
 					}

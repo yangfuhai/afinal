@@ -238,7 +238,7 @@ public class FieldUtils {
 	
 	
 	/**
-	 * 获取某个熟悉对应的 表的列
+	 * 获取某个属性对应的 表的列
 	 * @param entity
 	 * @param fieldName
 	 * @return
