@@ -349,7 +349,7 @@ public class FinalDb {
 			Cursor cursor = db.rawQuery(sqlInfo.getSql(), sqlInfo.getBindArgsAsStringArray());
 			try {
 				if(cursor.moveToNext()){
-					return CursorUtils.getEntity(cursor, clazz);
+					return CursorUtils.getEntity(cursor, clazz,this);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -372,30 +372,14 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
-					for(ManyToOne many : manys){
-						Object obj = dbModel.get(many.getColumn());
-						if(obj!=null){
-							@SuppressWarnings("unchecked")
-							T manyEntity = (T) findById(Integer.valueOf(obj.toString()), many.getDataType());
-							if(manyEntity!=null){
-								many.setValue(entity, manyEntity);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+            return loadManyToOne(entity,clazz);
 		}
 		
 		return null;
 	}
-	
-	/**
+
+
+    /**
 	 * 根据条件查找，同时查找“多对一”的数据（只查找findClass中的类的数据）
 	 * @param id
 	 * @param clazz
@@ -408,35 +392,50 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
-					for(ManyToOne many : manys){
-						boolean isFind = false;
-						for(Class<?> mClass : findClass){
-							if(many.getManyClass()==mClass){
-								isFind = true;
-								break;
-							}
-						}
-						
-						if(isFind){
-							@SuppressWarnings("unchecked")
-							T manyEntity = (T) findById(dbModel.get(many.getColumn()), many.getDataType());
-							if(manyEntity!=null){
-								many.setValue(entity, manyEntity);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadManyToOne(entity,clazz,findClass);
 		}
 		return null;
 	}
-	
+
+    /**
+     * 将entity中的“多对一”的数据填充满
+     * @param clazz
+     * @param entity
+     * @param <T>
+     * @return
+     */
+    public <T> T loadManyToOne(T entity,Class<T> clazz,Class<?> ... findClass) {
+        if(entity!=null){
+            try {
+                Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
+                for(ManyToOne many : manys){
+                    Object id = many.getValue(entity);
+                    if(id!=null){
+                        boolean isFind = false;
+                        if(findClass == null || findClass.length==0){
+                            isFind = true;
+                        }
+                        for(Class<?> mClass : findClass){
+                            if(many.getManyClass()==mClass){
+                                isFind = true;
+                                break;
+                            }
+                        }
+                        if(isFind){
+                            @SuppressWarnings("unchecked")
+                            T manyEntity = (T) findById(Integer.valueOf(id.toString()), many.getDataType());
+                            if(manyEntity!=null){
+                                many.setValue(entity, manyEntity);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return entity;
+    }
 	
 	/**
 	 * 根据主键查找，同时查找“一对多”的数据（如果有多个“一对多”属性，则查找所有的一对多”属性）
@@ -450,24 +449,13 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
-					for(OneToMany one : ones){
-						List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
-						if(list!=null){
-							one.setValue(entity, list);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadOneToMany(entity,clazz);
 		}
 		
 		return null;
 	}
+
+
 	
 	/**
 	 * 根据主键查找，同时查找“一对多”的数据（只查找findClass中的“一对多”）
@@ -482,36 +470,52 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
-					for(OneToMany one : ones){
-						boolean isFind = false;
-						for(Class<?> mClass : findClass){
-							if(one.getOneClass().equals(mClass.getName())){
-								isFind = true;
-								break;
-							}
-						}
-						
-						if(isFind){
-							List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
-							if(list!=null){
-								one.setValue(entity, list);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadOneToMany(entity,clazz,findClass);
 		}
 		
 		return null;
 	}
-	
-	/**
+
+    /**
+     * 将entity中的“一对多”的数据填充满
+     * @param entity
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T loadOneToMany(T entity ,Class<T> clazz,Class<?> ... findClass){
+        if(entity!=null){
+            try {
+                Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
+                Object id = TableInfo.get(clazz).getId().getValue(entity);
+                for(OneToMany one : ones){
+                    boolean isFind = false;
+                    if(findClass == null || findClass.length==0){
+                        isFind = true;
+                    }
+                    for(Class<?> mClass : findClass){
+                        if(one.getOneClass().equals(mClass.getName())){
+                            isFind = true;
+                            break;
+                        }
+                    }
+
+                    if(isFind){
+                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
+                        if(list!=null){
+                            one.setValue(entity, list);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return entity;
+    }
+
+
+    /**
 	 * 查找所有的数据
 	 * @param clazz
 	 */
@@ -563,7 +567,7 @@ public class FinalDb {
 		try {
 			List<T> list = new ArrayList<T>();
 			while(cursor.moveToNext()){
-				T t = CursorUtils.getEntity(cursor, clazz);
+				T t = CursorUtils.getEntity(cursor, clazz,this);
 				list.add(t);
 			}
 			return list;
