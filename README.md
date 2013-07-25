@@ -45,7 +45,28 @@ db.save(user);
 ```
 
 ----
-
+##FinalDB OneToMany懒加载使用方法：
+模型定义：
+public class Parent{
+    private int id;
+    @OneToMany(manyColumn = "parentId")
+    private OneToManyLazyLoader<Parent ,Child> children;
+    /*....*/
+}
+public class Child{
+    private int id;
+    private String text;
+    @ManyToOne(column = "parentId")
+    private  Parent  parent;
+    /*....*/
+}
+使用：
+List<  Parent  > all = db.findAll( Parent .class);
+        for( Parent  item : all){
+            if(item.getChildren ().getList().size()>0)
+                Toast.makeText(this,item.getText() + item.getChildren().getList().get(0).getText(),Toast.LENGTH_LONG).show();
+        }
+----
 ##FinalActivity使用方法：
 * 完全注解方式就可以进行UI绑定和事件绑定
 * 无需findViewById和setClickListener等
