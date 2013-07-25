@@ -47,17 +47,17 @@ public class CursorUtils {
 								table.getId().setValue(entity,  cursor.getString(i));
 							}
 						}
-                        /**
-                         * 处理OneToMany的lazyLoad形式
-                         */
-                        OneToMany oneToManyProp = table.oneToManyMap.get(column);
-                        if(oneToManyProp!=null){
-                            if(oneToManyProp.getDataType()==OneToManyLazyLoader.class){
-                                OneToManyLazyLoader oneToManyLazyLoader = new OneToManyLazyLoader(entity,clazz,oneToManyProp.getOneClass(),db);
-                                oneToManyProp.setValue(entity,oneToManyLazyLoader);
-                            }
-                        }
+
 					}
+                    /**
+                     * 处理OneToMany的lazyLoad形式
+                     */
+                    for(OneToMany oneToManyProp : table.oneToManyMap.values()){
+                        if(oneToManyProp.getDataType()==OneToManyLazyLoader.class){
+                            OneToManyLazyLoader oneToManyLazyLoader = new OneToManyLazyLoader(entity,clazz,oneToManyProp.getOneClass(),db);
+                            oneToManyProp.setValue(entity,oneToManyLazyLoader);
+                        }
+                    }
 					return entity;
 				}
 			}

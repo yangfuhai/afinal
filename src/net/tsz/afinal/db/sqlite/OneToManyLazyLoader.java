@@ -2,6 +2,7 @@ package net.tsz.afinal.db.sqlite;
 
 import net.tsz.afinal.FinalDb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +21,17 @@ public class OneToManyLazyLoader<O,M> {
         this.db = db;
     }
     List<M> entities;
+
+    /**
+     * 如果数据未加载，则调用loadOneToMany填充数据
+     * @return
+     */
     public List<M> getList(){
         if(entities==null){
             this.db.loadOneToMany((O)this.ownerEntity,this.ownerClazz,this.listItemClazz);
+        }
+        if(entities==null){
+            entities =new ArrayList<M>();
         }
         return entities;
     }

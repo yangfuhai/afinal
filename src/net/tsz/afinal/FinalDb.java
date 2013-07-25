@@ -25,6 +25,7 @@ import java.util.List;
 
 import net.tsz.afinal.db.sqlite.CursorUtils;
 import net.tsz.afinal.db.sqlite.DbModel;
+import net.tsz.afinal.db.sqlite.OneToManyLazyLoader;
 import net.tsz.afinal.db.sqlite.SqlBuilder;
 import net.tsz.afinal.db.sqlite.SqlInfo;
 import net.tsz.afinal.db.table.KeyValue;
@@ -494,7 +495,7 @@ public class FinalDb {
                         isFind = true;
                     }
                     for(Class<?> mClass : findClass){
-                        if(one.getOneClass().equals(mClass.getName())){
+                        if(one.getOneClass() == mClass){
                             isFind = true;
                             break;
                         }
@@ -503,7 +504,13 @@ public class FinalDb {
                     if(isFind){
                         List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
                         if(list!=null){
-                            one.setValue(entity, list);
+                            /*如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据*/
+                            if(one.getDataType()==OneToManyLazyLoader.class){
+                                OneToManyLazyLoader oneToManyLazyLoader = one.getValue(entity);
+                                oneToManyLazyLoader.setList(list);
+                            }else{
+                                one.setValue(entity, list);
+                            }
                         }
                     }
                 }

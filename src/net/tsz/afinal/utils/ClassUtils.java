@@ -257,8 +257,8 @@ public class ClassUtils {
 					}else{
 						throw new DbException("getOneToManyList Exception:"+f.getName()+"'s type is null");
 					}
-					
-					otm.setDataType(f.getClass());
+					/*修正类型赋值错误的bug，f.getClass返回的是Filed*/
+					otm.setDataType(f.getType());
 					otm.setSet(FieldUtils.getFieldSetMethod(clazz, f));
 					otm.setGet(FieldUtils.getFieldGetMethod(clazz, f));
 					
