@@ -92,6 +92,22 @@ public class AfinalDemoActivity extends FinalActivity {
     }
 }
 ```
+*在其他侵入式框架下使用（如ActionBarShelock）
+```java
+     protected void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+        setContentView(view);
+        FinalActivity.initInjectedView(this);
+     }
+```
+*在Fragment中使用
+```java
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState) {
+       View viewRoot = inflater.inflate(R.layout.map_frame, container, false);
+       FinalActivity.initInjectedView(this,viewRoot);
+    }
+```
 ##FinalHttp使用方法：
 ###普通get方法
 
