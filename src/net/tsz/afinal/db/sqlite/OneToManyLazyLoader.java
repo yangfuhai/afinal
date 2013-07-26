@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * 一对多延迟加载类
  * Created by pwy on 13-7-25.
+ * @param <O> 宿主实体的class
+ * @param <M> 多放实体class
  */
 public class OneToManyLazyLoader<O,M> {
-    Object ownerEntity;
+    O ownerEntity;
     Class<O> ownerClazz;
     Class<M> listItemClazz;
     FinalDb db;
-    public OneToManyLazyLoader(Object ownerEntity,Class<O> ownerClazz,Class<M> listItemclazz,FinalDb db){
+    public OneToManyLazyLoader(O ownerEntity,Class<O> ownerClazz,Class<M> listItemclazz,FinalDb db){
         this.ownerEntity = ownerEntity;
         this.ownerClazz = ownerClazz;
         this.listItemClazz = listItemclazz;
