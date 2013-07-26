@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.tsz.afinal.FinalDb;
+import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.Property;
 import net.tsz.afinal.db.table.TableInfo;
@@ -56,6 +57,16 @@ public class CursorUtils {
                         if(oneToManyProp.getDataType()==OneToManyLazyLoader.class){
                             OneToManyLazyLoader oneToManyLazyLoader = new OneToManyLazyLoader(entity,clazz,oneToManyProp.getOneClass(),db);
                             oneToManyProp.setValue(entity,oneToManyLazyLoader);
+                        }
+                    }
+
+                    /**
+                     * 处理ManyToOne的lazyLoad形式
+                     */
+                    for(ManyToOne manyToOneProp : table.manyToOneMap.values()){
+                        if(manyToOneProp.getDataType()==ManyToOneLazyLoader.class){
+                            ManyToOneLazyLoader manyToOneLazyLoader = new ManyToOneLazyLoader(entity,clazz,manyToOneProp.getManyClass(),db);
+                            manyToOneProp.setValue(entity,manyToOneLazyLoader);
                         }
                     }
 					return entity;
