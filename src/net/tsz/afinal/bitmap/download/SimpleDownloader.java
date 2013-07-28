@@ -19,11 +19,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import android.util.Log;
@@ -34,42 +36,54 @@ import android.util.Log;
  */
 public class SimpleDownloader implements Downloader {
 
-	private static final String TAG = "SimpleHttpDownloader";
+	private static final String TAG = SimpleDownloader.class.getSimpleName();
 	private static final int IO_BUFFER_SIZE = 8 * 1024; // 8k
 
-	public byte[] download(String urlString) {
+	public byte[] download (String urlString){
 		if (urlString == null)
 			return null;
 
 		if (urlString.trim().toLowerCase().startsWith("http")) {
 			return getFromHttp(urlString);
-		}else {
+		}else if(urlString.trim().toLowerCase().startsWith("file:")){
+			try {
+				File f = new File(new URI(urlString));
+				if (f.exists() && f.canRead()) {
+					return getFromFile(f);
+				}
+			} catch (URISyntaxException e) {
+				Log.e(TAG, "Error in read from file - " + urlString + " : " + e);
+			}
+		}else{
 			File f = new File(urlString);
 			if (f.exists() && f.canRead()) {
 				return getFromFile(f);
 			}
 		}
-
+		
 		return null;
 	}
 
 	private byte[] getFromFile(File file) {
-
-		FileReader fr = null;
+		if(file == null) return null;
+		
+		FileInputStream fis = null;
 		try {
-			fr = new FileReader(file);
+			fis = new FileInputStream(file);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int b = 0;
-			while ((b = fr.read()) != -1) {
-				baos.write(b);
+			int len = 0;
+			byte[] buffer = new byte[1024];
+			while ((len = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, len);
 			}
 			return baos.toByteArray();
 		} catch (Exception e) {
 			Log.e(TAG, "Error in read from file - " + file + " : " + e);
 		} finally {
-			if (fr != null) {
+			if (fis != null) {
 				try {
-					fr.close();
+					fis.close();
+					fis = null;
 				} catch (IOException e) {
 					// do nothing
 				}
@@ -87,8 +101,7 @@ public class SimpleDownloader implements Downloader {
 		try {
 			final URL url = new URL(urlString);
 			urlConnection = (HttpURLConnection) url.openConnection();
-			in = new FlushedInputStream(new BufferedInputStream(
-					urlConnection.getInputStream(), IO_BUFFER_SIZE));
+			in = new FlushedInputStream(new BufferedInputStream(urlConnection.getInputStream(), IO_BUFFER_SIZE));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int b;
 			while ((b = in.read()) != -1) {
@@ -114,8 +127,8 @@ public class SimpleDownloader implements Downloader {
 		return null;
 	}
 
+	
 	public class FlushedInputStream extends FilterInputStream {
-
 		public FlushedInputStream(InputStream inputStream) {
 			super(inputStream);
 		}
