@@ -24,59 +24,60 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import android.util.Log;
 
 /**
- * @title 根据 图片url地址下载图片  可以是本地和网络
- * @author 杨福海（michael）  www.yangfuhai.com
+ * @title 根据 图片url地址下载图片 可以是本地和网络
+ * @author 杨福海（michael） www.yangfuhai.com
  */
-public class SimpleDownloader implements Downloader{
-	
+public class SimpleDownloader implements Downloader {
+
 	private static final String TAG = "SimpleHttpDownloader";
-	private static final int IO_BUFFER_SIZE = 8 * 1024; //8k
-	
-	
+	private static final int IO_BUFFER_SIZE = 8 * 1024; // 8k
+
 	public byte[] download(String urlString) {
-		 	if(urlString == null)
-		 		return null;
-		 	
-		 	if(urlString.trim().toLowerCase().startsWith("http")){
-		 		return getFromHttp(urlString);
-		 	}else if(urlString.trim().toLowerCase().startsWith("file")){
-		 		try {
-					return getFromFile(new URI(urlString).getPath());
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
-		 	}else if(urlString.trim().toLowerCase().startsWith("/")){
-		 		return getFromFile(urlString);
-		 	}
-		 	
-		 	return null;
-	    }
+		if (urlString == null)
+			return null;
 
-
-	private byte[] getFromFile(String urlString) {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			FileReader f = new FileReader(new File(urlString));
-			int b;
-		    while ((b = f.read()) != -1) {
-		    	baos.write(b);
-		    }
-		    return baos.toByteArray();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (urlString.trim().toLowerCase().startsWith("http")) {
+			return getFromHttp(urlString);
+		}else {
+			File f = new File(urlString);
+			if (f.exists() && f.canRead()) {
+				return getFromFile(f);
+			}
 		}
-		
+
 		return null;
 	}
-	
-	
+
+	private byte[] getFromFile(File file) {
+
+		FileReader fr = null;
+		try {
+			fr = new FileReader(file);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int b = 0;
+			while ((b = fr.read()) != -1) {
+				baos.write(b);
+			}
+			return baos.toByteArray();
+		} catch (Exception e) {
+			Log.e(TAG, "Error in read from file - " + file + " : " + e);
+		} finally {
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException e) {
+					// do nothing
+				}
+			}
+		}
+
+		return null;
+	}
 
 	private byte[] getFromHttp(String urlString) {
 		HttpURLConnection urlConnection = null;
@@ -84,56 +85,57 @@ public class SimpleDownloader implements Downloader{
 		FlushedInputStream in = null;
 
 		try {
-		    final URL url = new URL(urlString);
-		    urlConnection = (HttpURLConnection) url.openConnection();
-		    in = new FlushedInputStream(new BufferedInputStream(urlConnection.getInputStream(), IO_BUFFER_SIZE));
-		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		    int b;
-		    while ((b = in.read()) != -1) {
-		    	baos.write(b);
-		    }
-		    return baos.toByteArray();
+			final URL url = new URL(urlString);
+			urlConnection = (HttpURLConnection) url.openConnection();
+			in = new FlushedInputStream(new BufferedInputStream(
+					urlConnection.getInputStream(), IO_BUFFER_SIZE));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int b;
+			while ((b = in.read()) != -1) {
+				baos.write(b);
+			}
+			return baos.toByteArray();
 		} catch (final IOException e) {
-		    Log.e(TAG, "Error in downloadBitmap - "+urlString +" : " + e);
+			Log.e(TAG, "Error in downloadBitmap - " + urlString + " : " + e);
 		} finally {
-		    if (urlConnection != null) {
-		        urlConnection.disconnect();
-		    }
-		    try {
-		        if (out != null) {
-		            out.close();
-		        }
-		        if (in != null) {
-		            in.close();
-		        }
-		    } catch (final IOException e) {}
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			}
+			try {
+				if (out != null) {
+					out.close();
+				}
+				if (in != null) {
+					in.close();
+				}
+			} catch (final IOException e) {
+			}
 		}
 		return null;
 	}
 
-	    
-	    public class FlushedInputStream extends FilterInputStream {
+	public class FlushedInputStream extends FilterInputStream {
 
-	    	public FlushedInputStream(InputStream inputStream) {
-	    		super(inputStream);
-	    	}
+		public FlushedInputStream(InputStream inputStream) {
+			super(inputStream);
+		}
 
-	    	@Override
-	    	public long skip(long n) throws IOException {
-	    		long totalBytesSkipped = 0L;
-	    		while (totalBytesSkipped < n) {
-	    			long bytesSkipped = in.skip(n - totalBytesSkipped);
-	    			if (bytesSkipped == 0L) {
-	    				int by_te = read();
-	    				if (by_te < 0) {
-	    					break; // we reached EOF
-	    				} else {
-	    					bytesSkipped = 1; // we read one byte
-	    				}
-	    			}
-	    			totalBytesSkipped += bytesSkipped;
-	    		}
-	    		return totalBytesSkipped;
-	    	}
-	    }
+		@Override
+		public long skip(long n) throws IOException {
+			long totalBytesSkipped = 0L;
+			while (totalBytesSkipped < n) {
+				long bytesSkipped = in.skip(n - totalBytesSkipped);
+				if (bytesSkipped == 0L) {
+					int by_te = read();
+					if (by_te < 0) {
+						break; // we reached EOF
+					} else {
+						bytesSkipped = 1; // we read one byte
+					}
+				}
+				totalBytesSkipped += bytesSkipped;
+			}
+			return totalBytesSkipped;
+		}
+	}
 }
