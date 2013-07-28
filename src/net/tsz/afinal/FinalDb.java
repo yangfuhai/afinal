@@ -15,6 +15,9 @@
  */
 package net.tsz.afinal;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ import java.util.List;
 
 import net.tsz.afinal.db.sqlite.CursorUtils;
 import net.tsz.afinal.db.sqlite.DbModel;
+import net.tsz.afinal.db.sqlite.OneToManyLazyLoader;
 import net.tsz.afinal.db.sqlite.SqlBuilder;
 import net.tsz.afinal.db.sqlite.SqlInfo;
 import net.tsz.afinal.db.table.KeyValue;
@@ -51,10 +55,54 @@ public class FinalDb {
 			throw new DbException("daoConfig is null");
 		if(config.getContext() == null)
 			throw new DbException("android context is null");
-		this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
+        if(config.isSaveOnSDCard()){
+            this.db = createDbFileOnSDCard(config.getTargetDirectory(),config.getDbName());
+        }else{
+		    this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
+        }
 		this.config = config;
 	}
-	
+
+    /**
+     * 在SD卡的指定目录上创建文件
+     * @param sdcardPath
+     * @param dbfilename
+     * @return
+     */
+	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,String dbfilename){
+        String dbPath=android.os.Environment.getExternalStorageDirectory()
+                .getAbsolutePath()+(sdcardPath==null||sdcardPath.length()==0?"":"/" +sdcardPath);
+        String[] dirs = sdcardPath.split("/");
+        String pathCache =android.os.Environment.getExternalStorageDirectory()
+                .getAbsolutePath();
+        for(String dir :dirs){
+            if(dir.length()==0)
+                continue;
+            File dbp=new File(pathCache+"/"+dir);
+            if(!dbp.exists()){
+                dbp.mkdir();
+                pathCache = dbp.getAbsolutePath();
+            }
+        }
+        File dbf=new File(dbPath+"/"+dbfilename);
+
+        //数据库文件是否创建成功
+        boolean isFileCreateSuccess=false;
+        if(!dbf.exists()){
+            try{
+                isFileCreateSuccess=dbf.createNewFile();
+            }
+            catch(IOException ioex){
+                throw new DbException("数据库文件创建失败",ioex);
+            }
+        }
+       else{
+            isFileCreateSuccess=true;
+        }
+        if(isFileCreateSuccess)
+            return SQLiteDatabase.openOrCreateDatabase(dbf, null);
+        return null;
+    }
 	
 	private synchronized static FinalDb getInstance(DaoConfig daoConfig) {
 		FinalDb dao = daoMap.get(daoConfig.getDbName());
@@ -64,7 +112,19 @@ public class FinalDb {
 		}
 		return dao;
 	}
-	
+    /**
+     * 在sd卡上创建FinalDb
+     * @param context
+     * @param targetDirectory 目标目录
+     */
+    public static FinalDb createOnSDCard(Context context,String targetDirectory){
+        DaoConfig config = new DaoConfig();
+        config.setContext(context);
+        config.setSaveOnSDCard(true);
+        config.setTargetDirectory(targetDirectory);
+        return getInstance(config);
+
+    }
 	/**
 	 * 创建FinalDb
 	 * @param context
@@ -290,7 +350,7 @@ public class FinalDb {
 			Cursor cursor = db.rawQuery(sqlInfo.getSql(), sqlInfo.getBindArgsAsStringArray());
 			try {
 				if(cursor.moveToNext()){
-					return CursorUtils.getEntity(cursor, clazz);
+					return CursorUtils.getEntity(cursor, clazz,this);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -313,30 +373,14 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
-					for(ManyToOne many : manys){
-						Object obj = dbModel.get(many.getColumn());
-						if(obj!=null){
-							@SuppressWarnings("unchecked")
-							T manyEntity = (T) findById(Integer.valueOf(obj.toString()), many.getDataType());
-							if(manyEntity!=null){
-								many.setValue(entity, manyEntity);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+            return loadManyToOne(entity,clazz);
 		}
 		
 		return null;
 	}
-	
-	/**
+
+
+    /**
 	 * 根据条件查找，同时查找“多对一”的数据（只查找findClass中的类的数据）
 	 * @param id
 	 * @param clazz
@@ -349,35 +393,50 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
-					for(ManyToOne many : manys){
-						boolean isFind = false;
-						for(Class<?> mClass : findClass){
-							if(many.getManyClass()==mClass){
-								isFind = true;
-								break;
-							}
-						}
-						
-						if(isFind){
-							@SuppressWarnings("unchecked")
-							T manyEntity = (T) findById(dbModel.get(many.getColumn()), many.getDataType());
-							if(manyEntity!=null){
-								many.setValue(entity, manyEntity);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadManyToOne(entity,clazz,findClass);
 		}
 		return null;
 	}
-	
+
+    /**
+     * 将entity中的“多对一”的数据填充满
+     * @param clazz
+     * @param entity
+     * @param <T>
+     * @return
+     */
+    public <T> T loadManyToOne(T entity,Class<T> clazz,Class<?> ... findClass) {
+        if(entity!=null){
+            try {
+                Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
+                for(ManyToOne many : manys){
+                    Object id = many.getValue(entity);
+                    if(id!=null){
+                        boolean isFind = false;
+                        if(findClass == null || findClass.length==0){
+                            isFind = true;
+                        }
+                        for(Class<?> mClass : findClass){
+                            if(many.getManyClass()==mClass){
+                                isFind = true;
+                                break;
+                            }
+                        }
+                        if(isFind){
+                            @SuppressWarnings("unchecked")
+                            T manyEntity = (T) findById(Integer.valueOf(id.toString()), many.getDataType());
+                            if(manyEntity!=null){
+                                many.setValue(entity, manyEntity);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return entity;
+    }
 	
 	/**
 	 * 根据主键查找，同时查找“一对多”的数据（如果有多个“一对多”属性，则查找所有的一对多”属性）
@@ -391,24 +450,13 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
-					for(OneToMany one : ones){
-						List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
-						if(list!=null){
-							one.setValue(entity, list);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadOneToMany(entity,clazz);
 		}
 		
 		return null;
 	}
+
+
 	
 	/**
 	 * 根据主键查找，同时查找“一对多”的数据（只查找findClass中的“一对多”）
@@ -423,36 +471,58 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			if(entity!=null){
-				try {
-					Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
-					for(OneToMany one : ones){
-						boolean isFind = false;
-						for(Class<?> mClass : findClass){
-							if(one.getOneClass().equals(mClass.getName())){
-								isFind = true;
-								break;
-							}
-						}
-						
-						if(isFind){
-							List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
-							if(list!=null){
-								one.setValue(entity, list);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return entity;
+			return loadOneToMany(entity,clazz,findClass);
 		}
 		
 		return null;
 	}
-	
-	/**
+
+    /**
+     * 将entity中的“一对多”的数据填充满
+     * @param entity
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T loadOneToMany(T entity ,Class<T> clazz,Class<?> ... findClass){
+        if(entity!=null){
+            try {
+                Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
+                Object id = TableInfo.get(clazz).getId().getValue(entity);
+                for(OneToMany one : ones){
+                    boolean isFind = false;
+                    if(findClass == null || findClass.length==0){
+                        isFind = true;
+                    }
+                    for(Class<?> mClass : findClass){
+                        if(one.getOneClass() == mClass){
+                            isFind = true;
+                            break;
+                        }
+                    }
+
+                    if(isFind){
+                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
+                        if(list!=null){
+                            /*如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据*/
+                            if(one.getDataType()==OneToManyLazyLoader.class){
+                                OneToManyLazyLoader oneToManyLazyLoader = one.getValue(entity);
+                                oneToManyLazyLoader.setList(list);
+                            }else{
+                                one.setValue(entity, list);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return entity;
+    }
+
+
+    /**
 	 * 查找所有的数据
 	 * @param clazz
 	 */
@@ -504,7 +574,7 @@ public class FinalDb {
 		try {
 			List<T> list = new ArrayList<T>();
 			while(cursor.moveToNext()){
-				T t = CursorUtils.getEntity(cursor, clazz);
+				T t = CursorUtils.getEntity(cursor, clazz,this);
 				list.add(t);
 			}
 			return list;
@@ -609,6 +679,8 @@ public class FinalDb {
 		private int 		dbVersion 	= 1;			//数据库版本
 		private boolean 	debug = true;				//是否是调试模式（调试模式  增删改查的时候显示SQL语句）
 		private DbUpdateListener dbUpdateListener;
+        private boolean saveOnSDCard = false;//是否保存到SD卡
+        private String  targetDirectory;//数据库文件在sd卡中的目录
 		
 		public Context getContext() {
 			return mContext;
@@ -640,8 +712,23 @@ public class FinalDb {
 		public void setDbUpdateListener(DbUpdateListener dbUpdateListener) {
 			this.dbUpdateListener = dbUpdateListener;
 		}
-		
-	}
+
+        public boolean isSaveOnSDCard() {
+            return saveOnSDCard;
+        }
+
+        public void setSaveOnSDCard(boolean saveOnSDCard) {
+            this.saveOnSDCard = saveOnSDCard;
+        }
+
+        public String getTargetDirectory() {
+            return targetDirectory;
+        }
+
+        public void setTargetDirectory(String targetDirectory) {
+            this.targetDirectory = targetDirectory;
+        }
+    }
 	
 	
 	class SqliteDbHelper extends SQLiteOpenHelper {
