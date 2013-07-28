@@ -368,7 +368,12 @@ public class SqlBuilder {
 		String manycolumn=many.getColumn();
 		Object manyobject=many.getValue(entity);
 		if(manyobject!=null){
-			Object manyvalue = TableInfo.get(manyobject.getClass()).getId().getValue(manyobject);
+			Object manyvalue;
+            if(manyobject.getClass()==ManyToOneLazyLoader.class){
+                manyvalue = TableInfo.get(many.getManyClass()).getId().getValue(manyobject);
+            }else{
+                manyvalue = TableInfo.get(manyobject.getClass()).getId().getValue(manyobject);
+            }
 			if(manycolumn!=null && manyvalue!=null){
 				kv = new KeyValue(manycolumn, manyvalue);
 			}
