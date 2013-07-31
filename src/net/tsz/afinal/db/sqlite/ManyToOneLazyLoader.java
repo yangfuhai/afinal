@@ -17,6 +17,10 @@ public class ManyToOneLazyLoader<M,O> {
     Class<M> manyClazz;
     Class<O> oneClazz;
     FinalDb db;
+    /**
+     * 用于
+     */
+    private Object fieldValue;
     public ManyToOneLazyLoader(M manyEntity, Class<M> manyClazz, Class<O> oneClazz, FinalDb db){
         this.manyEntity = manyEntity;
         this.manyClazz = manyClazz;
@@ -32,7 +36,7 @@ public class ManyToOneLazyLoader<M,O> {
      */
     public O get(){
         if(oneEntity==null && !hasLoaded){
-            this.db.loadManyToOne(this.manyEntity,this.manyClazz,this.oneClazz);
+            this.db.loadManyToOne(null,this.manyEntity,this.manyClazz,this.oneClazz);
             hasLoaded = true;
         }
         return oneEntity;
@@ -41,4 +45,11 @@ public class ManyToOneLazyLoader<M,O> {
         oneEntity = value;
     }
 
+    public Object getFieldValue() {
+        return fieldValue;
+    }
+
+    public void setFieldValue(Object fieldValue) {
+        this.fieldValue = fieldValue;
+    }
 }
