@@ -32,7 +32,6 @@ public class SqlBuilder {
 	
 	/**
 	 * 获取插入的sql语句
-	 * @param tableInfo
 	 * @return
 	 */
 	public static SqlInfo buildInsertSql(Object entity){
@@ -370,7 +369,7 @@ public class SqlBuilder {
 		if(manyobject!=null){
 			Object manyvalue;
             if(manyobject.getClass()==ManyToOneLazyLoader.class){
-                manyvalue = TableInfo.get(many.getManyClass()).getId().getValue(manyobject);
+                manyvalue = TableInfo.get(many.getManyClass()).getId().getValue(((ManyToOneLazyLoader)manyobject).get());
             }else{
                 manyvalue = TableInfo.get(manyobject.getClass()).getId().getValue(manyobject);
             }

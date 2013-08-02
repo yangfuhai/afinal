@@ -66,6 +66,7 @@ public class CursorUtils {
                     for(ManyToOne manyToOneProp : table.manyToOneMap.values()){
                         if(manyToOneProp.getDataType()==ManyToOneLazyLoader.class){
                             ManyToOneLazyLoader manyToOneLazyLoader = new ManyToOneLazyLoader(entity,clazz,manyToOneProp.getManyClass(),db);
+                            manyToOneLazyLoader.setFieldValue(cursor.getInt(cursor.getColumnIndex(manyToOneProp.getColumn())));
                             manyToOneProp.setValue(entity,manyToOneLazyLoader);
                         }
                     }
