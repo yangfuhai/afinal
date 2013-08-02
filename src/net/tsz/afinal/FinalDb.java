@@ -415,7 +415,7 @@ public class FinalDb {
 
                     Object id = null;
                     if(dbModel!=null){
-                        dbModel.get(many.getColumn());
+                        id = dbModel.get(many.getColumn());
                     }else if(many.getValue(entity).getClass()== ManyToOneLazyLoader.class
                             &&many.getValue(entity)!=null){
                         id = ((ManyToOneLazyLoader)many.getValue(entity)).getFieldValue();
