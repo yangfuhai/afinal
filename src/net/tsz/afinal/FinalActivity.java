@@ -100,23 +100,23 @@ public class FinalActivity extends Activity {
 					
 					String clickMethod = viewInject.click();
 					if(!TextUtils.isEmpty(clickMethod))
-						setViewClickListener(sourceView,field,clickMethod);
+						setViewClickListener(injectedSource,field,clickMethod);
 					
 					String longClickMethod = viewInject.longClick();
 					if(!TextUtils.isEmpty(longClickMethod))
-						setViewLongClickListener(sourceView,field,longClickMethod);
+						setViewLongClickListener(injectedSource,field,longClickMethod);
 					
 					String itemClickMethod = viewInject.itemClick();
 					if(!TextUtils.isEmpty(itemClickMethod))
-						setItemClickListener(sourceView,field,itemClickMethod);
+						setItemClickListener(injectedSource,field,itemClickMethod);
 					
 					String itemLongClickMethod = viewInject.itemLongClick();
 					if(!TextUtils.isEmpty(itemLongClickMethod))
-						setItemLongClickListener(sourceView,field,itemLongClickMethod);
+						setItemLongClickListener(injectedSource,field,itemLongClickMethod);
 					
 					Select select = viewInject.select();
 					if(!TextUtils.isEmpty(select.selected()))
-						setViewSelectListener(sourceView,field,select.selected(),select.noSelected());
+						setViewSelectListener(injectedSource,field,select.selected(),select.noSelected());
 					
 				}
 			}

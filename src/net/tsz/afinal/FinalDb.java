@@ -25,6 +25,7 @@ import java.util.List;
 
 import net.tsz.afinal.db.sqlite.CursorUtils;
 import net.tsz.afinal.db.sqlite.DbModel;
+import net.tsz.afinal.db.sqlite.ManyToOneLazyLoader;
 import net.tsz.afinal.db.sqlite.OneToManyLazyLoader;
 import net.tsz.afinal.db.sqlite.SqlBuilder;
 import net.tsz.afinal.db.sqlite.SqlInfo;
@@ -370,7 +371,7 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-            return loadManyToOne(entity,clazz);
+            return loadManyToOne(dbModel,entity,clazz);
 		}
 		
 		return null;
@@ -390,24 +391,33 @@ public class FinalDb {
 		DbModel dbModel = findDbModelBySQL(sql);
 		if(dbModel!=null){
 			T entity = CursorUtils.dbModel2Entity(dbModel, clazz);
-			return loadManyToOne(entity,clazz,findClass);
+			return loadManyToOne(dbModel,entity,clazz,findClass);
 		}
 		return null;
 	}
 
     /**
      * 将entity中的“多对一”的数据填充满
+     * 如果是懒加载填充，则dbModel参数可为null
      * @param clazz
      * @param entity
      * @param <T>
      * @return
      */
-    public <T> T loadManyToOne(T entity,Class<T> clazz,Class<?> ... findClass) {
+    public <T> T loadManyToOne(DbModel dbModel,T entity,Class<T> clazz,Class<?> ... findClass) {
         if(entity!=null){
             try {
                 Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
                 for(ManyToOne many : manys){
-                    Object id = many.getValue(entity);
+
+                    Object id = null;
+                    if(dbModel!=null){
+                        id = dbModel.get(many.getColumn());
+                    }else if(many.getValue(entity).getClass()== ManyToOneLazyLoader.class
+                            &&many.getValue(entity)!=null){
+                        id = ((ManyToOneLazyLoader)many.getValue(entity)).getFieldValue();
+                    }
+
                     if(id!=null){
                         boolean isFind = false;
                         if(findClass == null || findClass.length==0){
@@ -420,10 +430,19 @@ public class FinalDb {
                             }
                         }
                         if(isFind){
+
                             @SuppressWarnings("unchecked")
-                            T manyEntity = (T) findById(Integer.valueOf(id.toString()), many.getDataType());
+                            T manyEntity = (T) findById(Integer.valueOf(id.toString()), many.getManyClass());
                             if(manyEntity!=null){
-                                many.setValue(entity, manyEntity);
+                                if(many.getValue(entity).getClass()== ManyToOneLazyLoader.class){
+                                    if(many.getValue(entity)==null){
+                                        many.setValue(entity,new ManyToOneLazyLoader(entity,clazz,many.getManyClass(),this));
+                                    }
+                                    ((ManyToOneLazyLoader)many.getValue(entity)).set(manyEntity);
+                                }else{
+                                    many.setValue(entity, manyEntity);
+                                }
+
                             }
                         }
                     }
