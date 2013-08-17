@@ -76,22 +76,22 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 		return invokeLongClickMethod(handler,longClickMethod,v);
 	}
 	
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-		return invokeItemLongClickMethod(handler,itemLongClickMehtod,arg0,arg1,arg2,arg3);
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+		return invokeItemLongClickMethod(handler,itemLongClickMehtod,parent,view,position,id);
 	}
 	
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		
-		invokeItemSelectMethod(handler,itemSelectMethod,arg0,arg1,arg2,arg3);
+		invokeItemSelectMethod(handler,itemSelectMethod,parent,view,position,id);
 	}
 	
-	public void onNothingSelected(AdapterView<?> arg0) {
-		invokeNoSelectMethod(handler,nothingSelectedMethod,arg0);
+	public void onNothingSelected(AdapterView<?> parent) {
+		invokeNoSelectMethod(handler,nothingSelectedMethod,parent);
 	}
 	
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		
-		invokeItemClickMethod(handler,itemClickMethod,arg0,arg1,arg2,arg3);
+		invokeItemClickMethod(handler,itemClickMethod,parent,view,position,id);
 	}
 	
 	public void onClick(View v) {
@@ -144,7 +144,7 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 		if(handler == null) return null;
 		Method method = null;
 		try{   
-			///onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+			///onItemClick(AdapterView<?> parent, View view, int position, long id)
 			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
 			if(method!=null)
 				return method.invoke(handler, params);	
@@ -162,7 +162,7 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 		if(handler == null) throw new ViewException("invokeItemLongClickMethod: handler is null :");
 		Method method = null;
 		try{   
-			///onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,long arg3)
+			///onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
 			if(method!=null){
 				Object obj = method.invoke(handler, params);
@@ -182,7 +182,7 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 		if(handler == null) return null;
 		Method method = null;
 		try{   
-			///onItemSelected(AdapterView<?> arg0, View arg1, int arg2,long arg3)
+			///onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
 			if(method!=null)
 				return method.invoke(handler, params);	
@@ -199,7 +199,7 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 		if(handler == null) return null;
 		Method method = null;
 		try{   
-			//onNothingSelected(AdapterView<?> arg0)
+			//onNothingSelected(AdapterView<?> parent)
 			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class);
 			if(method!=null)
 				return method.invoke(handler, params);	
