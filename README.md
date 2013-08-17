@@ -92,7 +92,8 @@ public class AfinalDemoActivity extends FinalActivity {
     }
 }
 ```
-*在其他侵入式框架下使用（如ActionBarShelock）
+* 在其他侵入式框架下使用（如ActionBarShelock）
+
 ```java
      protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
@@ -100,7 +101,8 @@ public class AfinalDemoActivity extends FinalActivity {
         FinalActivity.initInjectedView(this);
      }
 ```
-*在Fragment中使用
+* 在Fragment中使用
+
 ```java
      public View onCreateView(LayoutInflater inflater, ViewGroup container,
           Bundle savedInstanceState) {
