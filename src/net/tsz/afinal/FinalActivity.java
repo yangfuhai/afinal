@@ -114,7 +114,8 @@ public class FinalActivity extends Activity {
 					String itemClickMethod = viewInject.itemClick();
 					if(!TextUtils.isEmpty(itemClickMethod))
 						setItemClickListener(injectedSource,field,itemClickMethod);
-					
+
+
 					String itemLongClickMethod = viewInject.itemLongClick();
 					if(!TextUtils.isEmpty(itemLongClickMethod))
 						setItemLongClickListener(injectedSource,field,itemLongClickMethod);
