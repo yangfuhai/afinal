@@ -93,7 +93,12 @@ public class FinalActivity extends Activity {
 					int viewId = viewInject.id();
 					try {
 						field.setAccessible(true);
-						field.set(injectedSource,sourceView.findViewById(viewId));
+                        /*当已经被赋值时，不在重复赋值，用于include，inflate情景下的viewinject组合*/
+                        if(field.get(injectedSource)==null){
+						    field.set(injectedSource,sourceView.findViewById(viewId));
+                        }else{
+                            continue;
+                        }
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

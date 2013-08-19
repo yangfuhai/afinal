@@ -521,7 +521,7 @@ public class FinalDb {
                     }
 
                     if(isFind){
-                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"="+id);
+                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"='"+id+"'");
                         if(list!=null){
                             /*如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据*/
                             if(one.getDataType()==OneToManyLazyLoader.class){
