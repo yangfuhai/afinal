@@ -609,7 +609,7 @@ public class FinalDb {
 
 					if (isFind) {
 						List<?> list = findAllByWhere(one.getOneClass(),
-								one.getColumn() + "='" + id + "'");
+                                one.getColumn() + "=" + id);
 						if (list != null) {
 							/* 如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据 */
 							if (one.getDataType() == OneToManyLazyLoader.class) {
@@ -888,10 +888,12 @@ public class FinalDb {
 			this.mDbUpdateListener = dbUpdateListener;
 		}
 
-		public void onCreate(SQLiteDatabase db) {
+		@Override
+        public void onCreate(SQLiteDatabase db) {
 		}
 
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		@Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			if (mDbUpdateListener != null) {
 				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
 			} else { // 清空所有的数据信息
