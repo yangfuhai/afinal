@@ -382,13 +382,7 @@ public class FinalDb {
 				"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'", null);
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
-				// 添加异常捕获.忽略删除所有表时出现的异常:
-				// table sqlite_sequence may not be dropped
-				try {
-					db.execSQL("DROP TABLE " + cursor.getString(0));
-				} catch (SQLException e) {
-					Log.e(TAG, e.getMessage());
-				}
+				db.execSQL("DROP TABLE " + cursor.getString(0));
 			}
 		}
 		if (cursor != null) {
