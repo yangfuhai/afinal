@@ -16,25 +16,16 @@
 package net.tsz.afinal.bitmap.core;
 
 import java.lang.ref.SoftReference;
-
-import net.tsz.afinal.utils.Utils;
+import java.util.HashMap;
 
 import android.graphics.Bitmap;
 
 public class SoftMemoryCacheImpl implements IMemoryCache {
 
-	private final LruMemoryCache<String, SoftReference<Bitmap>> mMemoryCache;
+	private final HashMap<String, SoftReference<Bitmap>> mMemoryCache;
 	
 	public SoftMemoryCacheImpl(int size) {
-		mMemoryCache = new LruMemoryCache<String, SoftReference<Bitmap>>(size) {
-            @Override
-            protected int sizeOf(String key, SoftReference<Bitmap> sBitmap) {
-            	final Bitmap bitmap = sBitmap==null ? null : sBitmap.get();
-            	if(bitmap == null)
-            		return 1;
-                return Utils.getBitmapSize(bitmap); 
-            }
-        };
+		mMemoryCache = new HashMap<String, SoftReference<Bitmap>>(size);
 	}
 	
 	@Override
@@ -53,7 +44,7 @@ public class SoftMemoryCacheImpl implements IMemoryCache {
 
 	@Override
 	public void evictAll() {
-		mMemoryCache.evictAll();
+		mMemoryCache.clear();
 	}
 
 	@Override
