@@ -379,7 +379,7 @@ public class FinalDb {
 	 */
 	public void dropDb() {
 		Cursor cursor = db.rawQuery(
-				"SELECT name FROM sqlite_master WHERE type ='table'", null);
+				"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'", null);
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				// 添加异常捕获.忽略删除所有表时出现的异常:
