@@ -19,8 +19,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import net.tsz.afinal.exception.DbException;
-import net.tsz.afinal.utils.ClassUtils;
-import net.tsz.afinal.utils.FieldUtils;
+import net.tsz.afinal.reflect.ClassUtils;
+import net.tsz.afinal.reflect.FieldUtils;
 
 
 public class TableInfo {
@@ -56,6 +56,7 @@ public class TableInfo {
 			Field idField = ClassUtils.getPrimaryKeyField(clazz);
 			if(idField != null){
 				Id id = new Id();
+				id.setIdType(FieldUtils.getIdType(idField));
 				id.setColumn(FieldUtils.getColumnByField(idField));
 				id.setFieldName(idField.getName());
 				id.setSet(FieldUtils.getFieldSetMethod(clazz, idField));

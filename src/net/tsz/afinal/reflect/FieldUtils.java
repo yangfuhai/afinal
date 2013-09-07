@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.tsz.afinal.utils;
+package net.tsz.afinal.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.tsz.afinal.annotation.sqlite.Id;
+import net.tsz.afinal.annotation.sqlite.IdType;
 import net.tsz.afinal.annotation.sqlite.ManyToOne;
 import net.tsz.afinal.annotation.sqlite.OneToMany;
 import net.tsz.afinal.annotation.sqlite.Property;
@@ -238,7 +239,7 @@ public class FieldUtils {
 	
 	
 	/**
-	 * 获取某个属性对应的 表的列
+	 * 获取某个熟悉对应的 表的列
 	 * @param entity
 	 * @param fieldName
 	 * @return
@@ -264,6 +265,11 @@ public class FieldUtils {
 			return id.column();
 		
 		return field.getName();
+	}
+	
+	public static IdType getIdType(Field field) {
+		Id id = field.getAnnotation(Id.class);
+		return id.idType();
 	}
 	
 	

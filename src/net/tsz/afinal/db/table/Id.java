@@ -15,6 +15,17 @@
  */
 package net.tsz.afinal.db.table;
 
-public class Id extends Property{
+import net.tsz.afinal.annotation.sqlite.IdType;
 
+public class Id extends Property{
+	private IdType idType;
+
+	public IdType getIdType() {
+		return idType;
+	}
+
+	public void setIdType(IdType idType) {
+		this.idType = idType;
+	}
+	
 }

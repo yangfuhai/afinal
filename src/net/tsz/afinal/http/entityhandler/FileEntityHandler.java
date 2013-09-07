@@ -41,6 +41,7 @@ public class FileEntityHandler {
 	}
 
 
+	@SuppressWarnings("resource")
 	public Object handleEntity(HttpEntity entity, EntityCallBack callback,String target,boolean isResume) throws IOException {
 		if (TextUtils.isEmpty(target) || target.trim().length() == 0)
 			return null;

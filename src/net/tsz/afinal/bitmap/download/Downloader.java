@@ -15,6 +15,7 @@
  */
 package net.tsz.afinal.bitmap.download;
 
+import java.io.OutputStream;
 
 public interface Downloader  {
 	
@@ -24,5 +25,5 @@ public interface Downloader  {
 	 * @param outputStream
 	 * @return
 	 */
-	public byte[] download(String urlString);
+	public boolean downloadToLocalStreamByUrl(String urlString, OutputStream outputStream);
 }

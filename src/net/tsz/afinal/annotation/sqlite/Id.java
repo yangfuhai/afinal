@@ -30,4 +30,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) 
 public @interface Id {
 	 public String column() default "";
+	 public IdType idType() default IdType.NOTHING;
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.tsz.afinal.utils;
+package net.tsz.afinal.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import net.tsz.afinal.annotation.sqlite.Id;
 import net.tsz.afinal.annotation.sqlite.Table;
-import net.tsz.afinal.db.sqlite.ManyToOneLazyLoader;
 import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.Property;
@@ -204,14 +203,7 @@ public class ClassUtils {
 				if (!FieldUtils.isTransient(f) && FieldUtils.isManyToOne(f)) {
 					
 					ManyToOne mto = new ManyToOne();
-                    //如果类型为ManyToOneLazyLoader则取第二个参数作为manyClass（一方实体） 2013-7-26
-                    if(f.getType()==ManyToOneLazyLoader.class){
-                        Class<?> pClazz = (Class<?>)((ParameterizedType)f.getGenericType()).getActualTypeArguments()[1];
-                        if(pClazz!=null)
-                            mto.setManyClass(pClazz);
-                    }else {
-					    mto.setManyClass(f.getType());
-                    }
+					mto.setManyClass(f.getType());
 					mto.setColumn(FieldUtils.getColumnByField(f));
 					mto.setFieldName(f.getName());
 					mto.setDataType(f.getType());	
@@ -252,21 +244,14 @@ public class ClassUtils {
 					
 					if(type instanceof ParameterizedType){
 						ParameterizedType pType = (ParameterizedType) f.getGenericType();
-                        //如果类型参数为2则认为是LazyLoader 2013-7-25
-                        if(pType.getActualTypeArguments().length==1){
-						    Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[0];
-						    if(pClazz!=null)
-							    otm.setOneClass(pClazz);
-                        }else{
-                            Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[1];
-                            if(pClazz!=null)
-                                otm.setOneClass(pClazz);
-                        }
+						Class<?> pClazz = (Class<?>)pType.getActualTypeArguments()[0];
+						if(pClazz!=null)
+							otm.setOneClass(pClazz);
 					}else{
 						throw new DbException("getOneToManyList Exception:"+f.getName()+"'s type is null");
 					}
-					/*修正类型赋值错误的bug，f.getClass返回的是Filed*/
-					otm.setDataType(f.getType());
+					
+					otm.setDataType(f.getClass());
 					otm.setSet(FieldUtils.getFieldSetMethod(clazz, f));
 					otm.setGet(FieldUtils.getFieldGetMethod(clazz, f));
 					
