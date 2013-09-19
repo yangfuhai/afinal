@@ -18,6 +18,9 @@ package net.tsz.afinal.db.sqlite;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.tsz.afinal.FinalDb;
+import net.tsz.afinal.db.table.ManyToOne;
+import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.Property;
 import net.tsz.afinal.db.table.TableInfo;
 
@@ -26,7 +29,7 @@ import android.database.Cursor;
 
 public class CursorUtils {
 
-	public static <T> T getEntity(Cursor cursor, Class<T> clazz){
+	public static <T> T getEntity(Cursor cursor, Class<T> clazz,FinalDb db){
 		try {
 			if(cursor!=null ){
 				TableInfo table = TableInfo.get(clazz);
@@ -45,8 +48,28 @@ public class CursorUtils {
 								table.getId().setValue(entity,  cursor.getString(i));
 							}
 						}
-						
+
 					}
+                    /**
+                     * 处理OneToMany的lazyLoad形式
+                     */
+                    for(OneToMany oneToManyProp : table.oneToManyMap.values()){
+                        if(oneToManyProp.getDataType()==OneToManyLazyLoader.class){
+                            OneToManyLazyLoader oneToManyLazyLoader = new OneToManyLazyLoader(entity,clazz,oneToManyProp.getOneClass(),db);
+                            oneToManyProp.setValue(entity,oneToManyLazyLoader);
+                        }
+                    }
+
+                    /**
+                     * 处理ManyToOne的lazyLoad形式
+                     */
+                    for(ManyToOne manyToOneProp : table.manyToOneMap.values()){
+                        if(manyToOneProp.getDataType()==ManyToOneLazyLoader.class){
+                            ManyToOneLazyLoader manyToOneLazyLoader = new ManyToOneLazyLoader(entity,clazz,manyToOneProp.getManyClass(),db);
+                            manyToOneLazyLoader.setFieldValue(cursor.getInt(cursor.getColumnIndex(manyToOneProp.getColumn())));
+                            manyToOneProp.setValue(entity,manyToOneLazyLoader);
+                        }
+                    }
 					return entity;
 				}
 			}
