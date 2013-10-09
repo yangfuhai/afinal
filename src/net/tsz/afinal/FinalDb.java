@@ -82,8 +82,10 @@ public class FinalDb {
             File dbp=new File(pathCache+"/"+dir);
             if(!dbp.exists()){
                 dbp.mkdir();
-                pathCache = dbp.getAbsolutePath();
+
             }
+            //确保部分目录存在时仍能正常创建
+            pathCache = dbp.getAbsolutePath();
         }
         File dbf=new File(dbPath+"/"+dbfilename);
 
@@ -521,7 +523,7 @@ public class FinalDb {
                     }
 
                     if(isFind){
-                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"='"+id+"'");
+                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"='"+id+"' or "+one.getColumn()+"="+id);
                         if(list!=null){
                             /*如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据*/
                             if(one.getDataType()==OneToManyLazyLoader.class){

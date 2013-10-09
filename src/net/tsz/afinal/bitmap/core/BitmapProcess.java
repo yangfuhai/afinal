@@ -48,7 +48,10 @@ public class BitmapProcess {
 				mCache.addToDiskCache(url, data);
 			}
 		}
-		
+        //在展示之前进行前置图形处理
+        if(config.getBeforeDisplayProcess()!=null){
+            bitmap =config.getBeforeDisplayProcess().process(bitmap);
+        }
 		return bitmap;
 	}
 	

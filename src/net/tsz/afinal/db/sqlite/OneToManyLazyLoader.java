@@ -29,7 +29,7 @@ public class OneToManyLazyLoader<O,M> {
      * 如果数据未加载，则调用loadOneToMany填充数据
      * @return
      */
-    public List<M> getList(){
+    public synchronized List<M> getList(){
         if(entities==null){
             this.db.loadOneToMany((O)this.ownerEntity,this.ownerClazz,this.listItemClazz);
         }

@@ -16,6 +16,7 @@
 package net.tsz.afinal.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -160,6 +161,10 @@ public class ClassUtils {
 			Field[] fs = clazz.getDeclaredFields();
 			String primaryKeyFieldName = getPrimaryKeyFieldName(clazz);
 			for (Field f : fs) {
+                //如果是静态字段则跳过
+                if(Modifier.isStatic(f.getModifiers())){
+                    continue;
+                }
 				//必须是基本数据类型和没有标瞬时态的字段
 				if(!FieldUtils.isTransient(f)){
 					if (FieldUtils.isBaseDateType(f)) {
