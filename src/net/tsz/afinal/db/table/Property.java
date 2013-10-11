@@ -15,13 +15,11 @@
  */
 package net.tsz.afinal.db.table;
 
-import android.annotation.SuppressLint;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import net.tsz.afinal.utils.FieldUtils;
 
 /**
  * @title 属性
@@ -55,7 +53,7 @@ public class Property {
 				} else if (dataType == long.class || dataType == Long.class) {
 					set.invoke(receiver, value == null ? (Long) null: Long.parseLong(value.toString()));
 				} else if (dataType == java.util.Date.class || dataType == java.sql.Date.class) {
-					set.invoke(receiver, value == null ? (Date) null: stringToDateTime(value.toString()));
+					set.invoke(receiver, value == null ? (Date) null: FieldUtils.stringToDateTime(value.toString()));
 				} else if (dataType == boolean.class || dataType == Boolean.class) {
 					set.invoke(receiver, value == null ? (Boolean) null: "1".equals(value.toString()));
 				} else {
@@ -85,24 +83,7 @@ public class Property {
 		if(obj != null && get != null) {
 			try {
 				return (T)get.invoke(obj);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Date stringToDateTime(String strDate) {
-		if (strDate != null) {
-			try {
-				return sdf.parse(strDate);
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
