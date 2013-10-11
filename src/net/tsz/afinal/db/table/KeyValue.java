@@ -15,7 +15,7 @@
  */
 package net.tsz.afinal.db.table;
 
-import java.text.SimpleDateFormat;
+import net.tsz.afinal.utils.FieldUtils;
 
 public class KeyValue {
 	private String key;
@@ -36,10 +36,9 @@ public class KeyValue {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public Object getValue() {
 		if(value instanceof java.util.Date || value instanceof java.sql.Date){
-			return sdf.format(value);
+			return FieldUtils.SDF.format(value);
 		}
 		return value;
 	}
