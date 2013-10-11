@@ -318,6 +318,13 @@ public class SqlBuilder {
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			strSQL.append("\"").append(property.getColumn());
+			if(property.getDataType() == int.class || property.getDataType() == Integer.class 
+					|| property.getDataType() == long.class || property.getDataType() == Long.class){
+				strSQL.append(" INTEGER");
+			}else if(property.getDataType() == float.class || property.getDataType() == Float.class 
+					|| property.getDataType() == double.class || property.getDataType() == Double.class){
+				strSQL.append(" REAL");
+			}
 			strSQL.append("\",");
 		}
 		
