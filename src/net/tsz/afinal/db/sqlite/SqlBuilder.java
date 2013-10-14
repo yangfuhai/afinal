@@ -310,20 +310,36 @@ public class SqlBuilder {
 		strSQL.append(" ( ");
 		
 		Class<?> primaryClazz = id.getDataType();
-		if( primaryClazz == int.class || primaryClazz==Integer.class)
-			strSQL.append("\"").append(id.getColumn()).append("\"    ").append("INTEGER PRIMARY KEY AUTOINCREMENT,");
-		else
-			strSQL.append("\"").append(id.getColumn()).append("\"    ").append("TEXT PRIMARY KEY,");
+		if( primaryClazz == int.class || primaryClazz==Integer.class 
+				|| primaryClazz == long.class || primaryClazz == Long.class){
+			strSQL.append(id.getColumn()).append(" INTEGER PRIMARY KEY AUTOINCREMENT,");
+		}else{
+			strSQL.append(id.getColumn()).append(" TEXT PRIMARY KEY,");
+		}
+			
+		
 		
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
-			strSQL.append("\"").append(property.getColumn());
-			strSQL.append("\",");
+			strSQL.append(property.getColumn());
+			Class<?> dataType =  property.getDataType();
+			if( dataType== int.class || dataType == Integer.class 
+			   || dataType == long.class || dataType == Long.class){
+				strSQL.append(" INTEGER");
+			}else if(dataType == float.class ||dataType == Float.class 
+					||dataType == double.class || dataType == Double.class){
+				strSQL.append(" REAL");
+			}else if (dataType == boolean.class || dataType == Boolean.class) {
+				strSQL.append(" NUMERIC");
+			}
+			strSQL.append(",");
 		}
 		
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne manyToOne : manyToOnes){
-			strSQL.append("\"").append(manyToOne.getColumn()).append("\",");
+			strSQL.append(manyToOne.getColumn())
+			.append(" INTEGER")
+			.append(",");
 		}
 		strSQL.deleteCharAt(strSQL.length() - 1);
 		strSQL.append(" )");
