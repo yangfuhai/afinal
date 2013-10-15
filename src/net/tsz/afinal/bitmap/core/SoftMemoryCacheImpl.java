@@ -25,7 +25,7 @@ public class SoftMemoryCacheImpl implements IMemoryCache {
 	private final HashMap<String, SoftReference<Bitmap>> mMemoryCache;
 	
 	public SoftMemoryCacheImpl(int size) {
-		mMemoryCache = new HashMap<String, SoftReference<Bitmap>>(size);
+        mMemoryCache = new HashMap<String, SoftReference<Bitmap>>();
 	}
 	
 	@Override
