@@ -2,6 +2,9 @@ package net.tsz.afinal.db.sqlite;
 
 import net.tsz.afinal.FinalDb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * 一对多延迟加载类

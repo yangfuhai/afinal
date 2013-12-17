@@ -312,23 +312,26 @@ public class SqlBuilder {
 		strSQL.append(" ( ");
 		
 		Class<?> primaryClazz = id.getDataType();
-		if( primaryClazz == int.class || primaryClazz==Integer.class)
-			strSQL.append("\"").append(id.getColumn()).append("\"    ").append("INTEGER PRIMARY KEY AUTOINCREMENT,");
-		else
-			strSQL.append("\"").append(id.getColumn()).append("\"    ").append("TEXT PRIMARY KEY,");
-		
+		if( primaryClazz == int.class || primaryClazz==Integer.class 
+				|| primaryClazz == long.class || primaryClazz == Long.class){
+			strSQL.append(id.getColumn()).append(" INTEGER PRIMARY KEY AUTOINCREMENT,");
+		}else{
+			strSQL.append(id.getColumn()).append(" TEXT PRIMARY KEY,");
+		}		
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
-			strSQL.append("\"").append(property.getColumn());
-            //add by pwy 2013/10/26 for 创建字段时指定数值字段类型，以免排序或查找时出错
-            if(property.getDataType() == int.class || property.getDataType()==Integer.class){
-                strSQL.append("\"    ").append("INTEGER DEFAULT(0),");
-            }else if(property.getDataType() == Double.class || property.getDataType()==double.class
-                    ||property.getDataType() == Float.class || property.getDataType()==float.class){
-                strSQL.append("\"    ").append("REAL DEFAULT(0),");
-            }else {
-			    strSQL.append("\",");
-            }
+			strSQL.append(property.getColumn());
+			Class<?> dataType =  property.getDataType();
+			if( dataType== int.class || dataType == Integer.class 
+			   || dataType == long.class || dataType == Long.class){
+				strSQL.append(" INTEGER");
+			}else if(dataType == float.class ||dataType == Float.class 
+					||dataType == double.class || dataType == Double.class){
+				strSQL.append(" REAL");
+			}else if (dataType == boolean.class || dataType == Boolean.class) {
+				strSQL.append(" NUMERIC");
+			}
+			strSQL.append(",");
             //add by pwy 2013/11/4 for 创建索引
             if(property.getField().getAnnotation(Index.class)!=null){
                 strIndexCreatorSQL.append("create index ")
@@ -340,7 +343,8 @@ public class SqlBuilder {
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne manyToOne : manyToOnes){
 			strSQL.append("\"").append(manyToOne.getColumn());
-            if(manyToOne.getDataType() == int.class || manyToOne.getDataType()==Integer.class){
+            if(manyToOne.getDataType() == int.class || manyToOne.getDataType()==Integer.class
+|| manyToOne.getDataType() == long.class || manyToOne.getDataType() == Long.class){
                 strSQL.append("\"    ").append("INTEGER DEFAULT(0),");
             }else if(manyToOne.getDataType() == Double.class || manyToOne.getDataType()==double.class
                     ||manyToOne.getDataType() == Float.class || manyToOne.getDataType()==float.class){
