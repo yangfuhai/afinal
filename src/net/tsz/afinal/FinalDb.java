@@ -38,8 +38,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
 import android.util.Log;
 
 public class FinalDb {
@@ -57,12 +60,14 @@ public class FinalDb {
 		if(config.getContext() == null)
 			throw new DbException("android context is null");
         if(config.isSaveOnSDCard()){
-            this.db = createDbFileOnSDCard(config.getTargetDirectory(),config.getDbName());
+            this.db = createDbFileOnSDCard(config.getTargetDirectory(),config.getDbName(),config.getDbVersion(),config.getDbUpdateListener());
         }else{
 		    this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(),config.getDbUpdateListener()).getWritableDatabase();
         }
 		this.config = config;
 	}
+
+
 
     /**
      * 在SD卡的指定目录上创建文件
@@ -70,7 +75,7 @@ public class FinalDb {
      * @param dbfilename
      * @return
      */
-	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,String dbfilename){
+	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,String dbfilename, int dbVersion, DbUpdateListener dbUpdateListener){
         String dbPath=android.os.Environment.getExternalStorageDirectory()
                 .getAbsolutePath()+(sdcardPath==null||sdcardPath.length()==0?"":"/" +sdcardPath);
         String[] dirs = sdcardPath.split("/");
@@ -82,10 +87,8 @@ public class FinalDb {
             File dbp=new File(pathCache+"/"+dir);
             if(!dbp.exists()){
                 dbp.mkdir();
-
+                pathCache = dbp.getAbsolutePath();
             }
-            //确保部分目录存在时仍能正常创建
-            pathCache = dbp.getAbsolutePath();
         }
         File dbf=new File(dbPath+"/"+dbfilename);
 
@@ -102,8 +105,29 @@ public class FinalDb {
        else{
             isFileCreateSuccess=true;
         }
-        if(isFileCreateSuccess)
-            return SQLiteDatabase.openOrCreateDatabase(dbf, null);
+        if(isFileCreateSuccess){
+            //add by pwy 2013/11/14 增加数据库升级支持
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbf,null);
+            //目前只支持升级，不支持降级
+            if(db.getVersion()<dbVersion){
+                if (db.isReadOnly()) {
+                    throw new SQLiteException("Can't upgrade read-only database from version " +
+                            db.getVersion() + " to " + dbVersion + ": ");
+                }
+
+                db.beginTransaction();
+                try {
+                    if(dbUpdateListener!=null){
+                        dbUpdateListener.onUpgrade(db,db.getVersion(),dbVersion);
+                    }
+                    db.setVersion(dbVersion);
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+            }
+            return db;
+        }
         return null;
     }
 	
@@ -523,7 +547,12 @@ public class FinalDb {
                     }
 
                     if(isFind){
-                        List<?> list = findAllByWhere(one.getOneClass(), one.getColumn()+"='"+id+"' or "+one.getColumn()+"="+id);
+                        //add by  pwy 20131015 for 懒加载排序
+                        String strWhere = "(" + one.getColumn()+"='"+id+"' or "+one.getColumn()+"="+id+")"+
+                                        ((one.getOrderColumn()!=null&&one.getOrderColumn().length()>0)
+                                                ?" order by "+one.getOrderColumn()+ (one.isDesc()?" desc":" asc")
+                                                :"");
+                        List<?> list = findAllByWhere(one.getOneClass(), strWhere);
                         if(list!=null){
                             /*如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据*/
                             if(one.getDataType()==OneToManyLazyLoader.class){
@@ -648,7 +677,7 @@ public class FinalDb {
 	
 	
 	
-	private void checkTableExist(Class<?> clazz){
+	public void checkTableExist(Class<?> clazz){
 		if(!tableIsExist(TableInfo.get(clazz))){
 			String sql = SqlBuilder.getCreatTableSQL(clazz);
 			debugSql(sql);

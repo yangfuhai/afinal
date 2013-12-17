@@ -21,6 +21,7 @@ import java.util.List;
 
 import android.text.TextUtils;
 
+import net.tsz.afinal.annotation.sqlite.Index;
 import net.tsz.afinal.db.table.Id;
 import net.tsz.afinal.db.table.KeyValue;
 import net.tsz.afinal.db.table.ManyToOne;
@@ -304,6 +305,7 @@ public class SqlBuilder {
 		TableInfo table=TableInfo.get(clazz);
 		
 		Id id=table.getId();
+        StringBuffer strIndexCreatorSQL = new StringBuffer();
 		StringBuffer strSQL = new StringBuffer();
 		strSQL.append("CREATE TABLE IF NOT EXISTS ");
 		strSQL.append(table.getTableName());
@@ -318,15 +320,37 @@ public class SqlBuilder {
 		Collection<Property> propertys = table.propertyMap.values();
 		for(Property property : propertys){
 			strSQL.append("\"").append(property.getColumn());
-			strSQL.append("\",");
+            //add by pwy 2013/10/26 for 创建字段时指定数值字段类型，以免排序或查找时出错
+            if(property.getDataType() == int.class || property.getDataType()==Integer.class){
+                strSQL.append("\"    ").append("INTEGER DEFAULT(0),");
+            }else if(property.getDataType() == Double.class || property.getDataType()==double.class
+                    ||property.getDataType() == Float.class || property.getDataType()==float.class){
+                strSQL.append("\"    ").append("REAL DEFAULT(0),");
+            }else {
+			    strSQL.append("\",");
+            }
+            //add by pwy 2013/11/4 for 创建索引
+            if(property.getField().getAnnotation(Index.class)!=null){
+                strIndexCreatorSQL.append("create index ")
+                            .append(property.getColumn()+"_idx on ")
+                        .append(table.getTableName()+"("+property.getColumn()+");");
+            }
 		}
 		
 		Collection<ManyToOne> manyToOnes = table.manyToOneMap.values();
 		for(ManyToOne manyToOne : manyToOnes){
-			strSQL.append("\"").append(manyToOne.getColumn()).append("\",");
+			strSQL.append("\"").append(manyToOne.getColumn());
+            if(manyToOne.getDataType() == int.class || manyToOne.getDataType()==Integer.class){
+                strSQL.append("\"    ").append("INTEGER DEFAULT(0),");
+            }else if(manyToOne.getDataType() == Double.class || manyToOne.getDataType()==double.class
+                    ||manyToOne.getDataType() == Float.class || manyToOne.getDataType()==float.class){
+                strSQL.append("\"    ").append("REAL DEFAULT(0),");
+            }else {
+                strSQL.append("\",");
+            }
 		}
 		strSQL.deleteCharAt(strSQL.length() - 1);
-		strSQL.append(" )");
+		strSQL.append(" );").append(strIndexCreatorSQL.toString());
 		return strSQL.toString();
 	}
 	

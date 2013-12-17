@@ -252,7 +252,11 @@ public class ClassUtils {
 					
 					otm.setColumn(FieldUtils.getColumnByField(f));
 					otm.setFieldName(f.getName());
-					
+                    //add by pwy 20131015 for 懒加载中嵌入排序
+                    net.tsz.afinal.annotation.sqlite.OneToMany oneToMany = f.getAnnotation(net.tsz.afinal.annotation.sqlite.OneToMany.class);
+                    otm.setOrderColumn(oneToMany.orderColumn());
+                    otm.setDesc(oneToMany.orderDesc());
+                    //add end
 					Type type = f.getGenericType();
 					
 					if(type instanceof ParameterizedType){

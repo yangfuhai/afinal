@@ -341,22 +341,19 @@ public class FinalBitmap {
 		}
 	
 		if (bitmap != null) {
-            //在展示之前进行前置图形处理
-            if(displayConfig.getBeforeDisplayProcess()!=null){
-                bitmap =displayConfig.getBeforeDisplayProcess().process(bitmap);
-            }
-			if(imageView instanceof ImageView){
-				((ImageView)imageView).setImageBitmap(bitmap);
-			}else{
-				imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
-			}
-			
-			
-		}else if (checkImageTask(uri, imageView)) {
+//			if(imageView instanceof ImageView){
+//				((ImageView)imageView).setImageBitmap(bitmap);
+//			}else{
+//				imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
+//			}
+            //modify by pwy 20131015,确保loadCompletedisplay能在每次display时调用
+            mConfig.displayer.loadCompletedisplay(imageView,bitmap,displayConfig);
+
+        }else if (checkImageTask(uri, imageView)) {
 			final BitmapLoadAndDisplayTask task = new BitmapLoadAndDisplayTask(imageView, displayConfig );
 			//设置默认图片
 			final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), displayConfig.getLoadingBitmap(), task);
-
+	       
 			if(imageView instanceof ImageView){
 				((ImageView)imageView).setImageDrawable(asyncDrawable);
 			}else{
@@ -776,6 +773,5 @@ public class FinalBitmap {
 				
 		}
 	}
-
-
+	
 }

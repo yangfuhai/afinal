@@ -25,4 +25,8 @@ import java.lang.annotation.Target;
 public @interface OneToMany {
 	
 	 public String manyColumn();
+
+     public String orderColumn() default "";
+
+     public boolean orderDesc() default false;
 }

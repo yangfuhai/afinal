@@ -15,37 +15,12 @@
  */
 package net.tsz.afinal.bitmap.core;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.DisplayMetrics;
 import android.view.animation.Animation;
 
 public class BitmapDisplayConfig {
-    public IBeforeDisplayProcess getBeforeDisplayProcess() {
-        return beforeDisplay;
-    }
-
-    public void setBeforeDisplayProcess(IBeforeDisplayProcess beforeDisplay) {
-        this.beforeDisplay = beforeDisplay;
-    }
-
-    /**
-     * 用于对网络图片进行前置处理
-     */
-    public interface IBeforeDisplayProcess {
-        public Bitmap process(Bitmap downloadedBitmap);
-    }
-	public static BitmapDisplayConfig newDefaultInstance(Context context){
-        BitmapDisplayConfig defaultDisplayConfig = new BitmapDisplayConfig();
-        defaultDisplayConfig.setAnimation(null);
-        defaultDisplayConfig.setAnimationType(BitmapDisplayConfig.AnimationType.fadeIn);
-        //设置图片的显示最大尺寸（为屏幕的大小,默认为屏幕宽度的1/2）
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int defaultWidth = (int)Math.floor(displayMetrics.widthPixels/2);
-        defaultDisplayConfig.setBitmapHeight(defaultWidth);
-        defaultDisplayConfig.setBitmapWidth(defaultWidth);
-        return defaultDisplayConfig;
-    }
+	
+	
 	private int bitmapWidth;
 	private int bitmapHeight;
 	
@@ -54,7 +29,7 @@ public class BitmapDisplayConfig {
 	private int animationType;
 	private Bitmap loadingBitmap;
 	private Bitmap loadfailBitmap;
-    private IBeforeDisplayProcess beforeDisplay;
+	
 
 	public int getBitmapWidth() {
 		return bitmapWidth;

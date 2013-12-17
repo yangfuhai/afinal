@@ -41,13 +41,19 @@ public class CursorUtils {
 						String column = cursor.getColumnName(i);
 						
 						Property property = table.propertyMap.get(column);
-						if(property!=null){
-							property.setValue(entity, cursor.getString(i));
-						}else{
-							if(table.getId().getColumn().equals(column)){
-								table.getId().setValue(entity,  cursor.getString(i));
-							}
-						}
+                        //add by pwy 2013/12/04 防止因为一个值异常导致输出null实体
+                        try {
+                            if(property!=null){
+                                property.setValue(entity, cursor.getString(i));
+                            }else{
+                                if(table.getId().getColumn().equals(column)){
+                                    table.getId().setValue(entity,  cursor.getString(i));
+                                }
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
 
 					}
                     /**

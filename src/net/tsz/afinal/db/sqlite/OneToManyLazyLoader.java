@@ -38,7 +38,7 @@ public class OneToManyLazyLoader<O,M> {
         }
         return entities;
     }
-    public void setList(List<M> value){
+    public synchronized void setList(List<M> value){
         entities = value;
     }
 
