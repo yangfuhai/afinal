@@ -741,7 +741,7 @@ public class FinalDb {
         return dbModelList;
     }
 
-    private void checkTableExist(Class<?> clazz) {
+    public void checkTableExist(Class<?> clazz) {
         if (!tableIsExist(TableInfo.get(clazz))) {
             String sql = SqlBuilder.getCreatTableSQL(clazz);
             debugSql(sql);
@@ -858,6 +858,10 @@ public class FinalDb {
      */
     private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,
                                                 String dbfilename, int dbVersion, DbUpdateListener dbUpdateListener) {
+        File dbDir = new File(sdcardPath);
+        if(!dbDir.exists()){
+            dbDir.mkdirs();
+        }
         File dbf = new File(sdcardPath, dbfilename);
         SQLiteDatabase retDb = null;
         if (!dbf.exists()) {
