@@ -15,6 +15,7 @@
  */
 package net.tsz.afinal.bitmap.core;
 
+import net.tsz.afinal.bitmap.display.Displayer;
 import android.graphics.Bitmap;
 import android.view.animation.Animation;
 
@@ -30,7 +31,16 @@ public class BitmapDisplayConfig {
 	private Bitmap loadingBitmap;
 	private Bitmap loadfailBitmap;
 	
+	private Displayer displayer;
 
+	public Displayer getDisplayer() {
+		return displayer;
+	}
+
+	public BitmapDisplayConfig setDisplayer(Displayer displayer) {
+		this.displayer = displayer;
+		return this;
+	}
 	public int getBitmapWidth() {
 		return bitmapWidth;
 	}

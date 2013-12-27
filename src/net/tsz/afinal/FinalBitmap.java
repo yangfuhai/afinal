@@ -341,11 +341,11 @@ public class FinalBitmap {
 		}
 	
 		if (bitmap != null) {
-			if(imageView instanceof ImageView){
-				((ImageView)imageView).setImageBitmap(bitmap);
-			}else{
-				imageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
+			Displayer displayer = displayConfig.getDisplayer();
+			if(null == displayer){
+				displayer=mConfig.displayer;
 			}
+			displayer.loadCompletedisplay(imageView, bitmap, displayConfig);
 			
 			
 		}else if (checkImageTask(uri, imageView)) {
@@ -707,10 +707,16 @@ public class FinalBitmap {
 
 			// 判断线程和当前的imageview是否是匹配
 			final View imageView = getAttachedImageView();
-			if (bitmap != null && imageView != null) {
-				mConfig.displayer.loadCompletedisplay(imageView,bitmap,displayConfig);			
-			}else if(bitmap == null && imageView!=null ){
-				mConfig.displayer.loadFailDisplay(imageView, displayConfig.getLoadfailBitmap());
+			if (null != imageView) {
+				Displayer displayer = displayConfig.getDisplayer();
+				if (null == displayer) {
+					displayer = mConfig.displayer;
+				}
+				if (bitmap != null) {
+					displayer.loadCompletedisplay(imageView, bitmap, displayConfig);
+				} else {
+					displayer.loadFailDisplay(imageView, displayConfig.getLoadfailBitmap());
+				}
 			}
 		}
 
