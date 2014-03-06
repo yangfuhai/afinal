@@ -31,45 +31,51 @@ public abstract class FinalActivity extends Activity {
 
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		initView();
+		initInjectedView(this);
 	}
 
 
 	public void setContentView(View view, LayoutParams params) {
 		super.setContentView(view, params);
-		initView();
+		initInjectedView(this);
 	}
 
 
 	public void setContentView(View view) {
 		super.setContentView(view);
-		initView();
+		initInjectedView(this);
 	}
+	
 
-	private void initView(){
-		Field[] fields = getClass().getDeclaredFields();
+	public static void initInjectedView(Activity activity){
+		initInjectedView(activity, activity.getWindow().getDecorView());
+	}
+	
+	
+	public static void initInjectedView(Object injectedSource,View sourceView){
+		Field[] fields = injectedSource.getClass().getDeclaredFields();
 		if(fields!=null && fields.length>0){
 			for(Field field : fields){
 				try {
 					field.setAccessible(true);
 					
-					if(field.get(this)!= null )
+					if(field.get(injectedSource)!= null )
 						continue;
 				
 					ViewInject viewInject = field.getAnnotation(ViewInject.class);
 					if(viewInject!=null){
 						
 						int viewId = viewInject.id();
-					    field.set(this,findViewById(viewId));
+					    field.set(injectedSource,sourceView.findViewById(viewId));
 					
-						setListener(field,viewInject.click(),Method.Click);
-						setListener(field,viewInject.longClick(),Method.LongClick);
-						setListener(field,viewInject.itemClick(),Method.ItemClick);
-						setListener(field,viewInject.itemLongClick(),Method.itemLongClick);
+					    setListener(injectedSource,field,viewInject.click(),Method.Click);
+						setListener(injectedSource,field,viewInject.longClick(),Method.LongClick);
+						setListener(injectedSource,field,viewInject.itemClick(),Method.ItemClick);
+						setListener(injectedSource,field,viewInject.itemLongClick(),Method.itemLongClick);
 						
 						Select select = viewInject.select();
 						if(!TextUtils.isEmpty(select.selected())){
-							setViewSelectListener(field,select.selected(),select.noSelected());
+							setViewSelectListener(injectedSource,field,select.selected(),select.noSelected());
 						}
 						
 					}
@@ -81,40 +87,39 @@ public abstract class FinalActivity extends Activity {
 	}
 	
 	
-	
-	private void setViewSelectListener(Field field,String select,String noSelect)throws Exception{
-		Object obj = field.get(this);
+	private static void setViewSelectListener(Object injectedSource,Field field,String select,String noSelect)throws Exception{
+		Object obj = field.get(injectedSource);
 		if(obj instanceof View){
-			((AbsListView)obj).setOnItemSelectedListener(new EventListener(this).select(select).noSelect(noSelect));
+			((AbsListView)obj).setOnItemSelectedListener(new EventListener(injectedSource).select(select).noSelect(noSelect));
 		}
 	}
 	
 	
-	private void setListener(Field field,String methodName,Method method)throws Exception{
+	private static void setListener(Object injectedSource,Field field,String methodName,Method method)throws Exception{
 		if(methodName == null || methodName.trim().length() == 0)
 			return;
 		
-		Object obj = field.get(this);
+		Object obj = field.get(injectedSource);
 		
 		switch (method) {
 			case Click:
 				if(obj instanceof View){
-					((View)obj).setOnClickListener(new EventListener(this).click(methodName));
+					((View)obj).setOnClickListener(new EventListener(injectedSource).click(methodName));
 				}
 				break;
 			case ItemClick:
 				if(obj instanceof AbsListView){
-					((AbsListView)obj).setOnItemClickListener(new EventListener(this).itemClick(methodName));
+					((AbsListView)obj).setOnItemClickListener(new EventListener(injectedSource).itemClick(methodName));
 				}
 				break;
 			case LongClick:
 				if(obj instanceof View){
-					((View)obj).setOnLongClickListener(new EventListener(this).longClick(methodName));
+					((View)obj).setOnLongClickListener(new EventListener(injectedSource).longClick(methodName));
 				}
 				break;
 			case itemLongClick:
 				if(obj instanceof AbsListView){
-					((AbsListView)obj).setOnItemLongClickListener(new EventListener(this).itemLongClick(methodName));
+					((AbsListView)obj).setOnItemLongClickListener(new EventListener(injectedSource).itemLongClick(methodName));
 				}
 				break;
 			default:
