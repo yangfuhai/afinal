@@ -46,6 +46,7 @@ public abstract class FinalActivity extends Activity {
 		initInjectedView(this);
 	}
 	
+	//this is a comment
 
 	public static void initInjectedView(Activity activity){
 		initInjectedView(activity, activity.getWindow().getDecorView());
