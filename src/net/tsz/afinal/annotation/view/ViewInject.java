@@ -24,9 +24,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) 
 public @interface ViewInject {
 	public int id();
-	public String click() default "";
-	public String longClick() default "";
-	public String itemClick() default "";
-	public String itemLongClick() default "";
-	public Select select() default @Select(selected="") ;
+	public boolean click() default false;
+	public boolean longClick() default false;
+	public boolean itemClick() default false;
+	public boolean itemLongClick() default false;
+	public boolean select() default false;
 }
