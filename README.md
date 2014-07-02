@@ -106,6 +106,7 @@ public class AfinalDemoActivity extends FinalActivity {
           Bundle savedInstanceState) {
        View viewRoot = inflater.inflate(R.layout.map_frame, container, false);
        FinalActivity.initInjectedView(this,viewRoot);
+       return viewRoot;
     }
 ```
 ##FinalHttp使用方法：
