@@ -77,8 +77,22 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 			 */
 			methodName = Thread.currentThread().getStackTrace()[3]
 					.getMethodName();
+			Class<?>[] parameterTypes = new Class<?>[params.length];
+			for (int i = 0; i < params.length; i++) {
+				parameterTypes[i] = params[i].getClass();
+				if (Integer.class.equals(parameterTypes[i])) {
+					parameterTypes[i] = int.class;
+				} else if (Long.class.equals(parameterTypes[i])) {
+					parameterTypes[i] = long.class;
+				} else if (AdapterView.class
+						.isAssignableFrom(parameterTypes[i])) {
+					parameterTypes[i] = AdapterView.class;
+				} else if (View.class.isAssignableFrom(parameterTypes[i])) {
+					parameterTypes[i] = View.class;
+				}
+			}
 			method = handler.getClass().getDeclaredMethod(methodName,
-					View.class);
+					parameterTypes);
 			Object obj = method.invoke(handler, params);
 			return obj == null ? false : Boolean.valueOf(obj.toString());
 		} catch (IllegalArgumentException e) {
