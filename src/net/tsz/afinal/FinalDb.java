@@ -17,7 +17,6 @@ package net.tsz.afinal;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import net.tsz.afinal.exception.DbException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -56,14 +54,10 @@ public class FinalDb {
 			throw new DbException("daoConfig is null");
 		if (config.getContext() == null)
 			throw new DbException("android context is null");
-		if (config.getTargetDirectory() != null
-				&& config.getTargetDirectory().trim().length() > 0) {
-			this.db = createDbFileOnSDCard(config.getTargetDirectory(),
-					config.getDbName());
+		if (config.getTargetDirectory() != null && config.getTargetDirectory().trim().length() > 0) {
+			this.db = createDbFileOnSDCard(config.getTargetDirectory(), config.getDbName());
 		} else {
-			this.db = new SqliteDbHelper(config.getContext()
-					.getApplicationContext(), config.getDbName(),
-					config.getDbVersion(), config.getDbUpdateListener())
+			this.db = new SqliteDbHelper(config.getContext().getApplicationContext(), config.getDbName(), config.getDbVersion(), config.getDbUpdateListener())
 					.getWritableDatabase();
 		}
 		this.config = config;
@@ -142,8 +136,7 @@ public class FinalDb {
 	 * @param dbName
 	 *            数据库名称
 	 */
-	public static FinalDb create(Context context, String targetDirectory,
-			String dbName) {
+	public static FinalDb create(Context context, String targetDirectory, String dbName) {
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
 		config.setDbName(dbName);
@@ -160,8 +153,7 @@ public class FinalDb {
 	 * @param isDebug
 	 *            是否为debug模式（debug模式进行数据库操作的时候将会打印sql语句）
 	 */
-	public static FinalDb create(Context context, String targetDirectory,
-			String dbName, boolean isDebug) {
+	public static FinalDb create(Context context, String targetDirectory, String dbName, boolean isDebug) {
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
 		config.setTargetDirectory(targetDirectory);
@@ -185,8 +177,7 @@ public class FinalDb {
 	 *            数据库升级监听器：如果监听器为null，升级的时候将会清空所所有的数据
 	 * @return
 	 */
-	public static FinalDb create(Context context, String dbName,
-			boolean isDebug, int dbVersion, DbUpdateListener dbUpdateListener) {
+	public static FinalDb create(Context context, String dbName, boolean isDebug, int dbVersion, DbUpdateListener dbUpdateListener) {
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
 		config.setDbName(dbName);
@@ -212,9 +203,7 @@ public class FinalDb {
 	 *            ：如果监听器为null，升级的时候将会清空所所有的数据
 	 * @return
 	 */
-	public static FinalDb create(Context context, String targetDirectory,
-			String dbName, boolean isDebug, int dbVersion,
-			DbUpdateListener dbUpdateListener) {
+	public static FinalDb create(Context context, String targetDirectory, String dbName, boolean isDebug, int dbVersion, DbUpdateListener dbUpdateListener) {
 		DaoConfig config = new DaoConfig();
 		config.setContext(context);
 		config.setTargetDirectory(targetDirectory);
@@ -256,8 +245,7 @@ public class FinalDb {
 	 */
 	public boolean saveBindId(Object entity) {
 		checkTableExist(entity.getClass());
-		List<KeyValue> entityKvList = SqlBuilder
-				.getSaveKeyValueListByEntity(entity);
+		List<KeyValue> entityKvList = SqlBuilder.getSaveKeyValueListByEntity(entity);
 		if (entityKvList != null && entityKvList.size() > 0) {
 			TableInfo tf = TableInfo.get(entity.getClass());
 			ContentValues cv = new ContentValues();
@@ -283,8 +271,7 @@ public class FinalDb {
 				cv.put(kv.getKey(), kv.getValue().toString());
 			}
 		} else {
-			Log.w(TAG,
-					"insertContentValues: List<KeyValue> is empty or ContentValues is empty!");
+			Log.w(TAG, "insertContentValues: List<KeyValue> is empty or ContentValues is empty!");
 		}
 
 	}
@@ -349,6 +336,10 @@ public class FinalDb {
 		db.execSQL(sql);
 	}
 
+	public void execSQL(String sql) {
+		db.execSQL(sql);
+	}
+
 	/**
 	 * 删除表的所有数据
 	 * 
@@ -377,9 +368,10 @@ public class FinalDb {
 	/**
 	 * 删除所有数据表
 	 */
-	public void dropDb() {
-		Cursor cursor = db.rawQuery(
-				"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'", null);
+	public void dropDb(String where) {
+		if (null == where)
+			where = "SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'";
+		Cursor cursor = db.rawQuery(where, null);
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				db.execSQL("DROP TABLE " + cursor.getString(0));
@@ -411,8 +403,7 @@ public class FinalDb {
 		SqlInfo sqlInfo = SqlBuilder.getSelectSqlAsSqlInfo(clazz, id);
 		if (sqlInfo != null) {
 			debugSql(sqlInfo.getSql());
-			Cursor cursor = db.rawQuery(sqlInfo.getSql(),
-					sqlInfo.getBindArgsAsStringArray());
+			Cursor cursor = db.rawQuery(sqlInfo.getSql(), sqlInfo.getBindArgsAsStringArray());
 			try {
 				if (cursor.moveToNext()) {
 					return CursorUtils.getEntity(cursor, clazz, this);
@@ -424,6 +415,23 @@ public class FinalDb {
 			}
 		}
 		return null;
+	}
+
+	public <T> int getCount(Class<T> clazz, String strWhere) {
+		String sql = SqlBuilder.getCount(clazz, strWhere);
+		Cursor cur = db.rawQuery(sql, null);
+		int num = 0;
+		try {
+			if (cur.moveToFirst() != false) {
+				int nameColumnIndex = cur.getColumnIndex("number");
+				num = cur.getInt(nameColumnIndex);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cur.close();
+		}
+		return num;
 	}
 
 	/**
@@ -453,8 +461,7 @@ public class FinalDb {
 	 * @param findClass
 	 *            要查找的类
 	 */
-	public <T> T findWithManyToOneById(Object id, Class<T> clazz,
-			Class<?>... findClass) {
+	public <T> T findWithManyToOneById(Object id, Class<T> clazz, Class<?>... findClass) {
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -474,21 +481,17 @@ public class FinalDb {
 	 * @param <T>
 	 * @return
 	 */
-	public <T> T loadManyToOne(DbModel dbModel, T entity, Class<T> clazz,
-			Class<?>... findClass) {
+	public <T> T loadManyToOne(DbModel dbModel, T entity, Class<T> clazz, Class<?>... findClass) {
 		if (entity != null) {
 			try {
-				Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap
-						.values();
+				Collection<ManyToOne> manys = TableInfo.get(clazz).manyToOneMap.values();
 				for (ManyToOne many : manys) {
 
 					Object id = null;
 					if (dbModel != null) {
 						id = dbModel.get(many.getColumn());
-					} else if (many.getValue(entity).getClass() == ManyToOneLazyLoader.class
-							&& many.getValue(entity) != null) {
-						id = ((ManyToOneLazyLoader) many.getValue(entity))
-								.getFieldValue();
+					} else if (many.getValue(entity).getClass() == ManyToOneLazyLoader.class && many.getValue(entity) != null) {
+						id = ((ManyToOneLazyLoader) many.getValue(entity)).getFieldValue();
 					}
 
 					if (id != null) {
@@ -505,21 +508,13 @@ public class FinalDb {
 						if (isFind) {
 
 							@SuppressWarnings("unchecked")
-							T manyEntity = (T) findById(
-									Integer.valueOf(id.toString()),
-									many.getManyClass());
+							T manyEntity = (T) findById(Integer.valueOf(id.toString()), many.getManyClass());
 							if (manyEntity != null) {
 								if (many.getValue(entity).getClass() == ManyToOneLazyLoader.class) {
 									if (many.getValue(entity) == null) {
-										many.setValue(
-												entity,
-												new ManyToOneLazyLoader(entity,
-														clazz,
-														many.getManyClass(),
-														this));
+										many.setValue(entity, new ManyToOneLazyLoader(entity, clazz, many.getManyClass(), this));
 									}
-									((ManyToOneLazyLoader) many
-											.getValue(entity)).set(manyEntity);
+									((ManyToOneLazyLoader) many.getValue(entity)).set(manyEntity);
 								} else {
 									many.setValue(entity, manyEntity);
 								}
@@ -561,8 +556,7 @@ public class FinalDb {
 	 * @param clazz
 	 * @param findClass
 	 */
-	public <T> T findWithOneToManyById(Object id, Class<T> clazz,
-			Class<?>... findClass) {
+	public <T> T findWithOneToManyById(Object id, Class<T> clazz, Class<?>... findClass) {
 		checkTableExist(clazz);
 		String sql = SqlBuilder.getSelectSQL(clazz, id);
 		debugSql(sql);
@@ -586,8 +580,7 @@ public class FinalDb {
 	public <T> T loadOneToMany(T entity, Class<T> clazz, Class<?>... findClass) {
 		if (entity != null) {
 			try {
-				Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap
-						.values();
+				Collection<OneToMany> ones = TableInfo.get(clazz).oneToManyMap.values();
 				Object id = TableInfo.get(clazz).getId().getValue(entity);
 				for (OneToMany one : ones) {
 					boolean isFind = false;
@@ -602,13 +595,11 @@ public class FinalDb {
 					}
 
 					if (isFind) {
-						List<?> list = findAllByWhere(one.getOneClass(),
-                                one.getColumn() + "=" + id);
+						List<?> list = findAllByWhere(one.getOneClass(), one.getColumn() + "=" + id);
 						if (list != null) {
 							/* 如果是OneToManyLazyLoader泛型，则执行灌入懒加载数据 */
 							if (one.getDataType() == OneToManyLazyLoader.class) {
-								OneToManyLazyLoader oneToManyLazyLoader = one
-										.getValue(entity);
+								OneToManyLazyLoader oneToManyLazyLoader = one.getValue(entity);
 								oneToManyLazyLoader.setList(list);
 							} else {
 								one.setValue(entity, list);
@@ -642,8 +633,7 @@ public class FinalDb {
 	 */
 	public <T> List<T> findAll(Class<T> clazz, String orderBy) {
 		checkTableExist(clazz);
-		return findAllBySql(clazz, SqlBuilder.getSelectSQL(clazz)
-				+ " ORDER BY " + orderBy);
+		return findAllBySql(clazz, SqlBuilder.getSelectSQL(clazz) + " ORDER BY " + orderBy);
 	}
 
 	/**
@@ -655,8 +645,7 @@ public class FinalDb {
 	 */
 	public <T> List<T> findAllByWhere(Class<T> clazz, String strWhere) {
 		checkTableExist(clazz);
-		return findAllBySql(clazz,
-				SqlBuilder.getSelectSQLByWhere(clazz, strWhere));
+		return findAllBySql(clazz, SqlBuilder.getSelectSQLByWhere(clazz, strWhere));
 	}
 
 	/**
@@ -668,12 +657,9 @@ public class FinalDb {
 	 * @param orderBy
 	 *            排序字段
 	 */
-	public <T> List<T> findAllByWhere(Class<T> clazz, String strWhere,
-			String orderBy) {
+	public <T> List<T> findAllByWhere(Class<T> clazz, String strWhere, String orderBy) {
 		checkTableExist(clazz);
-		return findAllBySql(clazz,
-				SqlBuilder.getSelectSQLByWhere(clazz, strWhere) + " ORDER BY "
-						+ orderBy);
+		return findAllBySql(clazz, SqlBuilder.getSelectSQLByWhere(clazz, strWhere) + " ORDER BY " + orderBy);
 	}
 
 	/**
@@ -753,8 +739,7 @@ public class FinalDb {
 
 		Cursor cursor = null;
 		try {
-			String sql = "SELECT COUNT(*) AS c FROM sqlite_master WHERE type ='table' AND name ='"
-					+ table.getTableName() + "' ";
+			String sql = "SELECT COUNT(*) AS c FROM sqlite_master WHERE type ='table' AND name ='" + table.getTableName() + "' ";
 			debugSql(sql);
 			cursor = db.rawQuery(sql, null);
 			if (cursor != null && cursor.moveToNext()) {
@@ -854,8 +839,7 @@ public class FinalDb {
 	 * @param dbfilename
 	 * @return
 	 */
-	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath,
-			String dbfilename) {
+	private SQLiteDatabase createDbFileOnSDCard(String sdcardPath, String dbfilename) {
 		File dbf = new File(sdcardPath, dbfilename);
 		if (!dbf.exists()) {
 			try {
@@ -876,22 +860,21 @@ public class FinalDb {
 
 		private DbUpdateListener mDbUpdateListener;
 
-		public SqliteDbHelper(Context context, String name, int version,
-				DbUpdateListener dbUpdateListener) {
+		public SqliteDbHelper(Context context, String name, int version, DbUpdateListener dbUpdateListener) {
 			super(context, name, null, version);
 			this.mDbUpdateListener = dbUpdateListener;
 		}
 
 		@Override
-        public void onCreate(SQLiteDatabase db) {
+		public void onCreate(SQLiteDatabase db) {
 		}
 
 		@Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			if (mDbUpdateListener != null) {
 				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
 			} else { // 清空所有的数据信息
-				dropDb();
+				dropDb(null);
 			}
 		}
 

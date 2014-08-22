@@ -19,14 +19,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import android.text.TextUtils;
-
 import net.tsz.afinal.db.table.Id;
 import net.tsz.afinal.db.table.KeyValue;
 import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.Property;
 import net.tsz.afinal.db.table.TableInfo;
 import net.tsz.afinal.exception.DbException;
+import android.text.TextUtils;
 
 public class SqlBuilder {
 	
@@ -180,7 +179,12 @@ public class SqlBuilder {
 		
 		return strSQL.toString();
 	}
-	
+	public static String getCount(Class<?> clazz,String strWhere){
+		TableInfo table=TableInfo.get(clazz);
+		StringBuffer strSQL = new StringBuffer("select count(id) AS number from ").append(table.getTableName());
+		strSQL.append(" WHERE ").append(strWhere);
+		return strSQL.toString();
+	}
 	public static SqlInfo getSelectSqlAsSqlInfo(Class<?> clazz,Object idValue){
 		TableInfo table=TableInfo.get(clazz);
 		
