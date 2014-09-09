@@ -49,6 +49,15 @@ public class BitmapProcess {
 			}
 		}
 		
+		if (url.trim().toLowerCase().startsWith("file:")) {// 旋转图片
+			int degree = Utils.getDegree(url.replace("file://", ""));
+			if (degree != 0) {
+				Matrix matrix = new Matrix();
+				matrix.postRotate(degree);
+				bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+			}
+		}
+
 		return bitmap;
 	}
 	

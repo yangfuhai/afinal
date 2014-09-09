@@ -43,7 +43,37 @@ public class Utils {
         return new File(cachePath + File.separator + uniqueName);
     }
 
-  
+    /** 计算图片旋转角度
+     * @param uri
+     * @return */
+    public static int getDegree(String uri) {
+        int degree = 0;
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            exif = null;
+        }
+        if (exif != null) {
+            int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);// 读取图片中相机方向信息  
+            switch (ori) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                degree = 90;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                degree = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                degree = 270;
+                break;
+            default:
+                degree = 0;
+                break;
+            }
+        }
+        return degree;
+    }
 
     /**
      * 获取bitmap的字节大小
