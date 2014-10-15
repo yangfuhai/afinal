@@ -391,6 +391,26 @@ public class FinalDb {
 		}
 	}
 
+	/**
+	 * 重新加载指定数据库，清除daoMap中的指定数据库
+	 * 
+	 * @param dbName
+	 * @return
+	 */
+	public void removeDBFromCache(String dbName){
+		if(daoMap.containsKey(dbName)){
+			FinalDB db=daoMap.get(dbName);
+			db.closeDb();
+			daoMap.remove(dbName)
+		}
+	}
+	//关闭数据库
+	private void closeDB(){
+		try {
+			db.close();
+		} catch (Exception e) {
+		}
+	}
 	private void exeSqlInfo(SqlInfo sqlInfo) {
 		if (sqlInfo != null) {
 			debugSql(sqlInfo.getSql());
