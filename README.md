@@ -1,5 +1,7 @@
 #afinal交流平台
 * QQ群：192341294（群1，2000未满）    246710918（群2，1000未满）
+##作者个人微信
+![mahua](http://7xi3g2.com1.z0.glb.clouddn.com/grwx.png?imageView2/1/w/250/h/250/q/87)
 
 
 ----
