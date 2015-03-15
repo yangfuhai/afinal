@@ -286,5 +286,5 @@ public View getView(int position, View convertView, ViewGroup parent) {
 * afinal捐助：[http://me.alipay.com/yangfuhai](http://me.alipay.com/yangfuhai) （为了感谢捐助者，michael将会把捐助者将公布在afinal官方网站上,不让公布的同学说明下）
 * afinal交流QQ群 ： 192341294
 #个人微信
-![mahua](http://7xi3g2.com1.z0.glb.clouddn.com/grwx.png =100px)
+![mahua](http://7xi3g2.com1.z0.glb.clouddn.com/grwx.png?imageView2/1/w/250/h/250/q/87)
 
