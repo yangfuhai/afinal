@@ -70,33 +70,28 @@ public class  HttpHandler  <T> extends  AsyncTask<Object, Object, Object> implem
 				request.setHeader("RANGE", "bytes="+fileLen+"-");
 		}
 		
-		boolean retry = true;
 		IOException cause = null;
 		HttpRequestRetryHandler retryHandler = client.getHttpRequestRetryHandler();
-		while (retry) {
-			try {
+		//这里的重试机制与HttpClient自己的重试自己冲突了，去掉while循环即可
+		try {
+			if (!isCancelled()) {
+				HttpResponse response = client.execute(request, context);
 				if (!isCancelled()) {
-					HttpResponse response = client.execute(request, context);
-					if (!isCancelled()) {
-						handleResponse(response);
-					} 
-				}
-				return;
-			} catch (UnknownHostException e) {
-				publishProgress(UPDATE_FAILURE,e,0,"unknownHostException：can't resolve host");
-				return;
-			} catch (IOException e) {
-				cause = e;
-				retry = retryHandler.retryRequest(cause, ++executionCount,context);
-			} catch (NullPointerException e) {
-				// HttpClient 4.0.x 之前的一个bug
-				// http://code.google.com/p/android/issues/detail?id=5255
-				cause = new IOException("NPE in HttpClient" + e.getMessage());
-				retry = retryHandler.retryRequest(cause, ++executionCount,context);
-			}catch (Exception e) {
-				cause = new IOException("Exception" + e.getMessage());
-				retry = retryHandler.retryRequest(cause, ++executionCount,context);
+					handleResponse(response);
+				} 
 			}
+			return;
+		} catch (UnknownHostException e) {
+			publishProgress(UPDATE_FAILURE,e,0,"unknownHostException：can't resolve host");
+			return;
+		} catch (IOException e) {
+			cause = e;
+		} catch (NullPointerException e) {
+			// HttpClient 4.0.x 之前的一个bug
+			// http://code.google.com/p/android/issues/detail?id=5255
+			cause = new IOException("NPE in HttpClient" + e.getMessage());
+		}catch (Exception e) {
+			cause = new IOException("Exception" + e.getMessage());
 		}
 		if(cause!=null)
 			throw cause;
