@@ -15,14 +15,16 @@
  */
 package net.tsz.afinal.annotation.view;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import net.tsz.afinal.exception.ViewException;
-
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -31,187 +33,82 @@ public class EventListener implements OnClickListener, OnLongClickListener, OnIt
 
 	private Object handler;
 	
-	private String clickMethod;
-	private String longClickMethod;
-	private String itemClickMethod;
-	private String itemSelectMethod;
-	private String nothingSelectedMethod;
-	private String itemLongClickMehtod;
-	
 	public EventListener(Object handler) {
 		this.handler = handler;
 	}
 	
-	public EventListener click(String method){
-		this.clickMethod = method;
-		return this;
-	}
-	
-	public EventListener longClick(String method){
-		this.longClickMethod = method;
-		return this;
-	}
-	
-	public EventListener itemLongClick(String method){
-		this.itemLongClickMehtod = method;
-		return this;
-	}
-	
-	public EventListener itemClick(String method){
-		this.itemClickMethod = method;
-		return this;
-	}
-	
-	public EventListener select(String method){
-		this.itemSelectMethod = method;
-		return this;
-	}
-	
-	public EventListener noSelect(String method){
-		this.nothingSelectedMethod = method;
-		return this;
-	}
-	
 	public boolean onLongClick(View v) {
-		return invokeLongClickMethod(handler,longClickMethod,v);
-	}
-	
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-		return invokeItemLongClickMethod(handler,itemLongClickMehtod,arg0,arg1,arg2,arg3);
-	}
-	
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-		
-		invokeItemSelectMethod(handler,itemSelectMethod,arg0,arg1,arg2,arg3);
-	}
-	
-	public void onNothingSelected(AdapterView<?> arg0) {
-		invokeNoSelectMethod(handler,nothingSelectedMethod,arg0);
-	}
-	
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		
-		invokeItemClickMethod(handler,itemClickMethod,arg0,arg1,arg2,arg3);
-	}
-	
-	public void onClick(View v) {
-		
-		invokeClickMethod(handler, clickMethod, v);
-	}
-	
-	
-	private static Object invokeClickMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) return null;
-		Method method = null;
-		try{   
-			method = handler.getClass().getDeclaredMethod(methodName,View.class);
-			if(method!=null)
-				return method.invoke(handler, params);	
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-		
-	}
-	
-	
-	private static boolean invokeLongClickMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) return false;
-		Method method = null;
-		try{   
-			//public boolean onLongClick(View v)
-			method = handler.getClass().getDeclaredMethod(methodName,View.class);
-			if(method!=null){
-				Object obj = method.invoke(handler, params);
-				return obj==null?false:Boolean.valueOf(obj.toString());	
-			}
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return false;
-		
-	}
-	
-	
-	
-	private static Object invokeItemClickMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) return null;
-		Method method = null;
-		try{   
-			///onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
-			if(method!=null)
-				return method.invoke(handler, params);	
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	
-	private static boolean invokeItemLongClickMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) throw new ViewException("invokeItemLongClickMethod: handler is null :");
-		Method method = null;
-		try{   
-			///onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,long arg3)
-			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
-			if(method!=null){
-				Object obj = method.invoke(handler, params);
-				return Boolean.valueOf(obj==null?false:Boolean.valueOf(obj.toString()));	
-			}
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	
-	private static Object invokeItemSelectMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) return null;
-		Method method = null;
-		try{   
-			///onItemSelected(AdapterView<?> arg0, View arg1, int arg2,long arg3)
-			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class,View.class,int.class,long.class);
-			if(method!=null)
-				return method.invoke(handler, params);	
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	private static Object invokeNoSelectMethod(Object handler, String methodName,  Object... params){
-		if(handler == null) return null;
-		Method method = null;
-		try{   
-			//onNothingSelected(AdapterView<?> arg0)
-			method = handler.getClass().getDeclaredMethod(methodName,AdapterView.class);
-			if(method!=null)
-				return method.invoke(handler, params);	
-			else
-				throw new ViewException("no such method:"+methodName);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
+		return invokeMethod(v);
 	}
 
-	
-	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		return invokeMethod(parent, view, position, id);
+	}
+
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+			long id) {
+		invokeMethod(parent, view, position, id);
+	}
+
+	public void onNothingSelected(AdapterView<?> parent) {
+		invokeMethod(parent);
+	}
+
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		invokeMethod(parent, view, position, id);
+	}
+
+	public void onClick(View v) {
+		invokeMethod(v);
+	}
+
+	private boolean invokeMethod(Object... params) throws RuntimeException {
+		if (handler == null)
+			return false;
+		Method method = null;
+		String methodName = null;
+		try {
+			/**
+			 * Method name is onClick,onItemClick etc
+			 * see http://lmbj.net/blog/get-method-name-by-stack-trace/
+			 */
+			methodName = Thread.currentThread().getStackTrace()[3]
+					.getMethodName();
+			Class<?>[] parameterTypes = new Class<?>[params.length];
+			for (int i = 0; i < params.length; i++) {
+				parameterTypes[i] = params[i].getClass();
+				if (Integer.class.equals(parameterTypes[i])) {
+					parameterTypes[i] = int.class;
+				} else if (Long.class.equals(parameterTypes[i])) {
+					parameterTypes[i] = long.class;
+				} else if (AdapterView.class
+						.isAssignableFrom(parameterTypes[i])) {
+					parameterTypes[i] = AdapterView.class;
+				} else if (View.class.isAssignableFrom(parameterTypes[i])) {
+					parameterTypes[i] = View.class;
+				}
+			}
+			method = handler.getClass().getDeclaredMethod(methodName,
+					parameterTypes);
+			Object obj = method.invoke(handler, params);
+			return obj == null ? false : Boolean.valueOf(obj.toString());
+		} catch (IllegalArgumentException e) {
+			Log.e("EventListener", "IllegalArgumentException", e);
+		} catch (NoSuchMethodException e) {
+			Log.e("EventListener", "NoSuchMethodException", e);
+			Toast.makeText(((View) params[0]).getContext(),
+					"Please implements the method:" + methodName,
+					Toast.LENGTH_LONG).show();
+			throw new ViewException("Please implements the method:"
+					+ methodName);
+		} catch (IllegalAccessException e) {
+			Log.e("EventListener", "IllegalAccessException", e);
+		} catch (InvocationTargetException e) {
+			Log.e("EventListener", "InvocationTargetException", e);
+		}
+		return false;
+	}
 }

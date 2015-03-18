@@ -1,0 +1,8 @@
+.settings/
+/gen
+/assets
+/bin
+/res
+/.classpath
+/.project
+lint.xml
