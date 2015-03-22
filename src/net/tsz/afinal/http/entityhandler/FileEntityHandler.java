@@ -47,7 +47,15 @@ public class FileEntityHandler {
 
 		File targetFile = new File(target);
 
+		/*
+		 * 目标路径支持保存到sdcard的某个自定义文件夹下
+		 * 修改日期：2014-04-09 15:50
+		 * 修改者：ShelWee
+		 */
 		if (!targetFile.exists()) {
+			String tmpDirectory = targetFile.getAbsolutePath();
+			File f = new File(tmpDirectory.substring(0, tmpDirectory.lastIndexOf(File.separator) ));
+			if(!f.exists()) f.mkdirs();
 			targetFile.createNewFile();
 		}
 
