@@ -756,7 +756,7 @@ public class FinalBitmap {
 		 public int memCacheSize;//内存缓存百分比
 		 public int diskCacheSize;//磁盘百分比
 		 public int poolSize = 3;//默认的线程池线程并发数量
-		 public boolean recycleImmediately = true;//是否立即回收内存
+		 public boolean recycleImmediately = false;//是否立即回收内存
 		
 		 public FinalBitmapConfig(Context context) {
 				defaultDisplayConfig = new BitmapDisplayConfig();
