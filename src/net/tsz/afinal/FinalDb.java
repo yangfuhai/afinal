@@ -376,8 +376,11 @@ public class FinalDb {
 
 	/**
 	 * 删除所有数据表
+	 * Changed by yinchuandong 
+	 * In the old version, the variable 'db' is global and is null initially, however, <br/>
+	 * when onUpgrade function is called, the db is passed as local variable 
 	 */
-	public void dropDb() {
+	public void dropDb(SQLiteDatabase db) {
 		Cursor cursor = db.rawQuery(
 				"SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'", null);
 		if (cursor != null) {
@@ -891,7 +894,7 @@ public class FinalDb {
 			if (mDbUpdateListener != null) {
 				mDbUpdateListener.onUpgrade(db, oldVersion, newVersion);
 			} else { // 清空所有的数据信息
-				dropDb();
+				dropDb(db);
 			}
 		}
 
