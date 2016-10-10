@@ -53,6 +53,7 @@ public class FinalBitmap {
 	private ExecutorService bitmapLoadAndDisplayExecutor;
 
 	private static FinalBitmap mFinalBitmap;
+	private static HashMap<Integer, Displayer> loadBitmapCallBack = new HashMap<Integer, Displayer>();
 	
 	////////////////////////// config method start////////////////////////////////////
 	private FinalBitmap(Context context) {
@@ -75,7 +76,34 @@ public class FinalBitmap {
 		return mFinalBitmap;
 	}
 	
-	
+	/**
+	 * 添加针对某个View.id的回调
+	 * 
+	 * @param resId
+	 * @param displayer
+	 */
+	public static void addLoadBitmapCallBack(int resId, Displayer displayer) {
+		loadBitmapCallBack.put(resId, displayer);
+	}
+
+	/**
+	 * 移除回调缓存
+	 * 
+	 * @param resId
+	 */
+	public static void removeLoadBitmapCallBack(int resId) {
+		loadBitmapCallBack.remove(resId);
+	}
+
+	/**
+	 * 获取对应id的回调
+	 * 
+	 * @param resId
+	 * @return
+	 */
+	public static Displayer getLoadBitmapCallBack(int resId) {
+		return loadBitmapCallBack.get(resId);
+	}
 	
 	/**
 	 * 设置图片正在加载的时候显示的图片
@@ -707,10 +735,18 @@ public class FinalBitmap {
 
 			// 判断线程和当前的imageview是否是匹配
 			final View imageView = getAttachedImageView();
-			if (bitmap != null && imageView != null) {
-				mConfig.displayer.loadCompletedisplay(imageView,bitmap,displayConfig);			
-			}else if(bitmap == null && imageView!=null ){
-				mConfig.displayer.loadFailDisplay(imageView, displayConfig.getLoadfailBitmap());
+			if (null != imageView) {
+				int resId = imageView.getId();
+				Displayer displayer = FinalBitmap.getLoadBitmapCallBack(resId);
+				if (displayer == null)
+					displayer = mConfig.displayer;
+
+				if (bitmap != null) {
+					displayer.loadCompletedisplay(imageView, bitmap, displayConfig);
+				} else if (bitmap == null) {
+					displayer.loadFailDisplay(imageView, displayConfig.getLoadfailBitmap());
+				}
+				FinalBitmap.removeLoadBitmapCallBack(resId);
 			}
 		}
 
