@@ -59,7 +59,8 @@ public abstract class FinalActivity extends Activity {
 				try {
 					field.setAccessible(true);
 					
-					if(field.get(injectedSource)!= null )
+					//只有View的子类需要Inject，不是View的子类直接跳过
+					if (!View.class.isAssignableFrom(field.getClass()) ||field.get(injectedSource) != null)
 						continue;
 				
 					ViewInject viewInject = field.getAnnotation(ViewInject.class);
