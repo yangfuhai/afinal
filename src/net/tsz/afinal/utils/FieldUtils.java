@@ -37,6 +37,8 @@ import net.tsz.afinal.annotation.sqlite.Transient;
  * @created 2012-10-10
  */
 public class FieldUtils {
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	public static Method getFieldGetMethod(Class<?> clazz, Field f) {
 		String fn = f.getName();
 		Method m = null;
@@ -337,11 +339,10 @@ public class FieldUtils {
 		         clazz.isPrimitive();
 	}
 	
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Date stringToDateTime(String strDate) {
+	public static Date stringToDateTime(String strDate) {
 		if (strDate != null) {
 			try {
-				return sdf.parse(strDate);
+				return SDF.parse(strDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

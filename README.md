@@ -1,6 +1,7 @@
 #afinal交流平台
-* QQ群：192341294（群1，1000已满）    246710918（群2，1000未满）
-* 网址：[http://www.afinal.org](http://www.afinal.org)
+* QQ群：192341294（群1，2000未满）    246710918（群2，1000未满）
+##作者个人微信
+![mahua](http://7xi3g2.com1.z0.glb.clouddn.com/grwx.png?imageView2/1/w/250/h/250/q/87)
 
 
 ----
@@ -284,6 +285,8 @@ public View getView(int position, View convertView, ViewGroup parent) {
 
 #关于作者michael
 * 个人博客：[http://www.yangfuhai.com](http://www.yangfuhai.com)
-* afinal捐助：[http://me.alipay.com/yangfuhai](http://me.alipay.com/yangfuhai) （为了感谢捐助者，michael将会把捐助者将公布在afinal官方网站[afinal.org](http://www.afinal.org)上,不让公布的同学说明下）
+* afinal捐助：[http://me.alipay.com/yangfuhai](http://me.alipay.com/yangfuhai) （为了感谢捐助者，michael将会把捐助者将公布在afinal官方网站上,不让公布的同学说明下）
 * afinal交流QQ群 ： 192341294
+#个人微信
+![mahua](http://7xi3g2.com1.z0.glb.clouddn.com/grwx.png?imageView2/1/w/250/h/250/q/87)
 
